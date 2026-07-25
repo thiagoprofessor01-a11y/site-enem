@@ -1,13 +1,16 @@
+import Protegido from "@/modules/auth/Protegido";
 import PlaceholderPage from "@/components/PlaceholderPage";
 
-// TIME B — Modo simulado cronometrado (resultado só ao final)
+// TIME B — Modo simulado cronometrado (protegido)
 export default function SimuladoPage() {
   return (
-    <PlaceholderPage
-      time="Time B"
-      emoji="⏱️"
-      titulo="Simulado"
-      descricao="Várias questões com tempo cronometrado; resultado exibido apenas ao final."
-    />
+    <Protegido>
+      <PlaceholderPage
+        time="Time B"
+        emoji="⏱️"
+        titulo="Simulado"
+        descricao="Várias questões com tempo cronometrado; resultado exibido apenas ao final."
+      />
+    </Protegido>
   );
 }

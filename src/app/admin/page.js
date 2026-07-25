@@ -1,11 +1,10 @@
-import AdminApp from "@/modules/admin/AdminApp";
+import AdminGuard from "@/modules/auth/AdminGuard";
 
-// Painel de administração de conteúdo.
-// Matéria → Módulo → Aula → (vídeos do YouTube + questionário).
+// Painel de administração — protegido por login de administrador.
 export const metadata = {
   title: "Admin — MeuENEM",
 };
 
 export default function AdminPage() {
-  return <AdminApp />;
+  return <AdminGuard />;
 }

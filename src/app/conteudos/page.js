@@ -1,6 +1,11 @@
+import Protegido from "@/modules/auth/Protegido";
 import ConteudosClient from "@/modules/conteudos-dashboard/ConteudosClient";
 
-// TIME D — Conteúdos: matérias por área de conhecimento (lê do banco).
+// TIME D — Conteúdos por área (área do aluno, protegida).
 export default function ConteudosPage() {
-  return <ConteudosClient />;
+  return (
+    <Protegido>
+      <ConteudosClient />
+    </Protegido>
+  );
 }
