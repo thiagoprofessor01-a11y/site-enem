@@ -153,13 +153,15 @@ const local = {
       db.videos = db.videos.filter((x) => x.id !== id);
     });
   },
-  addQuestao(aulaId, { enunciado, alternativas, correta }) {
+  addQuestao(aulaId, { formato = "form", html = null, enunciado = "", alternativas = [], correta = 0 }) {
     return this.mutate((db) =>
       db.questoes.push({
         id: genId(),
         aulaId,
-        enunciado: enunciado.trim(),
-        alternativas: alternativas.map((a) => a.trim()),
+        formato,
+        html,
+        enunciado: (enunciado || "").trim(),
+        alternativas: (alternativas || []).map((a) => a.trim()),
         correta,
       })
     );
@@ -224,6 +226,8 @@ const supa = {
       questoes: (questoes.data || []).map((q) => ({
         id: q.id,
         aulaId: q.aula_id,
+        formato: q.formato || "form",
+        html: q.html || "",
         enunciado: q.enunciado,
         alternativas: q.alternativas,
         correta: q.correta,
@@ -291,11 +295,13 @@ const supa = {
     checar(error);
     return this.fetchAll();
   },
-  async addQuestao(aulaId, { enunciado, alternativas, correta }) {
+  async addQuestao(aulaId, { formato = "form", html = null, enunciado = "", alternativas = [], correta = 0 }) {
     const { error } = await sb().from("questoes").insert({
       aula_id: aulaId,
-      enunciado: enunciado.trim(),
-      alternativas: alternativas.map((a) => a.trim()),
+      formato,
+      html,
+      enunciado: (enunciado || "").trim(),
+      alternativas: (alternativas || []).map((a) => a.trim()),
       correta,
     });
     checar(error);

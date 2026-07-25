@@ -43,7 +43,9 @@ create table if not exists public.aula_videos (
 create table if not exists public.questoes (
   id uuid primary key default gen_random_uuid(),
   aula_id uuid not null references public.aulas (id) on delete cascade,
-  enunciado text not null,
+  formato text not null default 'form', -- 'form' (estruturada) ou 'html' (código colado)
+  html text,                            -- usado quando formato = 'html'
+  enunciado text not null default '',
   alternativas jsonb not null default '[]'::jsonb,
   correta integer not null default 0,
   created_at timestamptz not null default now()

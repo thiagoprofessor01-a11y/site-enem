@@ -23,6 +23,7 @@ import {
   areaNome,
 } from "./admin-store";
 import { Campo, inputClass, Botao, CardVazio, Tag } from "./ui";
+import HtmlEmbed from "@/components/HtmlEmbed";
 
 export default function AdminApp() {
   const [db, setDb] = useState(null);
@@ -543,7 +544,7 @@ function AulaDetalhe({ db, aula, setDb }) {
               <li key={q.id} className="card p-4">
                 <div className="flex items-start justify-between gap-3">
                   <p className="text-sm font-semibold text-slate-900">
-                    {i + 1}. {q.enunciado}
+                    {i + 1}. {q.enunciado || (q.formato === "html" ? "Questão (HTML)" : "")}
                   </p>
                   <Botao
                     variant="danger"
@@ -552,24 +553,31 @@ function AulaDetalhe({ db, aula, setDb }) {
                     Excluir
                   </Botao>
                 </div>
-                <ul className="mt-3 space-y-1.5">
-                  {q.alternativas.map((alt, idx) =>
-                    alt ? (
-                      <li
-                        key={idx}
-                        className={`flex gap-2 text-sm ${
-                          idx === q.correta
-                            ? "font-semibold text-green-700"
-                            : "text-slate-600"
-                        }`}
-                      >
-                        <span>{LETRAS[idx]})</span>
-                        <span>{alt}</span>
-                        {idx === q.correta && <span>✓</span>}
-                      </li>
-                    ) : null
-                  )}
-                </ul>
+
+                {q.formato === "html" ? (
+                  <div className="mt-3 overflow-hidden rounded-lg border border-slate-200">
+                    <HtmlEmbed html={q.html} />
+                  </div>
+                ) : (
+                  <ul className="mt-3 space-y-1.5">
+                    {q.alternativas.map((alt, idx) =>
+                      alt ? (
+                        <li
+                          key={idx}
+                          className={`flex gap-2 text-sm ${
+                            idx === q.correta
+                              ? "font-semibold text-green-700"
+                              : "text-slate-600"
+                          }`}
+                        >
+                          <span>{LETRAS[idx]})</span>
+                          <span>{alt}</span>
+                          {idx === q.correta && <span>✓</span>}
+                        </li>
+                      ) : null
+                    )}
+                  </ul>
+                )}
               </li>
             ))}
           </ol>
@@ -616,59 +624,128 @@ function VideoForm({ onSalvar, onCancelar }) {
 }
 
 function QuestaoForm({ onSalvar, onCancelar }) {
+  const [formato, setFormato] = useState("html"); // padrão: colar HTML
+  // modo HTML
+  const [titulo, setTitulo] = useState("");
+  const [html, setHtml] = useState("");
+  // modo formulário
   const [enunciado, setEnunciado] = useState("");
   const [alternativas, setAlternativas] = useState(["", "", "", "", ""]);
   const [correta, setCorreta] = useState(0);
 
   const preenchidas = alternativas.filter((a) => a.trim()).length;
-  const valido = enunciado.trim() && preenchidas >= 2 && alternativas[correta].trim();
+  const validoForm =
+    enunciado.trim() && preenchidas >= 2 && alternativas[correta].trim();
+  const validoHtml = html.trim().length > 0;
+  const valido = formato === "html" ? validoHtml : validoForm;
+
+  function salvar() {
+    if (!valido) return;
+    if (formato === "html") {
+      onSalvar({ formato: "html", html, enunciado: titulo, alternativas: [], correta: 0 });
+    } else {
+      onSalvar({ formato: "form", html: null, enunciado, alternativas, correta });
+    }
+  }
 
   return (
-    <FormCard
-      onSubmit={() => valido && onSalvar({ enunciado, alternativas, correta })}
-      onCancelar={onCancelar}
-    >
-      <Campo label="Enunciado">
-        <textarea
-          autoFocus
-          className={inputClass()}
-          rows={3}
-          value={enunciado}
-          onChange={(e) => setEnunciado(e.target.value)}
-          placeholder="Escreva o enunciado da questão"
-        />
-      </Campo>
-      <div>
-        <span className="text-sm font-semibold text-slate-700">
-          Alternativas <span className="font-normal text-slate-400">(marque a correta)</span>
-        </span>
-        <div className="mt-2 space-y-2">
-          {alternativas.map((alt, idx) => (
-            <div key={idx} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="correta"
-                checked={correta === idx}
-                onChange={() => setCorreta(idx)}
-                className="h-4 w-4 accent-green-600"
-              />
-              <span className="w-5 text-sm font-semibold text-slate-500">
-                {LETRAS[idx]}
-              </span>
-              <input
-                className={inputClass()}
-                value={alt}
-                onChange={(e) => {
-                  const arr = [...alternativas];
-                  arr[idx] = e.target.value;
-                  setAlternativas(arr);
-                }}
-                placeholder={`Alternativa ${LETRAS[idx]}`}
-              />
-            </div>
-          ))}
-        </div>
+    <FormCard onSubmit={salvar} onCancelar={onCancelar}>
+      {/* Seletor de modo */}
+      <div className="flex gap-2">
+        {[
+          ["html", "Colar HTML"],
+          ["form", "Formulário"],
+        ].map(([val, label]) => (
+          <button
+            key={val}
+            type="button"
+            onClick={() => setFormato(val)}
+            className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+              formato === val
+                ? "bg-brand-600 text-white"
+                : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
+
+      {formato === "html" ? (
+        <>
+          <Campo label="Identificação (opcional)">
+            <input
+              className={inputClass()}
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              placeholder="Ex.: Questão 1 (ENEM 2022)"
+            />
+          </Campo>
+          <Campo label="Código HTML da questão">
+            <textarea
+              autoFocus
+              className={`${inputClass()} font-mono text-xs`}
+              rows={8}
+              value={html}
+              onChange={(e) => setHtml(e.target.value)}
+              placeholder="<div>...cole aqui o HTML da questão (enunciado, alternativas e correção)...</div>"
+            />
+          </Campo>
+          {html.trim() && (
+            <div>
+              <span className="text-sm font-semibold text-slate-700">Prévia</span>
+              <div className="mt-2 overflow-hidden rounded-lg border border-slate-200">
+                <HtmlEmbed html={html} />
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <Campo label="Enunciado">
+            <textarea
+              autoFocus
+              className={inputClass()}
+              rows={3}
+              value={enunciado}
+              onChange={(e) => setEnunciado(e.target.value)}
+              placeholder="Escreva o enunciado da questão"
+            />
+          </Campo>
+          <div>
+            <span className="text-sm font-semibold text-slate-700">
+              Alternativas{" "}
+              <span className="font-normal text-slate-400">(marque a correta)</span>
+            </span>
+            <div className="mt-2 space-y-2">
+              {alternativas.map((alt, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="correta"
+                    checked={correta === idx}
+                    onChange={() => setCorreta(idx)}
+                    className="h-4 w-4 accent-green-600"
+                  />
+                  <span className="w-5 text-sm font-semibold text-slate-500">
+                    {LETRAS[idx]}
+                  </span>
+                  <input
+                    className={inputClass()}
+                    value={alt}
+                    onChange={(e) => {
+                      const arr = [...alternativas];
+                      arr[idx] = e.target.value;
+                      setAlternativas(arr);
+                    }}
+                    placeholder={`Alternativa ${LETRAS[idx]}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </FormCard>
   );
 }
