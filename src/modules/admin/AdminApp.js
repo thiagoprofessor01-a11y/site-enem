@@ -24,6 +24,7 @@ import {
 } from "./admin-store";
 import { Campo, inputClass, Botao, CardVazio, Tag } from "./ui";
 import HtmlEmbed from "@/components/HtmlEmbed";
+import NivelDots from "@/components/NivelDots";
 
 export default function AdminApp() {
   const [db, setDb] = useState(null);
@@ -309,6 +310,7 @@ function ModulosView({ db, materia, setDb, abrir }) {
               <ItemLinha
                 key={m.id}
                 titulo={m.nome}
+                nivel={m.nivel}
                 sub={
                   (m.descricao ? m.descricao + " · " : "") +
                   `${db.aulas.filter((x) => x.moduloId === m.id).length} aula(s)`
@@ -331,9 +333,10 @@ function ModulosView({ db, materia, setDb, abrir }) {
 function ModuloForm({ inicial, onSalvar, onCancelar }) {
   const [nome, setNome] = useState(inicial?.nome || "");
   const [descricao, setDescricao] = useState(inicial?.descricao || "");
+  const [nivel, setNivel] = useState(inicial?.nivel ?? 3);
   return (
     <FormCard
-      onSubmit={() => nome.trim() && onSalvar({ nome, descricao })}
+      onSubmit={() => nome.trim() && onSalvar({ nome, descricao, nivel })}
       onCancelar={onCancelar}
     >
       <Campo label="Nome do módulo">
@@ -345,12 +348,13 @@ function ModuloForm({ inicial, onSalvar, onCancelar }) {
           placeholder="Ex.: Funções"
         />
       </Campo>
-      <Campo label="Descrição (opcional)">
+      <NivelPicker value={nivel} onChange={setNivel} />
+      <Campo label="Observação (opcional)">
         <input
           className={inputClass()}
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
-          placeholder="Breve descrição do módulo"
+          placeholder="Nota curta sobre o módulo (opcional)"
         />
       </Campo>
     </FormCard>
@@ -401,6 +405,7 @@ function AulasView({ db, modulo, setDb, abrir }) {
               <ItemLinha
                 key={a.id}
                 titulo={a.titulo}
+                nivel={a.nivel}
                 sub={`${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s) · ${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`}
                 onAbrir={() => abrir(a)}
                 onEditar={() => setForm(a.id)}
@@ -420,9 +425,10 @@ function AulasView({ db, modulo, setDb, abrir }) {
 function AulaForm({ inicial, onSalvar, onCancelar }) {
   const [titulo, setTitulo] = useState(inicial?.titulo || "");
   const [resumo, setResumo] = useState(inicial?.resumo || "");
+  const [nivel, setNivel] = useState(inicial?.nivel ?? 3);
   return (
     <FormCard
-      onSubmit={() => titulo.trim() && onSalvar({ titulo, resumo })}
+      onSubmit={() => titulo.trim() && onSalvar({ titulo, resumo, nivel })}
       onCancelar={onCancelar}
     >
       <Campo label="Título da aula">
@@ -434,6 +440,7 @@ function AulaForm({ inicial, onSalvar, onCancelar }) {
           placeholder="Ex.: Função do 1º grau"
         />
       </Campo>
+      <NivelPicker value={nivel} onChange={setNivel} />
       <Campo label="Resumo (opcional)">
         <textarea
           className={inputClass()}
@@ -444,6 +451,32 @@ function AulaForm({ inicial, onSalvar, onCancelar }) {
         />
       </Campo>
     </FormCard>
+  );
+}
+
+// Seletor de incidência (1 a 5 bolinhas vermelhas).
+function NivelPicker({ value, onChange }) {
+  return (
+    <div>
+      <span className="text-sm font-semibold text-slate-700">
+        Incidência{" "}
+        <span className="font-normal text-slate-400">(o quanto cai na prova)</span>
+      </span>
+      <div className="mt-2 flex items-center gap-2">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onChange(i)}
+            aria-label={`Nível ${i}`}
+            className={`h-6 w-6 rounded-full transition ${
+              i <= value ? "bg-red-500" : "bg-slate-200 hover:bg-slate-300"
+            }`}
+          />
+        ))}
+        <span className="ml-2 text-sm font-medium text-slate-500">{value}/5</span>
+      </div>
+    </div>
   );
 }
 
@@ -765,13 +798,14 @@ function Secao({ titulo, acao, children }) {
   );
 }
 
-function ItemLinha({ titulo, tag, sub, onAbrir, onEditar, onExcluir }) {
+function ItemLinha({ titulo, tag, sub, nivel, onAbrir, onEditar, onExcluir }) {
   return (
     <li className="card flex items-center justify-between gap-3 p-4">
       <button onClick={onAbrir} className="min-w-0 flex-1 text-left">
         <div className="flex items-center gap-2">
           <span className="truncate font-semibold text-slate-900">{titulo}</span>
           {tag && <Tag>{tag}</Tag>}
+          {nivel != null && <NivelDots nivel={nivel} />}
         </div>
         {sub && <p className="mt-0.5 truncate text-xs text-slate-500">{sub}</p>}
       </button>

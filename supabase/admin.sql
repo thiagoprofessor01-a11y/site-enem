@@ -21,6 +21,7 @@ create table if not exists public.modulos (
   materia_id uuid not null references public.materias (id) on delete cascade,
   nome text not null,
   descricao text not null default '',
+  nivel integer not null default 3, -- incidência 1..5 (bolinhas)
   created_at timestamptz not null default now()
 );
 
@@ -29,6 +30,7 @@ create table if not exists public.aulas (
   modulo_id uuid not null references public.modulos (id) on delete cascade,
   titulo text not null,
   resumo text not null default '',
+  nivel integer not null default 3, -- incidência 1..5 (bolinhas)
   created_at timestamptz not null default now()
 );
 

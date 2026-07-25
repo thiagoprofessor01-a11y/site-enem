@@ -90,13 +90,14 @@ const local = {
       db.questoes = db.questoes.filter((x) => !aulaIds.includes(x.aulaId));
     });
   },
-  addModulo(materiaId, { nome, descricao }) {
+  addModulo(materiaId, { nome, descricao, nivel = 3 }) {
     return this.mutate((db) =>
       db.modulos.push({
         id: genId(),
         materiaId,
         nome: nome.trim(),
         descricao: (descricao || "").trim(),
+        nivel,
       })
     );
   },
@@ -115,13 +116,14 @@ const local = {
       db.questoes = db.questoes.filter((x) => !aulaIds.includes(x.aulaId));
     });
   },
-  addAula(moduloId, { titulo, resumo }) {
+  addAula(moduloId, { titulo, resumo, nivel = 3 }) {
     return this.mutate((db) =>
       db.aulas.push({
         id: genId(),
         moduloId,
         titulo: titulo.trim(),
         resumo: (resumo || "").trim(),
+        nivel,
       })
     );
   },
@@ -210,12 +212,14 @@ const supa = {
         materiaId: m.materia_id,
         nome: m.nome,
         descricao: m.descricao,
+        nivel: m.nivel ?? 3,
       })),
       aulas: (aulas.data || []).map((a) => ({
         id: a.id,
         moduloId: a.modulo_id,
         titulo: a.titulo,
         resumo: a.resumo,
+        nivel: a.nivel ?? 3,
       })),
       videos: (videos.data || []).map((v) => ({
         id: v.id,
@@ -249,10 +253,10 @@ const supa = {
     checar(error);
     return this.fetchAll();
   },
-  async addModulo(materiaId, { nome, descricao }) {
+  async addModulo(materiaId, { nome, descricao, nivel = 3 }) {
     const { error } = await sb()
       .from("modulos")
-      .insert({ materia_id: materiaId, nome: nome.trim(), descricao: (descricao || "").trim() });
+      .insert({ materia_id: materiaId, nome: nome.trim(), descricao: (descricao || "").trim(), nivel });
     checar(error);
     return this.fetchAll();
   },
@@ -266,10 +270,10 @@ const supa = {
     checar(error);
     return this.fetchAll();
   },
-  async addAula(moduloId, { titulo, resumo }) {
+  async addAula(moduloId, { titulo, resumo, nivel = 3 }) {
     const { error } = await sb()
       .from("aulas")
-      .insert({ modulo_id: moduloId, titulo: titulo.trim(), resumo: (resumo || "").trim() });
+      .insert({ modulo_id: moduloId, titulo: titulo.trim(), resumo: (resumo || "").trim(), nivel });
     checar(error);
     return this.fetchAll();
   },

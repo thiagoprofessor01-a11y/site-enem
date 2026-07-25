@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import HtmlEmbed from "@/components/HtmlEmbed";
+import NivelDots from "@/components/NivelDots";
 import { AREA_INFO } from "./conteudos-ui";
 
 const LETRAS = ["A", "B", "C", "D", "E"];
@@ -122,9 +123,12 @@ export default function MateriaClient({ materiaId }) {
             return (
               <section key={mod.id}>
                 <div className="mb-3">
-                  <h2 className="text-lg font-semibold text-slate-900">
-                    {mod.nome}
-                  </h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-slate-900">
+                      {mod.nome}
+                    </h2>
+                    <NivelDots nivel={mod.nivel} tamanho="lg" />
+                  </div>
                   {mod.descricao && (
                     <p className="text-sm text-slate-500">{mod.descricao}</p>
                   )}
@@ -141,8 +145,11 @@ export default function MateriaClient({ materiaId }) {
                           className="flex w-full items-center justify-between gap-3 p-4 text-left"
                         >
                           <span className="min-w-0">
-                            <span className="block font-medium text-slate-900">
-                              {aula.titulo}
+                            <span className="flex items-center gap-2">
+                              <span className="font-medium text-slate-900">
+                                {aula.titulo}
+                              </span>
+                              <NivelDots nivel={aula.nivel} />
                             </span>
                             {aula.resumo && !aberta && (
                               <span className="mt-0.5 block truncate text-xs text-slate-500">
