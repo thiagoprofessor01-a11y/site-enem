@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { DEFAULT_ENEM_DATE } from "@/lib/config";
+import { fetchAll } from "@/modules/admin/admin-store";
+import NivelDots from "@/components/NivelDots";
 import {
   DIAS_SEMANA,
-  PESOS_AREA,
   carregarCronograma,
   salvarCronograma,
   apagarCronograma,
@@ -14,14 +16,23 @@ import {
   formatarData,
   hojeISO,
 } from "./cronograma-storage";
+import { montarPlano } from "./cronograma-engine";
 
 export default function CronogramaClient() {
   const [carregado, setCarregado] = useState(false);
   const [cronograma, setCronograma] = useState(null);
+  const [db, setDb] = useState(null); // conteúdo (matérias/aulas) para o plano
 
   useEffect(() => {
     setCronograma(carregarCronograma());
     setCarregado(true);
+    let ativo = true;
+    fetchAll()
+      .then((d) => ativo && setDb(d))
+      .catch(() => ativo && setDb({ materias: [], modulos: [], aulas: [], videos: [], questoes: [] }));
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   function handleCriar(dados) {
@@ -35,17 +46,14 @@ export default function CronogramaClient() {
     setCronograma(null);
   }
 
-  // Evita divergência de hidratação enquanto lê o localStorage.
   if (!carregado) {
     return (
-      <div className="container py-16 text-center text-slate-400">
-        Carregando…
-      </div>
+      <div className="container py-16 text-center text-slate-400">Carregando…</div>
     );
   }
 
   return cronograma ? (
-    <ResumoCronograma cronograma={cronograma} onApagar={handleApagar} />
+    <ResumoCronograma cronograma={cronograma} db={db} onApagar={handleApagar} />
   ) : (
     <FormularioCronograma onCriar={handleCriar} />
   );
@@ -63,6 +71,7 @@ function FormularioCronograma({ onCriar }) {
   const diasAte = diasCorridos(hoje, dataEnem);
   const diasEstudo = diasDeEstudo(hoje, dataEnem, diasSemana);
   const totalHoras = diasEstudo * Number(horasPorDia || 0);
+  const aulasPossiveis = Math.floor((totalHoras * 60) / 80);
 
   function toggleDia(idx) {
     setDiasSemana((prev) =>
@@ -83,8 +92,8 @@ function FormularioCronograma({ onCriar }) {
           Montar meu cronograma
         </h1>
         <p className="mt-3 text-slate-600">
-          Escolha quanto tempo você vai dedicar por dia. Nós calculamos quantos
-          dias faltam para o ENEM e quantas horas de estudo isso representa.
+          Diga quanto tempo você vai dedicar. Montamos um plano de aulas priorizando
+          o que mais cai no ENEM.
         </p>
       </div>
 
@@ -95,7 +104,6 @@ function FormularioCronograma({ onCriar }) {
         }}
         className="card mt-8 space-y-7 p-6 sm:p-8"
       >
-        {/* Horas por dia */}
         <div>
           <label className="block text-sm font-semibold text-slate-900">
             Quantas horas por dia você vai estudar?
@@ -116,7 +124,6 @@ function FormularioCronograma({ onCriar }) {
           </div>
         </div>
 
-        {/* Dias da semana */}
         <div>
           <label className="block text-sm font-semibold text-slate-900">
             Em quais dias da semana?
@@ -142,12 +149,8 @@ function FormularioCronograma({ onCriar }) {
           </div>
         </div>
 
-        {/* Data do ENEM */}
         <div>
-          <label
-            htmlFor="dataEnem"
-            className="block text-sm font-semibold text-slate-900"
-          >
+          <label htmlFor="dataEnem" className="block text-sm font-semibold text-slate-900">
             Data da prova
           </label>
           <input
@@ -160,14 +163,18 @@ function FormularioCronograma({ onCriar }) {
           />
         </div>
 
-        {/* Prévia */}
-        <div className="grid grid-cols-3 gap-3 rounded-xl bg-slate-50 p-4 text-center">
+        <div className="grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-4 text-center sm:grid-cols-4">
           <Previa valor={diasAte} rotulo="dias até o ENEM" />
           <Previa valor={diasEstudo} rotulo="dias de estudo" />
           <Previa valor={`${totalHoras}h`} rotulo="total de horas" />
+          <Previa valor={`~${aulasPossiveis}`} rotulo="aulas possíveis" />
         </div>
 
-        <button type="submit" disabled={!podeSalvar} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50">
+        <button
+          type="submit"
+          disabled={!podeSalvar}
+          className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
+        >
           Criar cronograma
         </button>
         {diasAte <= 0 && (
@@ -190,25 +197,18 @@ function Previa({ valor, rotulo }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Resumo do cronograma criado                                        */
+/* Resumo + plano de aulas                                            */
 /* ------------------------------------------------------------------ */
-function ResumoCronograma({ cronograma, onApagar }) {
+function ResumoCronograma({ cronograma, db, onApagar }) {
   const [confirmando, setConfirmando] = useState(false);
   const hoje = hojeISO();
 
   const diasAgora = diasCorridos(hoje, cronograma.dataEnem);
-  const diasEstudoRestantes = diasDeEstudo(
-    hoje,
-    cronograma.dataEnem,
-    cronograma.diasSemana
-  );
+  const diasEstudoRestantes = diasDeEstudo(hoje, cronograma.dataEnem, cronograma.diasSemana);
   const horasRestantes = diasEstudoRestantes * cronograma.horasPorDia;
+  const nomesDias = cronograma.diasSemana.map((idx) => DIAS_SEMANA[idx].curto).join(" · ");
 
-  const nomesDias = cronograma.diasSemana
-    .map((idx) => DIAS_SEMANA[idx].curto)
-    .join(" · ");
-
-  const somaPesos = PESOS_AREA.reduce((s, a) => s + a.peso, 0);
+  const plano = db ? montarPlano(cronograma, db) : null;
 
   return (
     <div className="container max-w-3xl py-14">
@@ -225,7 +225,7 @@ function ResumoCronograma({ cronograma, onApagar }) {
         </p>
       </div>
 
-      {/* Destaque: dias que faltam agora */}
+      {/* Faltam agora */}
       <div className="card mt-8 flex flex-col items-center px-8 py-8 text-center">
         <span className="text-xs font-semibold uppercase tracking-widest text-brand-600">
           Faltam agora
@@ -247,43 +247,12 @@ function ResumoCronograma({ cronograma, onApagar }) {
         <Metrica valor={diasEstudoRestantes} rotulo="dias de estudo restantes" />
         <Metrica valor={`${horasRestantes}h`} rotulo="horas de estudo até a prova" />
       </div>
-
       <p className="mt-4 text-center text-sm text-slate-500">
         Dias de estudo: <strong>{nomesDias}</strong>
       </p>
 
-      {/* Distribuição sugerida por área */}
-      <div className="card mt-8 p-6">
-        <h2 className="text-lg font-semibold text-slate-900">
-          Distribuição sugerida do tempo
-        </h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Suas {horasRestantes}h divididas por área, com peso proporcional à
-          importância na prova.
-        </p>
-        <div className="mt-5 space-y-4">
-          {PESOS_AREA.map((a) => {
-            const horas = Math.round((horasRestantes * a.peso) / somaPesos);
-            const pct = Math.round((a.peso / somaPesos) * 100);
-            return (
-              <div key={a.nome}>
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium text-slate-700">{a.nome}</span>
-                  <span className="tabular-nums text-slate-500">
-                    ~{horas}h
-                  </span>
-                </div>
-                <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className="h-full rounded-full bg-brand-500"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {/* Plano de aulas */}
+      <PlanoView plano={plano} carregando={!db} />
 
       {/* Ações */}
       <div className="mt-8 flex flex-col items-center gap-3">
@@ -299,10 +268,7 @@ function ResumoCronograma({ cronograma, onApagar }) {
               >
                 Sim, apagar
               </button>
-              <button
-                onClick={() => setConfirmando(false)}
-                className="btn-secondary"
-              >
+              <button onClick={() => setConfirmando(false)} className="btn-secondary">
                 Cancelar
               </button>
             </div>
@@ -315,6 +281,101 @@ function ResumoCronograma({ cronograma, onApagar }) {
             Apagar cronograma e criar um novo
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+function PlanoView({ plano, carregando }) {
+  if (carregando) {
+    return (
+      <div className="card mt-8 p-6 text-center text-sm text-slate-400">
+        Calculando seu plano de aulas…
+      </div>
+    );
+  }
+  if (!plano || plano.totalPlanejadas === 0) {
+    return (
+      <div className="card mt-8 p-6 text-center text-sm text-slate-500">
+        As aulas do plano aparecem aqui assim que houver conteúdo cadastrado.
+      </div>
+    );
+  }
+
+  return (
+    <div className="card mt-8 p-6">
+      <h2 className="text-lg font-semibold text-slate-900">Seu plano de aulas</h2>
+      <p className="mt-1 text-sm text-slate-500">
+        {plano.totalHoras}h de estudo ÷ 1h20 por aula. Priorizamos o que mais cai
+        (bolinhas vermelhas), dividido pelas 5 áreas.
+      </p>
+
+      <div className="mt-4 flex items-baseline gap-2">
+        <span className="text-4xl font-extrabold tabular-nums text-brand-700">
+          {plano.totalPlanejadas}
+        </span>
+        <span className="text-sm font-medium text-slate-500">
+          aulas até o ENEM (de {plano.totalAulas} possíveis no tempo)
+        </span>
+      </div>
+
+      <div className="mt-6 space-y-3">
+        {plano.areas.map((area) => (
+          <div key={area.slug} className="rounded-xl border border-slate-200 p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">{area.nome}</h3>
+              <span className="text-sm font-medium text-slate-500">
+                ~{area.totalSelecionadas} aulas
+              </span>
+            </div>
+
+            {area.materias.length === 0 ? (
+              <p className="mt-2 text-xs text-slate-400">Sem conteúdo nesta área ainda.</p>
+            ) : (
+              <div className="mt-2 space-y-2">
+                {area.materias.map((mp) => (
+                  <details key={mp.materia.id} className="group">
+                    <summary className="flex cursor-pointer items-center justify-between rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
+                      <span className="font-medium text-slate-700">{mp.materia.nome}</span>
+                      <span className="text-slate-400">
+                        {mp.selecionadas.length} aula(s) ▾
+                      </span>
+                    </summary>
+                    {mp.selecionadas.length > 0 ? (
+                      <ol className="mt-1 space-y-1 pl-2">
+                        {mp.selecionadas.map((aula, i) => (
+                          <li key={aula.id}>
+                            <Link
+                              href={`/conteudos/${mp.materia.id}/${aula.id}`}
+                              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition hover:bg-brand-50"
+                            >
+                              <span className="w-5 text-right text-xs text-slate-400">
+                                {i + 1}.
+                              </span>
+                              <span className="min-w-0 flex-1">
+                                <span className="block truncate text-slate-800">
+                                  {aula.titulo}
+                                </span>
+                                <span className="block truncate text-xs text-slate-400">
+                                  {aula.modNome}
+                                </span>
+                              </span>
+                              <NivelDots nivel={aula.nivel} />
+                            </Link>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p className="px-2 py-1 text-xs text-slate-400">
+                        Sem aulas cadastradas nesta matéria.
+                      </p>
+                    )}
+                  </details>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
