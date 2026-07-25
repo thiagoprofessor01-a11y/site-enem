@@ -71,7 +71,7 @@ function FormularioCronograma({ onCriar }) {
   const diasAte = diasCorridos(hoje, dataEnem);
   const diasEstudo = diasDeEstudo(hoje, dataEnem, diasSemana);
   const totalHoras = diasEstudo * Number(horasPorDia || 0);
-  const aulasPossiveis = Math.floor((totalHoras * 60) / 80);
+  const aulasPossiveis = totalHoras; // ~1 aula por hora
 
   function toggleDia(idx) {
     setDiasSemana((prev) =>
@@ -306,7 +306,7 @@ function PlanoView({ plano, carregando }) {
     <div className="card mt-8 p-6">
       <h2 className="text-lg font-semibold text-slate-900">Seu plano de aulas</h2>
       <p className="mt-1 text-sm text-slate-500">
-        {plano.totalHoras}h de estudo ÷ 1h20 por aula. Priorizamos o que mais cai
+        {plano.totalHoras}h de estudo ÷ 1h por aula. Priorizamos o que mais cai
         (bolinhas vermelhas), dividido pelas 5 áreas.
       </p>
 

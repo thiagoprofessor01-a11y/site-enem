@@ -1,19 +1,21 @@
 // Motor de montagem do plano de estudos.
 //
 // Regras (definidas com o professor):
-//  - Cada aula (vídeo + questões) leva ~1h20 (80 minutos).
-//  - Total de minutos = dias de estudo até o ENEM × horas por dia × 60.
-//  - Nº de aulas possíveis = total de minutos ÷ 80.
+//  - Cada aula (vídeo + questões) leva ~1 hora.
+//  - Nº de aulas por dia = horas por dia (2h → 2 aulas, 3h → 3 aulas...).
+//  - Total de aulas possíveis = total de horas até o ENEM.
 //  - Esse total é dividido pelas 5 áreas de conhecimento (1/5 cada).
 //  - Áreas com 1 matéria (Matemática, Redação) concentram tudo nela.
 //  - Áreas com várias matérias dividem o tempo da área pelo nº de matérias.
 //  - Dentro da matéria, as aulas são priorizadas por importância:
 //    módulo mais importante primeiro e, dentro dele, aula mais importante
 //    (o "nível" 1..5 = frequência com que cai no ENEM).
+//  - Um dia nunca repete a mesma matéria: as aulas do dia são de matérias
+//    diferentes.
 
 import { diasDeEstudo, hojeISO } from "./cronograma-storage";
 
-export const MINUTOS_POR_AULA = 80; // 1h20
+export const MINUTOS_POR_AULA = 60; // 1 hora por aula
 
 export const AREAS_PLANO = [
   { slug: "matematica", nome: "Matemática" },
@@ -118,46 +120,49 @@ export function montarAgenda(config, db) {
     })
   );
 
-  // Round-robin: uma aula de cada matéria por vez → intercala as áreas.
-  const ordem = [];
-  let algo = true;
-  while (algo) {
-    algo = false;
-    for (const f of filas) {
-      if (f.aulas.length) {
-        const a = f.aulas.shift();
-        ordem.push({
-          ...a,
-          materiaId: f.materia.id,
-          materiaNome: f.materia.nome,
-          areaNome: f.areaNome,
-        });
-        algo = true;
-      }
-    }
-  }
-
+  // Aulas por dia = horas por dia (cada aula ≈ 1 hora).
   const aulasPorDia = Math.max(
     1,
-    Math.floor((Number(config.horasPorDia) || 1) * 60 / MINUTOS_POR_AULA)
+    Math.round((Number(config.horasPorDia) || 1) * 60 / MINUTOS_POR_AULA)
   );
+
+  const restante = () => filas.reduce((s, f) => s + f.aulas.length, 0);
 
   const dias = [];
   const inicio = new Date((config.dataCriacao || isoLocal(new Date())) + "T00:00:00");
   const fim = new Date(config.dataEnem + "T00:00:00");
   const setDias = new Set(config.diasSemana);
   const cursor = new Date(inicio);
-  let idx = 0;
+  let rot = 0; // rotação: muda a matéria que "abre" o dia
+  let totalAgendadas = 0;
   let guard = 0;
-  while (idx < ordem.length && cursor <= fim && guard < 3000) {
+
+  while (restante() > 0 && cursor <= fim && guard < 4000) {
     if (setDias.has(cursor.getDay())) {
-      const doDia = ordem.slice(idx, idx + aulasPorDia);
-      idx += doDia.length;
-      dias.push({ data: isoLocal(cursor), aulas: doDia });
+      const doDia = [];
+      // Uma passada pelas matérias (a partir de `rot`): no máximo 1 aula por
+      // matéria → nunca repete matéria no mesmo dia.
+      for (let step = 0; step < filas.length && doDia.length < aulasPorDia; step++) {
+        const f = filas[(rot + step) % filas.length];
+        if (f.aulas.length) {
+          const a = f.aulas.shift();
+          doDia.push({
+            ...a,
+            materiaId: f.materia.id,
+            materiaNome: f.materia.nome,
+            areaNome: f.areaNome,
+          });
+        }
+      }
+      if (doDia.length) {
+        dias.push({ data: isoLocal(cursor), aulas: doDia });
+        totalAgendadas += doDia.length;
+        rot = (rot + 1) % filas.length; // alterna quem abre o próximo dia
+      }
     }
     cursor.setDate(cursor.getDate() + 1);
     guard++;
   }
 
-  return { plano, dias, aulasPorDia, totalAgendadas: idx };
+  return { plano, dias, aulasPorDia, totalAgendadas };
 }
