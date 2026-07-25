@@ -3,61 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
-import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
 import { AREA_INFO } from "./conteudos-ui";
 
-const LETRAS = ["A", "B", "C", "D", "E"];
-
-// Questão estruturada (formato = 'form') para o aluno: clica na alternativa e
-// vê se acertou. As questões em HTML têm a própria correção embutida.
-function QuestaoEstruturada({ questao }) {
-  const [escolhida, setEscolhida] = useState(null);
-  const respondida = escolhida !== null;
-  return (
-    <div className="rounded-lg border border-slate-200 p-4">
-      <p className="text-sm font-medium text-slate-800">{questao.enunciado}</p>
-      <ul className="mt-3 space-y-2">
-        {questao.alternativas.map((alt, idx) =>
-          alt ? (
-            <li key={idx}>
-              <button
-                type="button"
-                disabled={respondida}
-                onClick={() => setEscolhida(idx)}
-                className={`flex w-full items-start gap-2 rounded-lg border px-3 py-2 text-left text-sm transition ${
-                  respondida && idx === questao.correta
-                    ? "border-green-300 bg-green-50 text-green-800"
-                    : respondida && idx === escolhida
-                    ? "border-red-300 bg-red-50 text-red-800"
-                    : "border-slate-200 hover:border-brand-300 hover:bg-brand-50"
-                }`}
-              >
-                <span className="font-semibold">{LETRAS[idx]})</span>
-                <span>{alt}</span>
-              </button>
-            </li>
-          ) : null
-        )}
-      </ul>
-      {respondida && (
-        <p
-          className={`mt-3 text-sm font-semibold ${
-            escolhida === questao.correta ? "text-green-700" : "text-red-600"
-          }`}
-        >
-          {escolhida === questao.correta
-            ? "✓ Você acertou!"
-            : `✗ Resposta correta: ${LETRAS[questao.correta]}`}
-        </p>
-      )}
-    </div>
-  );
-}
-
 export default function MateriaClient({ materiaId }) {
   const [db, setDb] = useState(null);
-  const [aulaAberta, setAulaAberta] = useState(null);
 
   useEffect(() => {
     let ativo = true;
@@ -135,14 +85,13 @@ export default function MateriaClient({ materiaId }) {
                 </div>
                 <ul className="space-y-2">
                   {aulas.map((aula) => {
-                    const aberta = aulaAberta === aula.id;
-                    const videos = db.videos.filter((v) => v.aulaId === aula.id);
-                    const questoes = db.questoes.filter((q) => q.aulaId === aula.id);
+                    const nVideos = db.videos.filter((v) => v.aulaId === aula.id).length;
+                    const nQuestoes = db.questoes.filter((q) => q.aulaId === aula.id).length;
                     return (
-                      <li key={aula.id} className="card overflow-hidden">
-                        <button
-                          onClick={() => setAulaAberta(aberta ? null : aula.id)}
-                          className="flex w-full items-center justify-between gap-3 p-4 text-left"
+                      <li key={aula.id}>
+                        <Link
+                          href={`/conteudos/${materia.id}/${aula.id}`}
+                          className="card flex items-center justify-between gap-3 p-4 transition hover:border-brand-300 hover:shadow-card-hover"
                         >
                           <span className="min-w-0">
                             <span className="flex items-center gap-2">
@@ -151,81 +100,15 @@ export default function MateriaClient({ materiaId }) {
                               </span>
                               <NivelDots nivel={aula.nivel} />
                             </span>
-                            {aula.resumo && !aberta && (
-                              <span className="mt-0.5 block truncate text-xs text-slate-500">
-                                {aula.resumo}
-                              </span>
-                            )}
+                            <span className="mt-0.5 block text-xs text-slate-500">
+                              {nVideos > 0 && `${nVideos} vídeo(s)`}
+                              {nVideos > 0 && nQuestoes > 0 && " · "}
+                              {nQuestoes > 0 && `${nQuestoes} questão(ões)`}
+                              {nVideos === 0 && nQuestoes === 0 && "Abrir aula"}
+                            </span>
                           </span>
-                          <span
-                            className={`shrink-0 text-brand-600 transition ${
-                              aberta ? "rotate-180" : ""
-                            }`}
-                          >
-                            ▾
-                          </span>
-                        </button>
-
-                        {aberta && (
-                          <div className="border-t border-slate-100 p-4">
-                            {aula.resumo && (
-                              <p className="text-sm leading-relaxed text-slate-600">
-                                {aula.resumo}
-                              </p>
-                            )}
-                            {videos.length > 0 ? (
-                              <div className="mt-4 space-y-6">
-                                {videos.map((v) => (
-                                  <figure key={v.id}>
-                                    <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
-                                      <iframe
-                                        className="h-full w-full"
-                                        src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
-                                        title={v.titulo}
-                                        loading="lazy"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                      />
-                                    </div>
-                                    <figcaption className="mt-2 text-sm font-medium text-slate-700">
-                                      {v.titulo}
-                                    </figcaption>
-                                  </figure>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="mt-3 text-xs text-slate-400">
-                                Videoaulas em breve para este tópico.
-                              </p>
-                            )}
-
-                            {questoes.length > 0 && (
-                              <div className="mt-6">
-                                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-                                  Questionário
-                                </h3>
-                                <div className="space-y-4">
-                                  {questoes.map((q, i) => (
-                                    <div key={q.id}>
-                                      {q.enunciado && (
-                                        <p className="mb-1 text-sm font-semibold text-slate-700">
-                                          {i + 1}. {q.enunciado}
-                                        </p>
-                                      )}
-                                      {q.formato === "html" ? (
-                                        <div className="overflow-hidden rounded-lg border border-slate-200">
-                                          <HtmlEmbed html={q.html} />
-                                        </div>
-                                      ) : (
-                                        <QuestaoEstruturada questao={q} />
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                          <span className="shrink-0 font-semibold text-brand-600">→</span>
+                        </Link>
                       </li>
                     );
                   })}
