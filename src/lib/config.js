@@ -17,6 +17,72 @@ export const AREAS = [
   { slug: "redacao", nome: "Redação", questoes: 0 },
 ];
 
+// ---------------------------------------------------------------------
+// OFERTA — dados da página de vendas (edite aqui em um único lugar)
+// ---------------------------------------------------------------------
+export const OFERTA = {
+  promessa: "Passe no ENEM ainda em 2026",
+  subpromessa:
+    "O método completo para você organizar os estudos, focar no que mais cai e chegar confiante no dia da prova.",
+  preco: "47,90",
+  parcelaOuAvista: "Pagamento único",
+  acesso: "Acesso vitalício — sem mensalidade",
+};
+
+// Benefícios inclusos no acesso (usados na página de vendas).
+export const BENEFICIOS = [
+  {
+    emoji: "🗓️",
+    titulo: "Cronograma inteligente",
+    desc: "Um plano de estudos dia a dia, calculado pelo tempo que você tem até a prova.",
+  },
+  {
+    emoji: "📝",
+    titulo: "Banco de questões",
+    desc: "Milhares de questões do ENEM com filtros por matéria, tópico, ano e dificuldade.",
+  },
+  {
+    emoji: "⏱️",
+    titulo: "Simulados",
+    desc: "Simulados cronometrados no estilo da prova, com resultado e desempenho ao final.",
+  },
+  {
+    emoji: "✍️",
+    titulo: "Redação",
+    desc: "Aulas, banco de temas e correção pelas 5 competências avaliadas pelo ENEM.",
+  },
+  {
+    emoji: "🎬",
+    titulo: "Videoaulas selecionadas",
+    desc: "As melhores aulas de cada assunto, escolhidas a dedo — sem perder tempo procurando.",
+  },
+];
+
+// Depoimentos (SUBSTITUA pelos textos reais dos seus 3 alunos aprovados).
+export const DEPOIMENTOS = [
+  {
+    inicial: "M",
+    nome: "Marina S.",
+    resultado: "Aprovada em Enfermagem — Universidade Federal",
+    texto:
+      "Eu estudava sem direção e vivia ansiosa. Com o cronograma pronto e as videoaulas certas, parei de me perder e finalmente rendi. Passei na federal!",
+  },
+  {
+    inicial: "L",
+    nome: "Lucas P.",
+    resultado: "Aprovado em Engenharia — Universidade Federal",
+    texto:
+      "Os simulados e o banco de questões fizeram toda a diferença. Fui pra prova sabendo o que mais caía e como o tempo funcionava. Recomendo demais.",
+  },
+  {
+    inicial: "B",
+    nome: "Beatriz A.",
+    resultado: "Aprovada em Direito — Universidade Federal",
+    texto:
+      "A parte de redação me destravou. Entendi as 5 competências e minha nota subiu muito. Valeu cada centavo pelo que entrega.",
+  },
+];
+
 // Os 4 pilares do site (para a home e navegação de destaque).
 export const PILARES = [
   {
