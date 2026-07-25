@@ -167,10 +167,10 @@ export default function MateriaClient({ materiaId }) {
                               </p>
                             )}
                             {videos.length > 0 ? (
-                              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                              <div className="mt-4 space-y-6">
                                 {videos.map((v) => (
                                   <figure key={v.id}>
-                                    <div className="aspect-video overflow-hidden rounded-lg bg-slate-100">
+                                    <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
                                       <iframe
                                         className="h-full w-full"
                                         src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
@@ -180,7 +180,7 @@ export default function MateriaClient({ materiaId }) {
                                         allowFullScreen
                                       />
                                     </div>
-                                    <figcaption className="mt-1.5 text-xs font-medium text-slate-600">
+                                    <figcaption className="mt-2 text-sm font-medium text-slate-700">
                                       {v.titulo}
                                     </figcaption>
                                   </figure>
