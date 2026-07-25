@@ -5,6 +5,7 @@ export default function RedacaoPage() {
   return (
     <PlaceholderPage
       time="Time C"
+      emoji="✍️"
       titulo="Redação"
       descricao="Aulas básicas (estrutura dissertativa-argumentativa, as 5 competências, erros comuns) e banco de temas."
     />

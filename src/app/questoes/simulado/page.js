@@ -5,6 +5,7 @@ export default function SimuladoPage() {
   return (
     <PlaceholderPage
       time="Time B"
+      emoji="⏱️"
       titulo="Simulado"
       descricao="Várias questões com tempo cronometrado; resultado exibido apenas ao final."
     />

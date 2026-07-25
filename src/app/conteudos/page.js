@@ -5,6 +5,7 @@ export default function ConteudosPage() {
   return (
     <PlaceholderPage
       time="Time D"
+      emoji="📚"
       titulo="Conteúdos"
       descricao="Matérias e tópicos por área de conhecimento, com resumo objetivo de cada tópico."
     />

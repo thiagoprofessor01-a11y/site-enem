@@ -5,6 +5,7 @@ export default function PerfilPage() {
   return (
     <PlaceholderPage
       time="Time A"
+      emoji="⚙️"
       titulo="Perfil"
       descricao="Editar data do ENEM, horas disponíveis por dia e matérias com dificuldade."
     />
