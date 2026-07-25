@@ -117,7 +117,12 @@ export function montarAgenda(config, db, concluidas = []) {
     area.materias.forEach((mp) => {
       const pendentes = mp.selecionadas.filter((a) => !feitas.has(a.id));
       if (pendentes.length) {
-        filas.push({ materia: mp.materia, areaNome: area.nome, aulas: [...pendentes] });
+        filas.push({
+          materia: mp.materia,
+          areaNome: area.nome,
+          areaSlug: area.slug,
+          aulas: [...pendentes],
+        });
       }
     })
   );
@@ -154,6 +159,7 @@ export function montarAgenda(config, db, concluidas = []) {
             materiaId: f.materia.id,
             materiaNome: f.materia.nome,
             areaNome: f.areaNome,
+            areaSlug: f.areaSlug,
           });
         }
       }

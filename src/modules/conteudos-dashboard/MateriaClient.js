@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import NivelDots from "@/components/NivelDots";
-import { AREA_INFO } from "./conteudos-ui";
+import { areaInfo } from "./conteudos-ui";
 import { useConcluidas } from "./progresso";
 
 export default function MateriaClient({ materiaId }) {
@@ -41,9 +41,10 @@ export default function MateriaClient({ materiaId }) {
   }
 
   const modulos = db.modulos.filter((m) => m.materiaId === materia.id);
+  const info = areaInfo(materia.area);
 
   return (
-    <div className="container max-w-3xl py-12">
+    <div className="container max-w-3xl py-10">
       {/* Breadcrumb */}
       <nav className="mb-5 flex items-center gap-1 text-sm">
         <Link href="/conteudos" className="font-medium text-brand-600 hover:text-brand-700">
@@ -53,17 +54,14 @@ export default function MateriaClient({ materiaId }) {
         <span className="font-semibold text-slate-900">{materia.nome}</span>
       </nav>
 
-      <header className="mb-8 flex items-center gap-3">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-2xl">
-          {AREA_INFO[materia.area]?.emoji || "📚"}
+      {/* Cabeçalho colorido da matéria */}
+      <header className={`mb-8 flex items-center gap-4 rounded-2xl bg-gradient-to-br ${info.grad} p-6 text-white shadow-md`}>
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-3xl">
+          {info.emoji}
         </span>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            {materia.nome}
-          </h1>
-          <p className="text-sm text-slate-500">
-            {AREA_INFO[materia.area]?.nome || materia.area}
-          </p>
+          <h1 className="text-2xl font-extrabold tracking-tight">{materia.nome}</h1>
+          <p className="text-sm text-white/80">{info.nome}</p>
         </div>
       </header>
 
@@ -75,11 +73,9 @@ export default function MateriaClient({ materiaId }) {
             const aulas = db.aulas.filter((a) => a.moduloId === mod.id);
             return (
               <section key={mod.id}>
-                <div className="mb-3">
+                <div className={`mb-3 border-l-4 ${info.border} pl-3`}>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-semibold text-slate-900">
-                      {mod.nome}
-                    </h2>
+                    <h2 className="text-lg font-bold text-slate-900">{mod.nome}</h2>
                     <NivelDots nivel={mod.nivel} tamanho="lg" />
                   </div>
                   {mod.descricao && (
@@ -90,22 +86,23 @@ export default function MateriaClient({ materiaId }) {
                   {aulas.map((aula) => {
                     const nVideos = db.videos.filter((v) => v.aulaId === aula.id).length;
                     const nQuestoes = db.questoes.filter((q) => q.aulaId === aula.id).length;
+                    const feita = feitasSet.has(aula.id);
                     return (
                       <li key={aula.id}>
                         <Link
                           href={`/conteudos/${materia.id}/${aula.id}`}
-                          className="card flex items-center justify-between gap-3 p-4 transition hover:border-brand-300 hover:shadow-card-hover"
+                          className={`card flex items-center justify-between gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-card-hover ${info.ring}`}
                         >
                           <span className="min-w-0">
                             <span className="flex items-center gap-2">
-                              {feitasSet.has(aula.id) && (
-                                <span className="text-sm text-green-600">✓</span>
+                              {feita && (
+                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs text-green-600">
+                                  ✓
+                                </span>
                               )}
                               <span
-                                className={`font-medium ${
-                                  feitasSet.has(aula.id)
-                                    ? "text-slate-400 line-through"
-                                    : "text-slate-900"
+                                className={`font-semibold ${
+                                  feita ? "text-slate-400 line-through" : "text-slate-900"
                                 }`}
                               >
                                 {aula.titulo}
@@ -119,7 +116,7 @@ export default function MateriaClient({ materiaId }) {
                               {nVideos === 0 && nQuestoes === 0 && "Abrir aula"}
                             </span>
                           </span>
-                          <span className="shrink-0 font-semibold text-brand-600">→</span>
+                          <span className={`shrink-0 text-lg font-bold ${info.text}`}>→</span>
                         </Link>
                       </li>
                     );

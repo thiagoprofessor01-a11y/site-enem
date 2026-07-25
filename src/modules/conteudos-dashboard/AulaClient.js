@@ -5,6 +5,7 @@ import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
+import { areaInfo } from "./conteudos-ui";
 import { isConcluida, setConcluida } from "./progresso";
 
 const LETRAS = ["A", "B", "C", "D", "E"];
@@ -101,6 +102,7 @@ export default function AulaClient({ materiaId, aulaId }) {
 
   const modulo = db.modulos.find((m) => m.id === aula.moduloId);
   const materia = db.materias.find((m) => m.id === (modulo?.materiaId || materiaId));
+  const info = areaInfo(materia?.area);
   const videos = db.videos.filter((v) => v.aulaId === aula.id);
   const questoes = db.questoes.filter((q) => q.aulaId === aula.id);
 
@@ -135,13 +137,20 @@ export default function AulaClient({ materiaId, aulaId }) {
 
       {/* Cabeçalho da aula */}
       <header className="mb-6">
-        {modulo && (
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-            {modulo.nome}
-          </p>
-        )}
-        <div className="mt-1 flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        <div className="flex flex-wrap items-center gap-2">
+          {materia && (
+            <span className={`inline-flex items-center gap-1.5 rounded-full ${info.bg} px-3 py-1 text-xs font-bold ${info.text}`}>
+              <span>{info.emoji}</span> {materia.nome}
+            </span>
+          )}
+          {modulo && (
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              {modulo.nome}
+            </span>
+          )}
+        </div>
+        <div className="mt-2 flex items-center gap-3">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
             {aula.titulo}
           </h1>
           <NivelDots nivel={aula.nivel} tamanho="lg" />
