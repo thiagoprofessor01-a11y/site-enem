@@ -94,3 +94,70 @@ export function montarPlano(config, db) {
     totalPlanejadas,
   };
 }
+
+function isoLocal(d) {
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+}
+
+/**
+ * Distribui as aulas do plano dia a dia (a partir da data de criação), em
+ * ordem intercalada entre as matérias (para variar as áreas ao longo do dia).
+ * Retorna a lista de dias de estudo, cada um com as aulas daquele dia.
+ */
+export function montarAgenda(config, db) {
+  const plano = montarPlano(config, db);
+
+  // Filas por matéria (mantendo a ordem de prioridade dentro de cada uma).
+  const filas = [];
+  plano.areas.forEach((area) =>
+    area.materias.forEach((mp) => {
+      if (mp.selecionadas.length) {
+        filas.push({ materia: mp.materia, areaNome: area.nome, aulas: [...mp.selecionadas] });
+      }
+    })
+  );
+
+  // Round-robin: uma aula de cada matéria por vez → intercala as áreas.
+  const ordem = [];
+  let algo = true;
+  while (algo) {
+    algo = false;
+    for (const f of filas) {
+      if (f.aulas.length) {
+        const a = f.aulas.shift();
+        ordem.push({
+          ...a,
+          materiaId: f.materia.id,
+          materiaNome: f.materia.nome,
+          areaNome: f.areaNome,
+        });
+        algo = true;
+      }
+    }
+  }
+
+  const aulasPorDia = Math.max(
+    1,
+    Math.floor((Number(config.horasPorDia) || 1) * 60 / MINUTOS_POR_AULA)
+  );
+
+  const dias = [];
+  const inicio = new Date((config.dataCriacao || isoLocal(new Date())) + "T00:00:00");
+  const fim = new Date(config.dataEnem + "T00:00:00");
+  const setDias = new Set(config.diasSemana);
+  const cursor = new Date(inicio);
+  let idx = 0;
+  let guard = 0;
+  while (idx < ordem.length && cursor <= fim && guard < 3000) {
+    if (setDias.has(cursor.getDay())) {
+      const doDia = ordem.slice(idx, idx + aulasPorDia);
+      idx += doDia.length;
+      dias.push({ data: isoLocal(cursor), aulas: doDia });
+    }
+    cursor.setDate(cursor.getDate() + 1);
+    guard++;
+  }
+
+  return { plano, dias, aulasPorDia, totalAgendadas: idx };
+}
