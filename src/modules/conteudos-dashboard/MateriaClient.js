@@ -5,9 +5,12 @@ import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import NivelDots from "@/components/NivelDots";
 import { AREA_INFO } from "./conteudos-ui";
+import { useConcluidas } from "./progresso";
 
 export default function MateriaClient({ materiaId }) {
   const [db, setDb] = useState(null);
+  const concluidas = useConcluidas();
+  const feitasSet = new Set(concluidas || []);
 
   useEffect(() => {
     let ativo = true;
@@ -95,7 +98,16 @@ export default function MateriaClient({ materiaId }) {
                         >
                           <span className="min-w-0">
                             <span className="flex items-center gap-2">
-                              <span className="font-medium text-slate-900">
+                              {feitasSet.has(aula.id) && (
+                                <span className="text-sm text-green-600">✓</span>
+                              )}
+                              <span
+                                className={`font-medium ${
+                                  feitasSet.has(aula.id)
+                                    ? "text-slate-400 line-through"
+                                    : "text-slate-900"
+                                }`}
+                              >
                                 {aula.titulo}
                               </span>
                               <NivelDots nivel={aula.nivel} />

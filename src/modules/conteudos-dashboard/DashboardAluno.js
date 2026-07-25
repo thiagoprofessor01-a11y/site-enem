@@ -7,6 +7,7 @@ import { useSessao } from "@/modules/auth/auth";
 import NivelDots from "@/components/NivelDots";
 import { carregarCronograma, diasCorridos, hojeISO } from "@/modules/auth-cronograma/cronograma-storage";
 import { montarAgenda } from "@/modules/auth-cronograma/cronograma-engine";
+import { useConcluidas } from "./progresso";
 
 const ATALHOS = [
   { href: "/conteudos", titulo: "Conteúdos", emoji: "📚" },
@@ -27,6 +28,7 @@ function formatarDiaSemana(iso) {
 
 export default function DashboardAluno() {
   const sessao = useSessao();
+  const concluidas = useConcluidas();
   const [cronograma, setCronograma] = useState(undefined);
   const [db, setDb] = useState(null);
 
@@ -76,7 +78,14 @@ export default function DashboardAluno() {
       )}
 
       {/* Com cronograma → agenda do dia + próximos */}
-      {cronograma && <Agenda cronograma={cronograma} db={db} hoje={hoje} />}
+      {cronograma && (
+        <Agenda
+          cronograma={cronograma}
+          db={db}
+          hoje={hoje}
+          concluidas={concluidas || []}
+        />
+      )}
 
       {/* Atalhos */}
       <section className="mt-10">
@@ -100,7 +109,7 @@ export default function DashboardAluno() {
   );
 }
 
-function Agenda({ cronograma, db, hoje }) {
+function Agenda({ cronograma, db, hoje, concluidas }) {
   if (!db) {
     return (
       <div className="card p-6 text-center text-sm text-slate-400">
@@ -109,27 +118,59 @@ function Agenda({ cronograma, db, hoje }) {
     );
   }
 
-  const { dias } = montarAgenda(cronograma, db);
+  const { plano, dias } = montarAgenda(cronograma, db, concluidas);
   const futuros = dias.filter((d) => d.data >= hoje);
   const hojeDia = futuros.find((d) => d.data === hoje);
   const proximos = futuros.filter((d) => d.data > hoje).slice(0, 5);
 
+  // Progresso: aulas do plano já concluídas.
+  const idsPlano = plano.areas.flatMap((a) =>
+    a.materias.flatMap((m) => m.selecionadas.map((au) => au.id))
+  );
+  const feitasSet = new Set(concluidas);
+  const totalPlano = idsPlano.length;
+  const feitas = idsPlano.filter((id) => feitasSet.has(id)).length;
+  const pct = totalPlano ? Math.round((feitas / totalPlano) * 100) : 0;
+
+  const barra =
+    totalPlano > 0 ? (
+      <div className="card mb-6 p-5">
+        <div className="flex items-center justify-between text-sm">
+          <span className="font-semibold text-slate-900">Seu progresso</span>
+          <span className="text-slate-500">
+            {feitas} de {totalPlano} aulas ({pct}%)
+          </span>
+        </div>
+        <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+          <div
+            className="h-full rounded-full bg-green-500 transition-all"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+    ) : null;
+
   if (futuros.length === 0) {
     return (
-      <div className="card p-8 text-center">
-        <span className="text-4xl">🎉</span>
-        <h2 className="mt-3 text-lg font-bold text-slate-900">
-          Você concluiu todas as aulas do plano!
-        </h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Que tal revisar os conteúdos que mais caem ou fazer alguns simulados?
-        </p>
-      </div>
+      <>
+        {barra}
+        <div className="card p-8 text-center">
+          <span className="text-4xl">🎉</span>
+          <h2 className="mt-3 text-lg font-bold text-slate-900">
+            Você concluiu todas as aulas do plano!
+          </h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Que tal revisar os conteúdos que mais caem ou fazer alguns simulados?
+          </p>
+        </div>
+      </>
     );
   }
 
   return (
     <>
+      {barra}
+
       {/* HOJE — destaque */}
       <section>
         <div className="mb-3 flex items-center gap-2">

@@ -107,15 +107,17 @@ function isoLocal(d) {
  * ordem intercalada entre as matérias (para variar as áreas ao longo do dia).
  * Retorna a lista de dias de estudo, cada um com as aulas daquele dia.
  */
-export function montarAgenda(config, db) {
+export function montarAgenda(config, db, concluidas = []) {
   const plano = montarPlano(config, db);
+  const feitas = new Set(concluidas);
 
-  // Filas por matéria (mantendo a ordem de prioridade dentro de cada uma).
+  // Filas por matéria (prioridade mantida), EXCLUINDO aulas já concluídas.
   const filas = [];
   plano.areas.forEach((area) =>
     area.materias.forEach((mp) => {
-      if (mp.selecionadas.length) {
-        filas.push({ materia: mp.materia, areaNome: area.nome, aulas: [...mp.selecionadas] });
+      const pendentes = mp.selecionadas.filter((a) => !feitas.has(a.id));
+      if (pendentes.length) {
+        filas.push({ materia: mp.materia, areaNome: area.nome, aulas: [...pendentes] });
       }
     })
   );
@@ -129,7 +131,8 @@ export function montarAgenda(config, db) {
   const restante = () => filas.reduce((s, f) => s + f.aulas.length, 0);
 
   const dias = [];
-  const inicio = new Date((config.dataCriacao || isoLocal(new Date())) + "T00:00:00");
+  // A agenda começa HOJE e mostra o que ainda falta (concluídas já saíram).
+  const inicio = new Date(isoLocal(new Date()) + "T00:00:00");
   const fim = new Date(config.dataEnem + "T00:00:00");
   const setDias = new Set(config.diasSemana);
   const cursor = new Date(inicio);

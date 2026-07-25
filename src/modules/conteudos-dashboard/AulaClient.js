@@ -5,6 +5,7 @@ import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
+import { isConcluida, setConcluida } from "./progresso";
 
 const LETRAS = ["A", "B", "C", "D", "E"];
 
@@ -55,6 +56,7 @@ function QuestaoEstruturada({ questao }) {
 
 export default function AulaClient({ materiaId, aulaId }) {
   const [db, setDb] = useState(null);
+  const [feita, setFeita] = useState(false);
 
   useEffect(() => {
     let ativo = true;
@@ -65,6 +67,16 @@ export default function AulaClient({ materiaId, aulaId }) {
       ativo = false;
     };
   }, []);
+
+  useEffect(() => {
+    setFeita(isConcluida(aulaId));
+  }, [aulaId]);
+
+  function alternarConcluida() {
+    const novo = !feita;
+    setConcluida(aulaId, novo);
+    setFeita(novo);
+  }
 
   if (!db) {
     return (
@@ -193,8 +205,33 @@ export default function AulaClient({ materiaId, aulaId }) {
         </section>
       )}
 
+      {/* Concluir aula */}
+      <div className="mt-10">
+        {feita ? (
+          <div className="flex flex-col items-center gap-2 rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
+            <p className="text-lg font-semibold text-green-700">
+              ✓ Aula concluída!
+            </p>
+            <p className="text-sm text-green-600">Mandou bem. Bora para a próxima?</p>
+            <button
+              onClick={alternarConcluida}
+              className="mt-1 text-xs font-medium text-slate-500 underline hover:text-slate-700"
+            >
+              Desmarcar
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={alternarConcluida}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 px-6 py-4 text-base font-semibold text-white shadow-sm transition hover:bg-green-700"
+          >
+            ✓ Marcar aula como concluída
+          </button>
+        )}
+      </div>
+
       {/* Navegação entre aulas */}
-      <div className="mt-12 flex items-center justify-between gap-3 border-t border-slate-200 pt-6">
+      <div className="mt-8 flex items-center justify-between gap-3 border-t border-slate-200 pt-6">
         {anterior ? (
           <Link href={linkAula(anterior)} className="btn-secondary">
             ← {anterior.titulo}
