@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import {
   AREAS_MATERIA,
   LETRAS,
-  loadDB,
+  fetchAll,
+  backendLabel,
   addMateria,
   updateMateria,
   deleteMateria,
@@ -28,11 +29,19 @@ export default function AdminApp() {
   const [nav, setNav] = useState({}); // { materiaId, moduloId, aulaId }
 
   useEffect(() => {
-    setDb(loadDB());
+    let ativo = true;
+    fetchAll()
+      .then((d) => ativo && setDb(d))
+      .catch(() => ativo && setDb({ materias: [], modulos: [], aulas: [], videos: [], questoes: [] }));
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   if (!db) {
-    return <div className="py-16 text-center text-slate-400">Carregando…</div>;
+    return (
+      <div className="container py-16 text-center text-slate-400">Carregando…</div>
+    );
   }
 
   const materia = db.materias.find((m) => m.id === nav.materiaId);
@@ -97,20 +106,34 @@ function Cabecalho({ db }) {
     { n: db.videos.length, r: "vídeos" },
     { n: db.questoes.length, r: "questões" },
   ];
+  const conectado = backendLabel() === "supabase";
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-xl text-white">
-          ⚙️
-        </span>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Painel de administração
-          </h1>
-          <p className="text-sm text-slate-500">
-            Cadastre matérias, módulos, aulas, vídeos e questionários.
-          </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-xl text-white">
+            ⚙️
+          </span>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Painel de administração
+            </h1>
+            <p className="text-sm text-slate-500">
+              Cadastre matérias, módulos, aulas, vídeos e questionários.
+            </p>
+          </div>
         </div>
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+            conectado
+              ? "bg-green-100 text-green-700"
+              : "bg-amber-100 text-amber-700"
+          }`}
+        >
+          {conectado
+            ? "● Conectado ao banco (Supabase)"
+            : "● Salvando neste navegador"}
+        </span>
       </div>
       <div className="mt-5 grid grid-cols-5 gap-3">
         {stats.map((s) => (
@@ -163,8 +186,8 @@ function MateriasView({ db, setDb, abrir }) {
     >
       {form === "novo" && (
         <MateriaForm
-          onSalvar={(dados) => {
-            setDb(addMateria(dados));
+          onSalvar={async (dados) => {
+            setDb(await addMateria(dados));
             setForm(null);
           }}
           onCancelar={() => setForm(null)}
@@ -180,8 +203,8 @@ function MateriasView({ db, setDb, abrir }) {
               <MateriaForm
                 key={m.id}
                 inicial={m}
-                onSalvar={(dados) => {
-                  setDb(updateMateria(m.id, dados));
+                onSalvar={async (dados) => {
+                  setDb(await updateMateria(m.id, dados));
                   setForm(null);
                 }}
                 onCancelar={() => setForm(null)}
@@ -194,9 +217,9 @@ function MateriasView({ db, setDb, abrir }) {
                 sub={`${db.modulos.filter((x) => x.materiaId === m.id).length} módulo(s)`}
                 onAbrir={() => abrir(m)}
                 onEditar={() => setForm(m.id)}
-                onExcluir={() => {
+                onExcluir={async () => {
                   if (confirm(`Excluir "${m.nome}" e todo o seu conteúdo?`))
-                    setDb(deleteMateria(m.id));
+                    setDb(await deleteMateria(m.id));
                 }}
               />
             )
@@ -259,8 +282,8 @@ function ModulosView({ db, materia, setDb, abrir }) {
     >
       {form === "novo" && (
         <ModuloForm
-          onSalvar={(dados) => {
-            setDb(addModulo(materia.id, dados));
+          onSalvar={async (dados) => {
+            setDb(await addModulo(materia.id, dados));
             setForm(null);
           }}
           onCancelar={() => setForm(null)}
@@ -275,8 +298,8 @@ function ModulosView({ db, materia, setDb, abrir }) {
               <ModuloForm
                 key={m.id}
                 inicial={m}
-                onSalvar={(dados) => {
-                  setDb(updateModulo(m.id, dados));
+                onSalvar={async (dados) => {
+                  setDb(await updateModulo(m.id, dados));
                   setForm(null);
                 }}
                 onCancelar={() => setForm(null)}
@@ -291,9 +314,9 @@ function ModulosView({ db, materia, setDb, abrir }) {
                 }
                 onAbrir={() => abrir(m)}
                 onEditar={() => setForm(m.id)}
-                onExcluir={() => {
+                onExcluir={async () => {
                   if (confirm(`Excluir o módulo "${m.nome}"?`))
-                    setDb(deleteModulo(m.id));
+                    setDb(await deleteModulo(m.id));
                 }}
               />
             )
@@ -351,8 +374,8 @@ function AulasView({ db, modulo, setDb, abrir }) {
     >
       {form === "novo" && (
         <AulaForm
-          onSalvar={(dados) => {
-            setDb(addAula(modulo.id, dados));
+          onSalvar={async (dados) => {
+            setDb(await addAula(modulo.id, dados));
             setForm(null);
           }}
           onCancelar={() => setForm(null)}
@@ -367,8 +390,8 @@ function AulasView({ db, modulo, setDb, abrir }) {
               <AulaForm
                 key={a.id}
                 inicial={a}
-                onSalvar={(dados) => {
-                  setDb(updateAula(a.id, dados));
+                onSalvar={async (dados) => {
+                  setDb(await updateAula(a.id, dados));
                   setForm(null);
                 }}
                 onCancelar={() => setForm(null)}
@@ -380,9 +403,9 @@ function AulasView({ db, modulo, setDb, abrir }) {
                 sub={`${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s) · ${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`}
                 onAbrir={() => abrir(a)}
                 onEditar={() => setForm(a.id)}
-                onExcluir={() => {
+                onExcluir={async () => {
                   if (confirm(`Excluir a aula "${a.titulo}"?`))
-                    setDb(deleteAula(a.id));
+                    setDb(await deleteAula(a.id));
                 }}
               />
             )
@@ -449,8 +472,8 @@ function AulaDetalhe({ db, aula, setDb }) {
       >
         {addVid && (
           <VideoForm
-            onSalvar={(dados) => {
-              setDb(addVideo(aula.id, dados));
+            onSalvar={async (dados) => {
+              setDb(await addVideo(aula.id, dados));
               setAddVid(false);
             }}
             onCancelar={() => setAddVid(false)}
@@ -487,7 +510,7 @@ function AulaDetalhe({ db, aula, setDb }) {
                   </div>
                   <Botao
                     variant="danger"
-                    onClick={() => setDb(deleteVideo(v.id))}
+                    onClick={async () => setDb(await deleteVideo(v.id))}
                   >
                     Excluir
                   </Botao>
@@ -505,8 +528,8 @@ function AulaDetalhe({ db, aula, setDb }) {
       >
         {addQ && (
           <QuestaoForm
-            onSalvar={(dados) => {
-              setDb(addQuestao(aula.id, dados));
+            onSalvar={async (dados) => {
+              setDb(await addQuestao(aula.id, dados));
               setAddQ(false);
             }}
             onCancelar={() => setAddQ(false)}
@@ -524,7 +547,7 @@ function AulaDetalhe({ db, aula, setDb }) {
                   </p>
                   <Botao
                     variant="danger"
-                    onClick={() => setDb(deleteQuestao(q.id))}
+                    onClick={async () => setDb(await deleteQuestao(q.id))}
                   >
                     Excluir
                   </Botao>

@@ -4,6 +4,9 @@ Plataforma web para ajudar estudantes a se prepararem para o ENEM. Construída
 para uma equipe de 4 desenvolvedores trabalhando **em paralelo**, com o código
 organizado **por módulo/feature** para minimizar conflitos.
 
+> 👉 **Quer publicar o site e conectar ao banco de dados?** Siga o guia passo a
+> passo em **[COMECAR.md](./COMECAR.md)** (não precisa instalar nada).
+
 > O nome do site é definido em um único lugar: `src/lib/config.js` (`SITE.nome`).
 
 ## Stack
