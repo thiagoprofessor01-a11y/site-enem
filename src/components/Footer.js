@@ -16,6 +16,7 @@ const COLUNAS = [
     links: [
       { href: "/cadastro", label: "Criar conta" },
       { href: "/perfil", label: "Meu perfil" },
+      { href: "/admin", label: "Admin" },
     ],
   },
 ];
