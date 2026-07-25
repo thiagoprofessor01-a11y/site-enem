@@ -1,0 +1,12 @@
+import PlaceholderPage from "@/components/PlaceholderPage";
+
+// TIME C — Editor de redação para um tema específico
+export default function EscreverRedacaoPage({ params }) {
+  return (
+    <PlaceholderPage
+      time="Time C"
+      titulo="Editor de redação"
+      descricao={`Escrever redação sobre o tema #${params.temaId}, com contador de linhas/palavras (limite de 30 linhas).`}
+    />
+  );
+}
