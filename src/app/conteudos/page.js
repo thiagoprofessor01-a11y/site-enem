@@ -1,13 +1,6 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import ConteudosClient from "@/modules/conteudos-dashboard/ConteudosClient";
 
-// TIME D — Lista de matérias e tópicos por área de conhecimento
+// TIME D — Conteúdos: matérias por área de conhecimento (lê do banco).
 export default function ConteudosPage() {
-  return (
-    <PlaceholderPage
-      time="Time D"
-      emoji="📚"
-      titulo="Conteúdos"
-      descricao="Matérias e tópicos por área de conhecimento, com resumo objetivo de cada tópico."
-    />
-  );
+  return <ConteudosClient />;
 }
