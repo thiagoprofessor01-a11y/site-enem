@@ -60,29 +60,29 @@ export default function DashboardAluno() {
   return (
     <div className="container max-w-3xl py-8">
       {/* HERO */}
-      <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-indigo-600 to-purple-600 p-6 text-white shadow-lg sm:p-8">
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Olá, {nome} <span className="inline-block">👋</span>
+      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-6 text-white sm:p-8">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Olá, {nome}
         </h1>
         {cronograma ? (
-          <p className="mt-1 text-brand-100">
-            Faltam <strong className="text-white">{diasCorridos(hoje, cronograma.dataEnem)} dias</strong> para o ENEM. Bora estudar?
+          <p className="mt-1 text-slate-300">
+            Faltam <strong className="text-white">{diasCorridos(hoje, cronograma.dataEnem)} dias</strong> para o ENEM.
           </p>
         ) : (
-          <p className="mt-1 text-brand-100">Vamos montar seu plano de estudos?</p>
+          <p className="mt-1 text-slate-300">Vamos montar seu plano de estudos?</p>
         )}
 
         {progresso && progresso.total > 0 && (
           <div className="mt-5">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-semibold">Seu progresso</span>
-              <span className="text-brand-100">
+              <span className="font-semibold text-white">Seu progresso</span>
+              <span className="text-slate-300">
                 {progresso.feitas} de {progresso.total} aulas · {progresso.pct}%
               </span>
             </div>
-            <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/25">
+            <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/15">
               <div
-                className="h-full rounded-full bg-white transition-all"
+                className="h-full rounded-full bg-emerald-400 transition-all"
                 style={{ width: `${progresso.pct}%` }}
               />
             </div>
@@ -203,7 +203,7 @@ function Agenda({ agenda, hoje }) {
           </div>
         ) : (
           <div className="card p-6 text-center text-sm text-slate-500">
-            Hoje é dia de descanso 🌿 — aproveite para recarregar as energias.
+            Hoje é dia de descanso — aproveite para recarregar as energias.
           </div>
         )}
       </section>
