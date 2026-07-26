@@ -163,11 +163,8 @@ function Agenda({ agenda, hoje }) {
     <>
       {/* HOJE — destaque */}
       <section className="mt-8">
-        <div className="mb-4 flex items-center gap-2">
+        <div className="mb-4">
           <h2 className="text-xl font-extrabold text-slate-900">Suas aulas de hoje</h2>
-          <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-bold uppercase text-brand-700">
-            Hoje
-          </span>
         </div>
 
         {hojeDia && hojeDia.aulas.length > 0 ? (

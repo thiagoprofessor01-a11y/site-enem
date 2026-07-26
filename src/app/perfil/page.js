@@ -1,16 +1,11 @@
 import Protegido from "@/modules/auth/Protegido";
-import PlaceholderPage from "@/components/PlaceholderPage";
+import PerfilClient from "@/modules/auth/PerfilClient";
 
 // TIME A — Perfil do usuário (protegido)
 export default function PerfilPage() {
   return (
     <Protegido>
-      <PlaceholderPage
-        time="Time A"
-        emoji="⚙️"
-        titulo="Perfil"
-        descricao="Editar data do ENEM, horas disponíveis por dia e matérias com dificuldade."
-      />
+      <PerfilClient />
     </Protegido>
   );
 }

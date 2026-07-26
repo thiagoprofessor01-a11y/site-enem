@@ -93,9 +93,23 @@ export default function Navbar() {
                   Admin
                 </Link>
               )}
-              <span className="hidden text-sm text-slate-500 sm:block">
-                {sessao.nome}
-              </span>
+              {!isAdmin && (
+                <Link
+                  href="/perfil"
+                  className={`hidden text-sm font-medium transition sm:block ${
+                    isActive("/perfil")
+                      ? "text-brand-700"
+                      : "text-slate-500 hover:text-slate-900"
+                  }`}
+                >
+                  {sessao.nome}
+                </Link>
+              )}
+              {isAdmin && (
+                <span className="hidden text-sm text-slate-500 sm:block">
+                  {sessao.nome}
+                </span>
+              )}
               <button
                 onClick={sair}
                 className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"

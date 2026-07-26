@@ -56,6 +56,16 @@ export function logout() {
   }
 }
 
+export function excluirConta() {
+  if (typeof window !== "undefined") {
+    // Apaga todos os dados locais do usuário: sessão, cronograma e progresso.
+    window.localStorage.removeItem(KEY);
+    window.localStorage.removeItem("meuenem:cronograma");
+    window.localStorage.removeItem("meuenem:concluidas");
+    window.dispatchEvent(new Event(EVENTO));
+  }
+}
+
 export function getSessao() {
   if (typeof window === "undefined") return null;
   try {

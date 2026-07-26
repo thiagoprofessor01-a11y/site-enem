@@ -65,7 +65,7 @@ export default function CronogramaClient() {
 function FormularioCronograma({ onCriar }) {
   const [horasPorDia, setHorasPorDia] = useState(3);
   const [diasSemana, setDiasSemana] = useState([1, 2, 3, 4, 5]); // seg-sex
-  const [dataEnem, setDataEnem] = useState(DEFAULT_ENEM_DATE);
+  const dataEnem = DEFAULT_ENEM_DATE; // data do ENEM fixa (definida em config)
 
   const hoje = hojeISO();
   const diasAte = diasCorridos(hoje, dataEnem);
@@ -85,10 +85,7 @@ function FormularioCronograma({ onCriar }) {
   return (
     <div className="container max-w-2xl py-14">
       <div className="text-center">
-        <span className="flex mx-auto h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-3xl">
-          🗓️
-        </span>
-        <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
           Montar meu cronograma
         </h1>
         <p className="mt-3 text-slate-600">
@@ -149,21 +146,7 @@ function FormularioCronograma({ onCriar }) {
           </div>
         </div>
 
-        <div>
-          <label htmlFor="dataEnem" className="block text-sm font-semibold text-slate-900">
-            Data da prova
-          </label>
-          <input
-            id="dataEnem"
-            type="date"
-            value={dataEnem}
-            min={hoje}
-            onChange={(e) => setDataEnem(e.target.value)}
-            className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-4 text-center sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-6 text-center sm:grid-cols-4">
           <Previa valor={diasAte} rotulo="dias até o ENEM" />
           <Previa valor={diasEstudo} rotulo="dias de estudo" />
           <Previa valor={`${totalHoras}h`} rotulo="total de horas" />
@@ -177,11 +160,6 @@ function FormularioCronograma({ onCriar }) {
         >
           Criar cronograma
         </button>
-        {diasAte <= 0 && (
-          <p className="text-center text-sm text-red-500">
-            Escolha uma data de prova no futuro.
-          </p>
-        )}
       </form>
     </div>
   );
@@ -210,13 +188,22 @@ function ResumoCronograma({ cronograma, db, onApagar }) {
 
   const plano = db ? montarPlano(cronograma, db) : null;
 
+  // Cor de destaque conforme a urgência (quanto menos dias, mais quente).
+  const urgente = diasAgora <= 30;
+  const atencao = diasAgora > 30 && diasAgora <= 60;
+  const corDias = urgente
+    ? "text-red-600"
+    : atencao
+    ? "text-orange-500"
+    : "text-brand-600";
+
   return (
     <div className="container max-w-3xl py-14">
       <div className="text-center">
-        <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-green-700">
+        <p className="text-sm font-semibold uppercase tracking-wide text-green-700">
           Cronograma ativo
-        </span>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
+        </p>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">
           Seu plano de estudos
         </h1>
         <p className="mt-2 text-sm text-slate-500">
@@ -225,20 +212,26 @@ function ResumoCronograma({ cronograma, db, onApagar }) {
         </p>
       </div>
 
-      {/* Faltam agora */}
-      <div className="card mt-8 flex flex-col items-center px-8 py-8 text-center">
-        <span className="text-xs font-semibold uppercase tracking-widest text-brand-600">
+      {/* Faltam agora — contagem em destaque */}
+      <div className="card mt-8 flex flex-col items-center px-8 py-9 text-center">
+        <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
           Faltam agora
         </span>
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-6xl font-extrabold tabular-nums text-slate-900">
+        <div className={`mt-2 flex items-center gap-3 ${corDias}`}>
+          <span className="text-3xl sm:text-4xl">🔥</span>
+          <span className="text-7xl font-extrabold tabular-nums">
             {diasAgora}
           </span>
-          <span className="text-lg font-semibold text-slate-500">dias</span>
+          <span className="self-end pb-2 text-xl font-bold">dias</span>
         </div>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-slate-500">
           para {formatarData(cronograma.dataEnem)}
         </p>
+        {urgente && (
+          <p className="mt-3 text-sm font-semibold text-red-600">
+            A reta final chegou — cada dia conta!
+          </p>
+        )}
       </div>
 
       {/* Métricas */}
@@ -306,8 +299,8 @@ function PlanoView({ plano, carregando }) {
     <div className="card mt-8 p-6">
       <h2 className="text-lg font-semibold text-slate-900">Seu plano de aulas</h2>
       <p className="mt-1 text-sm text-slate-500">
-        {plano.totalHoras}h de estudo ÷ 1h por aula. Priorizamos o que mais cai
-        (bolinhas vermelhas), dividido pelas 5 áreas.
+        {plano.totalHoras}h de estudo ÷ 1h por aula. Priorizamos o que mais cai,
+        dividido pelas 5 áreas.
       </p>
 
       <div className="mt-4 flex items-baseline gap-2">

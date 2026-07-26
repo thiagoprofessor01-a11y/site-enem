@@ -115,7 +115,7 @@ export default function AulaClient({ materiaId, aulaId }) {
   const linkAula = (a) => `/conteudos/${materia?.id || materiaId}/${a.id}`;
 
   return (
-    <div className="container max-w-3xl py-10">
+    <div className="container max-w-6xl py-10">
       {/* Breadcrumb */}
       <nav className="mb-5 flex flex-wrap items-center gap-1 text-sm">
         <Link href="/conteudos" className="font-medium text-brand-600 hover:text-brand-700">
@@ -138,17 +138,14 @@ export default function AulaClient({ materiaId, aulaId }) {
 
       {/* Cabeçalho da aula */}
       <header className="mb-6">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide">
           {materia && (
-            <span className={`inline-flex items-center gap-1.5 rounded-full ${info.bg} px-3 py-1 text-xs font-bold ${info.text}`}>
+            <span className={`inline-flex items-center gap-1.5 ${info.text}`}>
               <Icon name={info.icon} className="h-3.5 w-3.5" /> {materia.nome}
             </span>
           )}
-          {modulo && (
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              {modulo.nome}
-            </span>
-          )}
+          {materia && modulo && <span className="text-slate-300">·</span>}
+          {modulo && <span className="text-slate-400">{modulo.nome}</span>}
         </div>
         <div className="mt-2 flex items-center gap-3">
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
@@ -215,29 +212,33 @@ export default function AulaClient({ materiaId, aulaId }) {
         </section>
       )}
 
-      {/* Concluir aula */}
-      <div className="mt-10">
-        {feita ? (
-          <div className="flex flex-col items-center gap-2 rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
-            <p className="text-lg font-semibold text-green-700">
-              ✓ Aula concluída!
-            </p>
-            <p className="text-sm text-green-600">Mandou bem. Bora para a próxima?</p>
-            <button
-              onClick={alternarConcluida}
-              className="mt-1 text-xs font-medium text-slate-500 underline hover:text-slate-700"
-            >
-              Desmarcar
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={alternarConcluida}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 px-6 py-4 text-base font-semibold text-white shadow-sm transition hover:bg-green-700"
-          >
-            ✓ Marcar aula como concluída
-          </button>
-        )}
+      {/* Concluir aula — quadrado que se preenche ao clicar */}
+      <div className="mt-10 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={alternarConcluida}
+          role="checkbox"
+          aria-checked={feita}
+          aria-label="Marcar aula como concluída"
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
+            feita
+              ? "border-green-600 bg-green-600 text-white"
+              : "border-slate-300 bg-white hover:border-green-500"
+          }`}
+        >
+          {feita && (
+            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+              <path
+                fillRule="evenodd"
+                d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 011.4-1.4l3.3 3.3 6.8-6.8a1 1 0 011.4 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
+        </button>
+        <span className="text-sm font-medium text-slate-700">
+          {feita ? "Aula concluída" : "Marcar aula como concluída"}
+        </span>
       </div>
 
       {/* Navegação entre aulas */}
