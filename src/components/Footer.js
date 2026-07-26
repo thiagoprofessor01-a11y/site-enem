@@ -19,13 +19,20 @@ const COLUNAS = [
       { href: "/admin", label: "Admin" },
     ],
   },
+  {
+    titulo: "Legal",
+    links: [
+      { href: "/privacidade", label: "Privacidade" },
+      { href: "/termos", label: "Termos de uso" },
+    ],
+  },
 ];
 
 export default function Footer() {
   return (
     <footer className="mt-20 border-t border-slate-200 bg-white">
       <div className="container py-12">
-        <div className="grid gap-8 md:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-5">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
