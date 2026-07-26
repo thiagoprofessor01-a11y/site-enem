@@ -1,16 +1,11 @@
 import Protegido from "@/modules/auth/Protegido";
-import PlaceholderPage from "@/components/PlaceholderPage";
+import RedacaoClient from "@/modules/redacao/RedacaoClient";
 
-// TIME C — Aulas de redação + banco de temas (protegido)
+// TIME C — Redação: aulas + banco de temas (HTML colado), gerenciado pelo admin.
 export default function RedacaoPage() {
   return (
     <Protegido>
-      <PlaceholderPage
-        time="Time C"
-        emoji="✍️"
-        titulo="Redação"
-        descricao="Aulas básicas (estrutura dissertativa-argumentativa, as 5 competências, erros comuns) e banco de temas."
-      />
+      <RedacaoClient />
     </Protegido>
   );
 }

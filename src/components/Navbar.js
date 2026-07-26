@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-      <nav className="container flex h-16 items-center justify-between">
+      <nav className="container relative flex h-16 items-center justify-between">
         <Link href="/" onClick={() => setAberto(false)} className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
             M
@@ -46,25 +46,31 @@ export default function Navbar() {
           <span className="text-lg font-bold tracking-tight text-slate-900">{SITE.nome}</span>
         </Link>
 
-        {/* Desktop */}
+        {/* Desktop — links centralizados */}
+        {links.length > 0 && (
+          <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                  isActive(l.href)
+                    ? "bg-brand-50 text-brand-700"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Desktop — ações à direita */}
         <div className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                isActive(l.href)
-                  ? "bg-brand-50 text-brand-700"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
           {logado ? (
             <button
               onClick={sair}
-              className="ml-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
             >
               Sair
             </button>

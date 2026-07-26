@@ -25,10 +25,19 @@ import {
 import { Campo, inputClass, Botao, CardVazio, Tag } from "./ui";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
+import QuestoesClient from "@/modules/questoes/QuestoesClient";
+import RedacaoClient from "@/modules/redacao/RedacaoClient";
+
+const SECOES = [
+  { id: "aulas", label: "Aulas" },
+  { id: "questoes", label: "Questões" },
+  { id: "redacao", label: "Redação" },
+];
 
 export default function AdminApp() {
   const [db, setDb] = useState(null);
   const [nav, setNav] = useState({}); // { materiaId, moduloId, aulaId }
+  const [secao, setSecao] = useState("aulas"); // aulas | questoes | redacao
 
   useEffect(() => {
     let ativo = true;
@@ -65,33 +74,58 @@ export default function AdminApp() {
 
   return (
     <div className="container max-w-4xl py-10">
-      <Cabecalho db={db} />
-      <Breadcrumb crumbs={crumbs} />
+      <Cabecalho db={db} mostrarStats={secao === "aulas"} />
 
-      {aula ? (
-        <AulaDetalhe db={db} aula={aula} setDb={setDb} />
-      ) : modulo ? (
-        <AulasView
-          db={db}
-          modulo={modulo}
-          setDb={setDb}
-          abrir={(a) =>
-            setNav({ materiaId: materia.id, moduloId: modulo.id, aulaId: a.id })
-          }
-        />
-      ) : materia ? (
-        <ModulosView
-          db={db}
-          materia={materia}
-          setDb={setDb}
-          abrir={(m) => setNav({ materiaId: materia.id, moduloId: m.id })}
-        />
+      {/* Divisões do painel: Aulas · Questões · Redação (sem Cronograma) */}
+      <div className="mb-6 flex justify-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
+        {SECOES.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSecao(s.id)}
+            className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+              secao === s.id
+                ? "bg-brand-600 text-white shadow-sm"
+                : "text-slate-600 hover:bg-slate-100"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {secao === "questoes" ? (
+        <QuestoesClient embutido forcarAdmin />
+      ) : secao === "redacao" ? (
+        <RedacaoClient embutido forcarAdmin />
       ) : (
-        <MateriasView
-          db={db}
-          setDb={setDb}
-          abrir={(m) => setNav({ materiaId: m.id })}
-        />
+        <>
+          <Breadcrumb crumbs={crumbs} />
+          {aula ? (
+            <AulaDetalhe db={db} aula={aula} setDb={setDb} />
+          ) : modulo ? (
+            <AulasView
+              db={db}
+              modulo={modulo}
+              setDb={setDb}
+              abrir={(a) =>
+                setNav({ materiaId: materia.id, moduloId: modulo.id, aulaId: a.id })
+              }
+            />
+          ) : materia ? (
+            <ModulosView
+              db={db}
+              materia={materia}
+              setDb={setDb}
+              abrir={(m) => setNav({ materiaId: materia.id, moduloId: m.id })}
+            />
+          ) : (
+            <MateriasView
+              db={db}
+              setDb={setDb}
+              abrir={(m) => setNav({ materiaId: m.id })}
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -100,7 +134,7 @@ export default function AdminApp() {
 /* ==================================================================== */
 /* Cabeçalho + breadcrumb                                               */
 /* ==================================================================== */
-function Cabecalho({ db }) {
+function Cabecalho({ db, mostrarStats = true }) {
   const stats = [
     { n: db.materias.length, r: "matérias" },
     { n: db.modulos.length, r: "módulos" },
@@ -137,14 +171,16 @@ function Cabecalho({ db }) {
             : "● Salvando neste navegador"}
         </span>
       </div>
-      <div className="mt-5 grid grid-cols-5 gap-3">
-        {stats.map((s) => (
-          <div key={s.r} className="card px-3 py-3 text-center">
-            <p className="text-xl font-bold tabular-nums text-slate-900">{s.n}</p>
-            <p className="text-xs text-slate-500">{s.r}</p>
-          </div>
-        ))}
-      </div>
+      {mostrarStats && (
+        <div className="mt-5 grid grid-cols-5 gap-3">
+          {stats.map((s) => (
+            <div key={s.r} className="card px-3 py-3 text-center">
+              <p className="text-xl font-bold tabular-nums text-slate-900">{s.n}</p>
+              <p className="text-xs text-slate-500">{s.r}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
