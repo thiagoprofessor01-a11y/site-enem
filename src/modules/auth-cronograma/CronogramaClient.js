@@ -16,7 +16,9 @@ import {
   formatarData,
   hojeISO,
 } from "./cronograma-storage";
-import { montarPlano } from "./cronograma-engine";
+import { montarPlano, montarAgenda } from "./cronograma-engine";
+import AgendaAulas from "@/modules/conteudos-dashboard/AgendaAulas";
+import { useConcluidas } from "@/modules/conteudos-dashboard/progresso";
 
 export default function CronogramaClient() {
   const [carregado, setCarregado] = useState(false);
@@ -186,7 +188,9 @@ function ResumoCronograma({ cronograma, db, onApagar }) {
   const horasRestantes = diasEstudoRestantes * cronograma.horasPorDia;
   const nomesDias = cronograma.diasSemana.map((idx) => DIAS_SEMANA[idx].curto).join(" · ");
 
+  const concluidas = useConcluidas();
   const plano = db ? montarPlano(cronograma, db) : null;
+  const agenda = db ? montarAgenda(cronograma, db, concluidas || []) : null;
 
   // Cor de destaque conforme a urgência (quanto menos dias, mais quente).
   const urgente = diasAgora <= 30;
@@ -244,7 +248,10 @@ function ResumoCronograma({ cronograma, db, onApagar }) {
         Dias de estudo: <strong>{nomesDias}</strong>
       </p>
 
-      {/* Plano de aulas */}
+      {/* Agenda de aulas (as mesmas aulas que aparecem na tela inicial) */}
+      <AgendaAulas agenda={agenda} hoje={hoje} />
+
+      {/* Plano de aulas (visão geral por área) */}
       <PlanoView plano={plano} carregando={!db} />
 
       {/* Ações */}

@@ -55,15 +55,21 @@ export default function MateriaClient({ materiaId }) {
         <span className="font-semibold text-slate-900">{materia.nome}</span>
       </nav>
 
-      {/* Cabeçalho da matéria */}
-      <header className="mb-8 flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card">
-        <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${info.solid} text-white`}>
-          <Icon name={info.icon} className="h-7 w-7" />
+      {/* Banner da matéria — espaço reservado para você personalizar.
+          Troque o conteúdo deste bloco pela arte/imagem do banner desta matéria. */}
+      <div className="mb-6 flex aspect-[16/5] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 text-center text-sm text-slate-400">
+        Espaço para o banner de {materia.nome}
+      </div>
+
+      {/* Cabeçalho da matéria — área e matéria centralizados */}
+      <header className="mb-8 flex flex-col items-center gap-3 text-center">
+        <p className={`text-xs font-semibold uppercase tracking-widest ${info.text}`}>
+          {info.nome}
+        </p>
+        <span className={`inline-flex items-center gap-2 rounded-full ${info.solid} px-5 py-2 text-white shadow-sm`}>
+          <Icon name={info.icon} className="h-5 w-5" />
+          <span className="text-lg font-extrabold tracking-tight">{materia.nome}</span>
         </span>
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{materia.nome}</h1>
-          <p className={`text-sm font-semibold ${info.text}`}>{info.nome}</p>
-        </div>
       </header>
 
       {modulos.length === 0 ? (

@@ -103,8 +103,14 @@ function isoLocal(d) {
 }
 
 /**
- * Distribui as aulas do plano dia a dia (a partir da data de criação), em
- * ordem intercalada entre as matérias (para variar as áreas ao longo do dia).
+ * Distribui as aulas do plano dia a dia (a partir de hoje).
+ *
+ * Regras:
+ *  - Nº de aulas por dia = horas por dia (cada aula = 1 hora → 3h = 3 aulas).
+ *  - Nunca repete a mesma matéria no mesmo dia.
+ *  - As matérias de um dia são, sempre que possível, DIFERENTES das do dia
+ *    anterior (assim o aluno não vê "biologia" dois dias seguidos).
+ *
  * Retorna a lista de dias de estudo, cada um com as aulas daquele dia.
  */
 export function montarAgenda(config, db, concluidas = []) {
@@ -118,7 +124,8 @@ export function montarAgenda(config, db, concluidas = []) {
       const pendentes = mp.selecionadas.filter((a) => !feitas.has(a.id));
       if (pendentes.length) {
         filas.push({
-          materia: mp.materia,
+          materiaId: mp.materia.id,
+          materiaNome: mp.materia.nome,
           areaNome: area.nome,
           areaSlug: area.slug,
           aulas: [...pendentes],
@@ -127,11 +134,8 @@ export function montarAgenda(config, db, concluidas = []) {
     })
   );
 
-  // Aulas por dia = horas por dia (cada aula ≈ 1 hora).
-  const aulasPorDia = Math.max(
-    1,
-    Math.round((Number(config.horasPorDia) || 1) * 60 / MINUTOS_POR_AULA)
-  );
+  // Aulas por dia = horas por dia (cada aula = 1 hora).
+  const aulasPorDia = Math.max(1, Math.round(Number(config.horasPorDia) || 1));
 
   const restante = () => filas.reduce((s, f) => s + f.aulas.length, 0);
 
@@ -141,36 +145,60 @@ export function montarAgenda(config, db, concluidas = []) {
   const fim = new Date(config.dataEnem + "T00:00:00");
   const setDias = new Set(config.diasSemana);
   const cursor = new Date(inicio);
-  let rot = 0; // rotação: muda a matéria que "abre" o dia
+  let ontem = new Set(); // matérias usadas no dia anterior
+  let inicioRot = 0; // rotação: varia qual matéria "abre" o dia
   let totalAgendadas = 0;
   let guard = 0;
 
   while (restante() > 0 && cursor <= fim && guard < 4000) {
-    if (setDias.has(cursor.getDay())) {
-      const doDia = [];
-      // Uma passada pelas matérias (a partir de `rot`): no máximo 1 aula por
-      // matéria → nunca repete matéria no mesmo dia.
-      for (let step = 0; step < filas.length && doDia.length < aulasPorDia; step++) {
-        const f = filas[(rot + step) % filas.length];
-        if (f.aulas.length) {
-          const a = f.aulas.shift();
-          doDia.push({
-            ...a,
-            materiaId: f.materia.id,
-            materiaNome: f.materia.nome,
-            areaNome: f.areaNome,
-            areaSlug: f.areaSlug,
-          });
-        }
-      }
-      if (doDia.length) {
-        dias.push({ data: isoLocal(cursor), aulas: doDia });
-        totalAgendadas += doDia.length;
-        rot = (rot + 1) % filas.length; // alterna quem abre o próximo dia
-      }
+    guard++;
+    if (!setDias.has(cursor.getDay())) {
+      cursor.setDate(cursor.getDate() + 1);
+      continue;
+    }
+
+    const doDia = [];
+    const usadasHoje = new Set();
+
+    // Candidatas do dia = matérias com aula pendente, em ordem rotacionada.
+    const comAulas = filas.filter((f) => f.aulas.length);
+    const n = comAulas.length;
+    const ordenadas = [];
+    for (let i = 0; i < n; i++) ordenadas.push(comAulas[(inicioRot + i) % n]);
+
+    const pegar = (f) => {
+      const a = f.aulas.shift();
+      usadasHoje.add(f.materiaId);
+      doDia.push({
+        ...a,
+        materiaId: f.materiaId,
+        materiaNome: f.materiaNome,
+        areaNome: f.areaNome,
+        areaSlug: f.areaSlug,
+      });
+    };
+
+    // 1ª passada: só matérias que NÃO apareceram ontem (dias seguidos variados).
+    for (const f of ordenadas) {
+      if (doDia.length >= aulasPorDia) break;
+      if (usadasHoje.has(f.materiaId) || ontem.has(f.materiaId)) continue;
+      pegar(f);
+    }
+    // 2ª passada: se o dia não encheu, libera repetir matéria de ontem — mas
+    // nunca a mesma matéria duas vezes no mesmo dia.
+    for (const f of ordenadas) {
+      if (doDia.length >= aulasPorDia) break;
+      if (usadasHoje.has(f.materiaId)) continue;
+      pegar(f);
+    }
+
+    if (doDia.length) {
+      dias.push({ data: isoLocal(cursor), aulas: doDia });
+      totalAgendadas += doDia.length;
+      ontem = usadasHoje;
+      inicioRot = n ? (inicioRot + aulasPorDia) % n : 0;
     }
     cursor.setDate(cursor.getDate() + 1);
-    guard++;
   }
 
   return { plano, dias, aulasPorDia, totalAgendadas };
