@@ -55,12 +55,6 @@ export default function MateriaClient({ materiaId }) {
         <span className="font-semibold text-slate-900">{materia.nome}</span>
       </nav>
 
-      {/* Banner da matéria — espaço reservado para você personalizar.
-          Troque o conteúdo deste bloco pela arte/imagem do banner desta matéria. */}
-      <div className="mb-6 flex aspect-[16/5] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 text-center text-sm text-slate-400">
-        Espaço para o banner de {materia.nome}
-      </div>
-
       {/* Cabeçalho da matéria — área e matéria centralizados */}
       <header className="mb-8 flex flex-col items-center gap-3 text-center">
         <p className={`text-xs font-semibold uppercase tracking-widest ${info.text}`}>
@@ -77,7 +71,12 @@ export default function MateriaClient({ materiaId }) {
       ) : (
         <div className="space-y-8">
           {modulos.map((mod) => {
-            const aulas = db.aulas.filter((a) => a.moduloId === mod.id);
+            const aulas = db.aulas
+              .filter((a) => a.moduloId === mod.id)
+              .sort(
+                (a, b) =>
+                  (b.nivel ?? 3) - (a.nivel ?? 3) || (a.ordem ?? 0) - (b.ordem ?? 0)
+              );
             return (
               <section key={mod.id}>
                 <div className={`mb-3 border-l-4 ${info.border} pl-3`}>

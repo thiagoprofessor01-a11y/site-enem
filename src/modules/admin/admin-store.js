@@ -66,9 +66,9 @@ const local = {
     fn(db);
     return this.write({ ...db });
   },
-  addMateria({ nome, area }) {
+  addMateria({ nome, area, banner = "" }) {
     return this.mutate((db) =>
-      db.materias.push({ id: genId(), nome: nome.trim(), area })
+      db.materias.push({ id: genId(), nome: nome.trim(), area, banner: (banner || "").trim() })
     );
   },
   updateMateria(id, dados) {
@@ -124,6 +124,7 @@ const local = {
         titulo: titulo.trim(),
         resumo: (resumo || "").trim(),
         nivel,
+        ordem: Math.floor(Date.now() / 1000),
       })
     );
   },
@@ -206,6 +207,7 @@ const supa = {
         id: m.id,
         nome: m.nome,
         area: m.area,
+        banner: m.banner || "",
       })),
       modulos: (modulos.data || []).map((m) => ({
         id: m.id,
@@ -220,6 +222,7 @@ const supa = {
         titulo: a.titulo,
         resumo: a.resumo,
         nivel: a.nivel ?? 3,
+        ordem: a.ordem ?? 0,
       })),
       videos: (videos.data || []).map((v) => ({
         id: v.id,
@@ -238,8 +241,8 @@ const supa = {
       })),
     };
   },
-  async addMateria({ nome, area }) {
-    const { error } = await sb().from("materias").insert({ nome: nome.trim(), area });
+  async addMateria({ nome, area, banner = "" }) {
+    const { error } = await sb().from("materias").insert({ nome: nome.trim(), area, banner: (banner || "").trim() });
     checar(error);
     return this.fetchAll();
   },
@@ -273,7 +276,7 @@ const supa = {
   async addAula(moduloId, { titulo, resumo, nivel = 3 }) {
     const { error } = await sb()
       .from("aulas")
-      .insert({ modulo_id: moduloId, titulo: titulo.trim(), resumo: (resumo || "").trim(), nivel });
+      .insert({ modulo_id: moduloId, titulo: titulo.trim(), resumo: (resumo || "").trim(), nivel, ordem: Math.floor(Date.now() / 1000) });
     checar(error);
     return this.fetchAll();
   },

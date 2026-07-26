@@ -1,16 +1,11 @@
 import Protegido from "@/modules/auth/Protegido";
-import PlaceholderPage from "@/components/PlaceholderPage";
+import QuestoesClient from "@/modules/questoes/QuestoesClient";
 
-// TIME B — Banco de questões com filtros + modo treino livre (protegido)
+// TIME B — Banco de questões por módulo (HTML colado), gerenciado pelo admin.
 export default function QuestoesPage() {
   return (
     <Protegido>
-      <PlaceholderPage
-        time="Time B"
-        emoji="📝"
-        titulo="Banco de questões"
-        descricao="Listagem com filtros (matéria, tópico, ano, dificuldade) e modo treino livre com gabarito comentado."
-      />
+      <QuestoesClient />
     </Protegido>
   );
 }

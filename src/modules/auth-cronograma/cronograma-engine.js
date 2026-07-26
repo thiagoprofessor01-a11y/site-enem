@@ -39,7 +39,8 @@ function aulasPriorizadas(db, materiaId) {
     .sort(
       (a, b) =>
         (b.modNivel ?? 3) - (a.modNivel ?? 3) ||
-        (b.nivel ?? 3) - (a.nivel ?? 3)
+        (b.nivel ?? 3) - (a.nivel ?? 3) ||
+        (a.ordem ?? 0) - (b.ordem ?? 0)
     );
 }
 

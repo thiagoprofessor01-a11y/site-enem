@@ -235,9 +235,10 @@ function MateriasView({ db, setDb, abrir }) {
 function MateriaForm({ inicial, onSalvar, onCancelar }) {
   const [nome, setNome] = useState(inicial?.nome || "");
   const [area, setArea] = useState(inicial?.area || AREAS_MATERIA[0].slug);
+  const [banner, setBanner] = useState(inicial?.banner || "");
   return (
     <FormCard
-      onSubmit={() => nome.trim() && onSalvar({ nome, area })}
+      onSubmit={() => nome.trim() && onSalvar({ nome, area, banner })}
       onCancelar={onCancelar}
     >
       <Campo label="Nome da matéria">
@@ -262,6 +263,20 @@ function MateriaForm({ inicial, onSalvar, onCancelar }) {
           ))}
         </select>
       </Campo>
+      <Campo label="Banner (URL de uma imagem) — opcional">
+        <input
+          className={inputClass()}
+          value={banner}
+          onChange={(e) => setBanner(e.target.value)}
+          placeholder="https://.../banner-matematica.jpg"
+        />
+      </Campo>
+      {banner.trim() && (
+        <div className="aspect-[16/6] w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={banner} alt="Prévia do banner" className="h-full w-full object-cover" />
+        </div>
+      )}
     </FormCard>
   );
 }
@@ -366,7 +381,28 @@ function ModuloForm({ inicial, onSalvar, onCancelar }) {
 /* ==================================================================== */
 function AulasView({ db, modulo, setDb, abrir }) {
   const [form, setForm] = useState(null);
-  const aulas = db.aulas.filter((a) => a.moduloId === modulo.id);
+  const aulas = db.aulas
+    .filter((a) => a.moduloId === modulo.id)
+    .sort((a, b) => (b.nivel ?? 3) - (a.nivel ?? 3) || (a.ordem ?? 0) - (b.ordem ?? 0));
+
+  // Move a aula i para cima/baixo, apenas se a vizinha tiver o mesmo nível.
+  async function mover(i, dir) {
+    const j = dir === "cima" ? i - 1 : i + 1;
+    if (j < 0 || j >= aulas.length) return;
+    if ((aulas[i].nivel ?? 3) !== (aulas[j].nivel ?? 3)) return;
+    const nova = [...aulas];
+    [nova[i], nova[j]] = [nova[j], nova[i]];
+    let result;
+    for (let k = 0; k < nova.length; k++) {
+      result = await updateAula(nova[k].id, { ordem: k + 1 });
+    }
+    setDb(result);
+  }
+
+  const podeMover = (i, dir) => {
+    const j = dir === "cima" ? i - 1 : i + 1;
+    return j >= 0 && j < aulas.length && (aulas[i].nivel ?? 3) === (aulas[j].nivel ?? 3);
+  };
 
   return (
     <Secao
@@ -390,7 +426,7 @@ function AulasView({ db, modulo, setDb, abrir }) {
         <CardVazio>Nenhuma aula neste módulo ainda.</CardVazio>
       ) : (
         <ul className="space-y-2">
-          {aulas.map((a) =>
+          {aulas.map((a, i) =>
             form === a.id ? (
               <AulaForm
                 key={a.id}
@@ -407,6 +443,8 @@ function AulasView({ db, modulo, setDb, abrir }) {
                 titulo={a.titulo}
                 nivel={a.nivel}
                 sub={`${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s) · ${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`}
+                onSubir={podeMover(i, "cima") ? () => mover(i, "cima") : null}
+                onDescer={podeMover(i, "baixo") ? () => mover(i, "baixo") : null}
                 onAbrir={() => abrir(a)}
                 onEditar={() => setForm(a.id)}
                 onExcluir={async () => {
@@ -798,9 +836,30 @@ function Secao({ titulo, acao, children }) {
   );
 }
 
-function ItemLinha({ titulo, tag, sub, nivel, onAbrir, onEditar, onExcluir }) {
+function ItemLinha({ titulo, tag, sub, nivel, onSubir, onDescer, onAbrir, onEditar, onExcluir }) {
+  const temReorder = onSubir !== undefined || onDescer !== undefined;
   return (
     <li className="card flex items-center justify-between gap-3 p-4">
+      {temReorder && (
+        <div className="flex shrink-0 flex-col">
+          <button
+            onClick={onSubir || undefined}
+            disabled={!onSubir}
+            title="Mover para cima (mesmo nível)"
+            className="text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
+          >
+            ▲
+          </button>
+          <button
+            onClick={onDescer || undefined}
+            disabled={!onDescer}
+            title="Mover para baixo (mesmo nível)"
+            className="text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
+          >
+            ▼
+          </button>
+        </div>
+      )}
       <button onClick={onAbrir} className="min-w-0 flex-1 text-left">
         <div className="flex items-center gap-2">
           <span className="truncate font-semibold text-slate-900">{titulo}</span>

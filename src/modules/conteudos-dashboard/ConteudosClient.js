@@ -37,12 +37,11 @@ export default function ConteudosClient() {
   })).filter((g) => g.materias.length > 0);
 
   return (
-    <div className="container max-w-5xl py-12">
-      <header className="mb-10">
+    <div className="container max-w-2xl py-12">
+      <header className="mb-10 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Conteúdos</h1>
-        <p className="mt-2 text-slate-600">
-          Estude por matéria, do que mais cai para o que menos cai. Cada tópico traz
-          um resumo e as videoaulas selecionadas.
+        <p className="mx-auto mt-2 max-w-lg text-slate-600">
+          Estude por matéria, do que mais cai para o que menos cai.
         </p>
       </header>
 
@@ -51,33 +50,52 @@ export default function ConteudosClient() {
           Nenhum conteúdo cadastrado ainda.
         </div>
       ) : (
-        <div className="space-y-12">
+        <div className="space-y-10">
           {porArea.map(({ area, materias }) => {
             const info = areaInfo(area);
             return (
               <section key={area}>
-                <div className="mb-4 flex items-center gap-3">
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${info.solid} text-white`}>
-                    <Icon name={info.icon} />
+                {/* Cabeçalho da área — centralizado */}
+                <div className="mb-4 flex items-center justify-center gap-2">
+                  <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${info.solid} text-white`}>
+                    <Icon name={info.icon} className="h-4 w-4" />
                   </span>
-                  <h2 className="text-lg font-bold text-slate-900">{info.nome}</h2>
+                  <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+                    {info.nome}
+                  </h2>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+                {/* Banners das matérias */}
+                <div className="space-y-4">
                   {materias.map((m) => (
                     <Link
                       key={m.id}
                       href={`/conteudos/${m.id}`}
-                      className={`card group relative overflow-hidden p-5 transition hover:-translate-y-1 hover:shadow-card-hover ${info.ring}`}
+                      className="card group block overflow-hidden transition hover:-translate-y-0.5 hover:shadow-card-hover"
                     >
-                      <span className={`absolute inset-x-0 top-0 h-1 ${info.solid}`} />
-                      <h3 className="mt-1 text-lg font-bold text-slate-900">{m.nome}</h3>
-                      <p className="mt-1 text-sm text-slate-500">
-                        {plural(contarModulos(m.id), "módulo", "módulos")} ·{" "}
-                        {plural(contarAulas(m.id), "aula", "aulas")}
-                      </p>
-                      <span className={`mt-4 inline-flex items-center gap-1 text-sm font-bold ${info.text}`}>
-                        Estudar →
-                      </span>
+                      <div className="relative aspect-[16/6] w-full">
+                        {m.banner ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={m.banner} alt={m.nome} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className={`flex h-full w-full items-center justify-center ${info.solid}`}>
+                            <Icon name={info.icon} className="h-10 w-10 text-white/90" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
+                          <div>
+                            <span className="block text-lg font-extrabold text-white drop-shadow">{m.nome}</span>
+                            <span className="block text-xs font-medium text-white/85">
+                              {plural(contarModulos(m.id), "módulo", "módulos")} ·{" "}
+                              {plural(contarAulas(m.id), "aula", "aulas")}
+                            </span>
+                          </div>
+                          <span className="rounded-lg bg-white/90 px-3 py-1.5 text-sm font-bold text-slate-900 opacity-0 transition group-hover:opacity-100">
+                            Estudar →
+                          </span>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
