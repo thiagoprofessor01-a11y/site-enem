@@ -5,6 +5,7 @@ import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
+import Icon from "@/components/Icon";
 import { areaInfo } from "./conteudos-ui";
 import { isConcluida, setConcluida } from "./progresso";
 
@@ -140,7 +141,7 @@ export default function AulaClient({ materiaId, aulaId }) {
         <div className="flex flex-wrap items-center gap-2">
           {materia && (
             <span className={`inline-flex items-center gap-1.5 rounded-full ${info.bg} px-3 py-1 text-xs font-bold ${info.text}`}>
-              <span>{info.emoji}</span> {materia.nome}
+              <Icon name={info.icon} className="h-3.5 w-3.5" /> {materia.nome}
             </span>
           )}
           {modulo && (

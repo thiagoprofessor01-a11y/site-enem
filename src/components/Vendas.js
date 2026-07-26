@@ -55,10 +55,9 @@ export default function Vendas() {
     <div>
       {/* ============================= HERO ============================= */}
       <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 to-transparent" />
         <div className="container flex flex-col items-center py-20 text-center sm:py-24">
           <span className="animate-fade-up rounded-full border border-brand-100 bg-white px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
-            🎯 Preparação completa para o ENEM
+            Preparação completa para o ENEM
           </span>
 
           <h1 className="animate-fade-up mt-6 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
@@ -103,13 +102,8 @@ export default function Vendas() {
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {BENEFICIOS.map((b) => (
-            <div key={b.titulo} className="card flex flex-col p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-2xl">
-                {b.emoji}
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-slate-900">
-                {b.titulo}
-              </h3>
+            <div key={b.titulo} className="card flex flex-col border-t-2 border-t-brand-600 p-6">
+              <h3 className="text-lg font-semibold text-slate-900">{b.titulo}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 {b.desc}
               </p>
@@ -188,7 +182,7 @@ export default function Vendas() {
       <section id="comprar" className="container scroll-mt-20 py-16">
         <div className="mx-auto max-w-lg">
           <div className="card overflow-hidden border-brand-200 shadow-card-hover">
-            <div className="bg-gradient-to-br from-brand-600 to-brand-800 px-8 py-8 text-center text-white">
+            <div className="bg-slate-900 px-8 py-8 text-center text-white">
               <p className="text-sm font-semibold uppercase tracking-widest text-brand-100">
                 Acesso completo
               </p>
@@ -257,7 +251,7 @@ export default function Vendas() {
 
       {/* ========================== CTA FINAL ========================= */}
       <section className="container pb-8 pt-4">
-        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 px-8 py-14 text-center text-white sm:px-16">
+        <div className="overflow-hidden rounded-3xl bg-slate-900 px-8 py-14 text-center text-white sm:px-16">
           <h2 className="mx-auto max-w-2xl text-3xl font-bold sm:text-4xl">
             {OFERTA.promessa}
           </h2>

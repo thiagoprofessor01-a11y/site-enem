@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import NivelDots from "@/components/NivelDots";
+import Icon from "@/components/Icon";
 import { areaInfo } from "./conteudos-ui";
 import { useConcluidas } from "./progresso";
 
@@ -54,14 +55,14 @@ export default function MateriaClient({ materiaId }) {
         <span className="font-semibold text-slate-900">{materia.nome}</span>
       </nav>
 
-      {/* Cabeçalho colorido da matéria */}
-      <header className={`mb-8 flex items-center gap-4 rounded-2xl bg-gradient-to-br ${info.grad} p-6 text-white shadow-md`}>
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-3xl">
-          {info.emoji}
+      {/* Cabeçalho da matéria */}
+      <header className="mb-8 flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card">
+        <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${info.solid} text-white`}>
+          <Icon name={info.icon} className="h-7 w-7" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight">{materia.nome}</h1>
-          <p className="text-sm text-white/80">{info.nome}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{materia.nome}</h1>
+          <p className={`text-sm font-semibold ${info.text}`}>{info.nome}</p>
         </div>
       </header>
 

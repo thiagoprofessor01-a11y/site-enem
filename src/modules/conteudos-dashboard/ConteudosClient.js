@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
+import Icon from "@/components/Icon";
 import { areaInfo, ORDEM_AREAS } from "./conteudos-ui";
 
 const plural = (n, um, muitos) => `${n} ${n === 1 ? um : muitos}`;
@@ -56,8 +57,8 @@ export default function ConteudosClient() {
             return (
               <section key={area}>
                 <div className="mb-4 flex items-center gap-3">
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${info.grad} text-lg text-white shadow-sm`}>
-                    {info.emoji}
+                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${info.solid} text-white`}>
+                    <Icon name={info.icon} />
                   </span>
                   <h2 className="text-lg font-bold text-slate-900">{info.nome}</h2>
                 </div>
@@ -68,7 +69,7 @@ export default function ConteudosClient() {
                       href={`/conteudos/${m.id}`}
                       className={`card group relative overflow-hidden p-5 transition hover:-translate-y-1 hover:shadow-card-hover ${info.ring}`}
                     >
-                      <span className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${info.grad}`} />
+                      <span className={`absolute inset-x-0 top-0 h-1 ${info.solid}`} />
                       <h3 className="mt-1 text-lg font-bold text-slate-900">{m.nome}</h3>
                       <p className="mt-1 text-sm text-slate-500">
                         {plural(contarModulos(m.id), "módulo", "módulos")} ·{" "}

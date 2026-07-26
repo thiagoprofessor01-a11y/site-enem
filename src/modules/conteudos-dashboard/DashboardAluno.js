@@ -5,16 +5,17 @@ import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import { useSessao } from "@/modules/auth/auth";
 import NivelDots from "@/components/NivelDots";
+import Icon from "@/components/Icon";
 import { carregarCronograma, diasCorridos, hojeISO } from "@/modules/auth-cronograma/cronograma-storage";
 import { montarAgenda } from "@/modules/auth-cronograma/cronograma-engine";
 import { useConcluidas } from "./progresso";
 import { areaInfo } from "./conteudos-ui";
 
 const ATALHOS = [
-  { href: "/conteudos", titulo: "Conteúdos", emoji: "📚", grad: "from-blue-500 to-indigo-600" },
-  { href: "/questoes", titulo: "Questões", emoji: "📝", grad: "from-emerald-500 to-teal-600" },
-  { href: "/redacao", titulo: "Redação", emoji: "✍️", grad: "from-rose-500 to-pink-600" },
-  { href: "/cronograma", titulo: "Cronograma", emoji: "🗓️", grad: "from-amber-500 to-orange-600" },
+  { href: "/conteudos", titulo: "Conteúdos", icon: "livro", cor: "bg-blue-600" },
+  { href: "/questoes", titulo: "Questões", icon: "lista", cor: "bg-emerald-600" },
+  { href: "/redacao", titulo: "Redação", icon: "lapis", cor: "bg-rose-600" },
+  { href: "/cronograma", titulo: "Cronograma", icon: "calendario", cor: "bg-amber-600" },
 ];
 
 function formatarDiaSemana(iso) {
@@ -119,8 +120,8 @@ export default function DashboardAluno() {
               href={a.href}
               className="card group flex flex-col items-center gap-2 p-4 text-center text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <span className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${a.grad} text-xl shadow-sm`}>
-                {a.emoji}
+              <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${a.cor} text-white`}>
+                <Icon name={a.icon} />
               </span>
               {a.titulo}
             </Link>
@@ -179,8 +180,8 @@ function Agenda({ agenda, hoje }) {
                   href={`/conteudos/${aula.materiaId}/${aula.id}`}
                   className={`card group flex items-center gap-4 border ${info.border} p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover sm:p-5`}
                 >
-                  <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${info.grad} text-lg text-white shadow-sm`}>
-                    ▶
+                  <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${info.solid} text-white`}>
+                    <Icon name="play" className="h-6 w-6" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className={`text-xs font-bold uppercase tracking-wide ${info.text}`}>
