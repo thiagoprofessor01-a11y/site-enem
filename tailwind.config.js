@@ -14,12 +14,20 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: [
+          "var(--font-sans)",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
           "Segoe UI",
           "Roboto",
           "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
+        display: [
+          "var(--font-display)",
+          "ui-sans-serif",
+          "system-ui",
           "Arial",
           "sans-serif",
         ],
@@ -38,6 +46,14 @@ module.exports = {
           800: "#3730a3",
           900: "#312e81",
         },
+        // Paleta vibrante da página de vendas
+        ink: "#1b1430",
+        paper: "#fff6ee",
+        coral: "#ff6a4d",
+        sun: "#ffc93c",
+        teal: "#10bfa5",
+        pink: "#ff5d9e",
+        grape: "#7b5cff",
       },
       boxShadow: {
         card: "0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.06)",
@@ -49,9 +65,14 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out both",
+        marquee: "marquee 22s linear infinite",
       },
     },
   },
