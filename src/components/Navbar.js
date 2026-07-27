@@ -23,9 +23,9 @@ export default function Navbar() {
   const isAdmin = logado && sessao.role === "admin";
   const isActive = (href) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
-  function sair() {
+  async function sair() {
     setAberto(false);
-    logout();
+    await logout();
     router.replace("/");
   }
 

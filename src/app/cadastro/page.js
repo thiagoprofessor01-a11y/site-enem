@@ -1,14 +1,9 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import CadastroClient from "@/modules/auth/CadastroClient";
 
-// TIME A — Cadastro/login + configuração inicial
-// (data do ENEM, horas disponíveis por dia, matérias com dificuldade)
+export const metadata = {
+  title: "Criar conta — MeuENEM",
+};
+
 export default function CadastroPage() {
-  return (
-    <PlaceholderPage
-      time="Time A"
-      emoji="👤"
-      titulo="Cadastro e configuração inicial"
-      descricao="Login via Supabase Auth e coleta de data do ENEM, horas disponíveis e dificuldades."
-    />
-  );
+  return <CadastroClient />;
 }

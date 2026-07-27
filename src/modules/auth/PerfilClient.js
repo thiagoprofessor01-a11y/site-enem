@@ -9,8 +9,8 @@ export default function PerfilClient() {
   const router = useRouter();
   const [confirmando, setConfirmando] = useState(false);
 
-  function handleExcluir() {
-    excluirConta();
+  async function handleExcluir() {
+    await excluirConta();
     router.replace("/");
   }
 

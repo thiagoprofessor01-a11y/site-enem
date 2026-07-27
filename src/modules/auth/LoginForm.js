@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { login, CONTAS } from "./auth";
+import Link from "next/link";
+import { login, CONTAS, authFake } from "./auth";
 
 /**
  * Formulário de login reutilizável.
@@ -16,16 +17,24 @@ export default function LoginForm({
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const sessao = login(email, senha);
-    if (!sessao) {
-      setErro("E-mail ou senha incorretos.");
-      return;
-    }
     setErro("");
-    onSucesso?.(sessao);
+    setCarregando(true);
+    try {
+      const sessao = await login(email, senha);
+      if (!sessao) {
+        setErro("E-mail ou senha incorretos.");
+        return;
+      }
+      onSucesso?.(sessao);
+    } catch (err) {
+      setErro("Não foi possível entrar. Tente novamente.");
+    } finally {
+      setCarregando(false);
+    }
   }
 
   return (
@@ -65,12 +74,19 @@ export default function LoginForm({
 
         {erro && <p className="text-sm font-medium text-red-600">{erro}</p>}
 
-        <button type="submit" className="btn-primary w-full">
-          Entrar
+        <button type="submit" disabled={carregando} className="btn-primary w-full disabled:opacity-60">
+          {carregando ? "Entrando…" : "Entrar"}
         </button>
+
+        <p className="text-center text-sm text-slate-500">
+          Não tem conta?{" "}
+          <Link href="/cadastro" className="font-semibold text-brand-600 hover:text-brand-700">
+            Criar conta
+          </Link>
+        </p>
       </form>
 
-      {mostrarDicas && (
+      {mostrarDicas && authFake() && (
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           <p className="font-semibold">Contas de teste (temporárias)</p>
           <ul className="mt-2 space-y-1">
