@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Icon from "@/components/Icon";
+import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
 import { OFERTA, BENEFICIOS, DEPOIMENTOS } from "@/lib/config";
 
 // PÁGINA DE VENDAS (pública) — estilo "cartaz": tipografia pesada, cores
@@ -115,12 +116,9 @@ export default function Vendas() {
                 {OFERTA.parcelaOuAvista} · {OFERTA.acesso}
               </p>
 
-              <Link
-                href="/cadastro"
-                className="mt-6 flex w-full items-center justify-center rounded-2xl bg-coral px-6 py-4 text-lg font-extrabold uppercase text-ink shadow-md transition hover:-translate-y-0.5 hover:bg-[#ff543a]"
-              >
+              <ComprarAcesso className="mt-6 flex w-full items-center justify-center rounded-2xl bg-coral px-6 py-4 text-lg font-extrabold uppercase text-ink shadow-md transition hover:-translate-y-0.5 hover:bg-[#ff543a]">
                 Garanta sua vaga
-              </Link>
+              </ComprarAcesso>
               <p className="mt-3 text-center text-xs font-semibold text-ink/50">
                 Pagamento 100% seguro · acesso liberado na hora
               </p>
@@ -310,12 +308,9 @@ export default function Vendas() {
           <p className="relative mx-auto mt-4 max-w-xl font-bold text-ink/80">
             Acesso completo por R$ {OFERTA.preco} — pagamento único, para sempre.
           </p>
-          <Link
-            href="/cadastro"
-            className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-8 py-4 text-base font-extrabold uppercase text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-black"
-          >
+          <ComprarAcesso className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-8 py-4 text-base font-extrabold uppercase text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-black">
             Quero meu acesso →
-          </Link>
+          </ComprarAcesso>
         </div>
       </section>
     </div>

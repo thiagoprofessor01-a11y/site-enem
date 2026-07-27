@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useSessao } from "./auth";
+import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
 
 function Aviso({ children }) {
   return (
@@ -46,9 +46,9 @@ export default function Protegido({ children }) {
           Garanta seu acesso para desbloquear cronograma, questões, conteúdos e
           redação.
         </p>
-        <Link href="/#comprar" className="btn-primary mt-6">
-          Quero meu acesso
-        </Link>
+        <ComprarAcesso className="btn-primary mt-6">
+          Liberar meu acesso — R$ 47,90
+        </ComprarAcesso>
       </Aviso>
     );
   }
