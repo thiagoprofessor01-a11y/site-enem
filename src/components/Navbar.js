@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { SITE } from "@/lib/config";
 import { useSessao, logout } from "@/modules/auth/auth";
+import Logo from "@/components/Logo";
 
 const LINKS_ALUNO = [
   { href: "/conteudos", label: "Conteúdos" },
@@ -39,11 +39,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <nav className="container relative flex h-16 items-center justify-between">
-        <Link href="/" onClick={() => setAberto(false)} className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-            M
-          </span>
-          <span className="text-lg font-bold tracking-tight text-slate-900">{SITE.nome}</span>
+        <Link href="/" onClick={() => setAberto(false)} className="flex items-center">
+          <Logo className="h-8 w-auto" />
         </Link>
 
         {/* Desktop — links centralizados */}

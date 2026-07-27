@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE } from "@/lib/config";
+import Logo from "@/components/Logo";
 
 const COLUNAS = [
   {
@@ -34,14 +35,7 @@ export default function Footer() {
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-5">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-                M
-              </span>
-              <span className="text-lg font-bold text-slate-900">
-                {SITE.nome}
-              </span>
-            </div>
+            <Logo className="h-9 w-auto" />
             <p className="mt-3 max-w-xs text-sm text-slate-500">
               {SITE.descricao}
             </p>

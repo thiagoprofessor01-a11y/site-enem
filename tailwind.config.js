@@ -33,18 +33,18 @@ module.exports = {
         ],
       },
       colors: {
-        // Identidade visual do site (índigo profissional)
+        // Identidade visual do site — navy neutro da logo MeuENEM
         brand: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
+          50: "#eef1f7",
+          100: "#dae0ee",
+          200: "#b7c3dd",
+          300: "#8b9cc3",
+          400: "#5f74a4",
+          500: "#415888",
+          600: "#2f426c",
+          700: "#243354",
+          800: "#1e2749",
+          900: "#151d31",
         },
         // Paleta vibrante da página de vendas
         ink: "#1b1430",

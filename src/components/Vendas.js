@@ -1,12 +1,6 @@
 import Link from "next/link";
-import Countdown from "@/components/Countdown";
 import Icon from "@/components/Icon";
-import {
-  DEFAULT_ENEM_DATE,
-  OFERTA,
-  BENEFICIOS,
-  DEPOIMENTOS,
-} from "@/lib/config";
+import { OFERTA, BENEFICIOS, DEPOIMENTOS } from "@/lib/config";
 
 // PÁGINA DE VENDAS (pública) — estilo "cartaz": tipografia pesada, cores
 // vibrantes, cards arredondados e chips coloridos. O botão de compra leva a
@@ -142,10 +136,6 @@ export default function Vendas() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="mt-6">
-            <Countdown dataEnem={DEFAULT_ENEM_DATE} />
           </div>
         </div>
       </section>
