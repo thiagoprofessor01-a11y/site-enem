@@ -37,7 +37,7 @@ export async function POST(req) {
           },
         },
       ],
-      success_url: `${origin}/conteudos?pago=1`,
+      success_url: `${origin}/conteudos?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?checkout=cancelado`,
     });
 
