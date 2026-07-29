@@ -19,6 +19,11 @@ begin
     'q_modulos','q_questoes','r_modulos','r_itens'
   ]
   loop
+    -- pula tabelas que ainda não existem (evita erro se algum banco não foi criado)
+    if to_regclass('public.' || t) is null then
+      continue;
+    end if;
+
     -- garante RLS ligado
     execute format('alter table public.%I enable row level security;', t);
 
