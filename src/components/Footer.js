@@ -6,10 +6,12 @@ const COLUNAS = [
   {
     titulo: "Estudar",
     links: [
+      { href: "/conteudos", label: "Conteúdos" },
       { href: "/cronograma", label: "Cronograma" },
       { href: "/questoes", label: "Questões" },
+      { href: "/simulados", label: "Simulados" },
       { href: "/redacao", label: "Redação" },
-      { href: "/conteudos", label: "Conteúdos" },
+      { href: "/resumos", label: "Resumos" },
     ],
   },
   {

@@ -27,11 +27,15 @@ import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
 import QuestoesClient from "@/modules/questoes/QuestoesClient";
 import RedacaoClient from "@/modules/redacao/RedacaoClient";
+import SimuladosClient from "@/modules/simulados/SimuladosClient";
+import ResumosClient from "@/modules/resumos/ResumosClient";
 
 const SECOES = [
   { id: "aulas", label: "Aulas" },
   { id: "questoes", label: "Questões" },
+  { id: "simulados", label: "Simulados" },
   { id: "redacao", label: "Redação" },
+  { id: "resumos", label: "Resumos" },
 ];
 
 export default function AdminApp() {
@@ -76,13 +80,13 @@ export default function AdminApp() {
     <div className="container max-w-4xl py-10">
       <Cabecalho db={db} mostrarStats={secao === "aulas"} />
 
-      {/* Divisões do painel: Aulas · Questões · Redação (sem Cronograma) */}
-      <div className="mb-6 flex justify-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
+      {/* Divisões do painel: Aulas · Questões · Simulados · Redação · Resumos */}
+      <div className="mb-6 flex gap-2 overflow-x-auto rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
         {SECOES.map((s) => (
           <button
             key={s.id}
             onClick={() => setSecao(s.id)}
-            className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+            className={`flex-1 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-semibold transition ${
               secao === s.id
                 ? "bg-brand-600 text-white shadow-sm"
                 : "text-slate-600 hover:bg-slate-100"
@@ -95,8 +99,12 @@ export default function AdminApp() {
 
       {secao === "questoes" ? (
         <QuestoesClient embutido forcarAdmin />
+      ) : secao === "simulados" ? (
+        <SimuladosClient embutido forcarAdmin />
       ) : secao === "redacao" ? (
         <RedacaoClient embutido forcarAdmin />
+      ) : secao === "resumos" ? (
+        <ResumosClient embutido forcarAdmin />
       ) : (
         <>
           <Breadcrumb crumbs={crumbs} />

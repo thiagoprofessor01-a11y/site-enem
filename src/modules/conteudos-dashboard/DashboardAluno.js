@@ -12,9 +12,11 @@ import AgendaAulas from "./AgendaAulas";
 
 const ATALHOS = [
   { href: "/conteudos", titulo: "Conteúdos", icon: "livro", cor: "bg-blue-600" },
-  { href: "/questoes", titulo: "Questões", icon: "lista", cor: "bg-emerald-600" },
-  { href: "/redacao", titulo: "Redação", icon: "lapis", cor: "bg-rose-600" },
   { href: "/cronograma", titulo: "Cronograma", icon: "calendario", cor: "bg-amber-600" },
+  { href: "/questoes", titulo: "Questões", icon: "lista", cor: "bg-emerald-600" },
+  { href: "/simulados", titulo: "Simulados", icon: "raio", cor: "bg-violet-600" },
+  { href: "/redacao", titulo: "Redação", icon: "lapis", cor: "bg-rose-600" },
+  { href: "/resumos", titulo: "Resumos", icon: "livro", cor: "bg-slate-600" },
 ];
 
 export default function DashboardAluno() {
@@ -84,29 +86,32 @@ export default function DashboardAluno() {
         )}
       </div>
 
-      {/* Sem cronograma → convite */}
+      {/* Sem cronograma → convite (não mostra agenda nenhuma) */}
       {cronograma === null && (
-        <div className="card mt-6 p-8 text-center">
-          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-3xl">
+        <div className="card mt-6 border-2 border-dashed border-amber-300 bg-amber-50/60 p-8 text-center">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500 text-3xl text-white">
             🗓️
           </span>
-          <h2 className="mt-4 text-xl font-bold text-slate-900">Monte seu cronograma</h2>
+          <h2 className="mt-4 text-xl font-bold text-slate-900">
+            Você ainda não configurou seu cronograma
+          </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
-            Diga quantas horas por dia você tem e a gente monta um plano priorizando o que mais cai no ENEM — com as aulas do seu dia.
+            Configure quantas horas por dia e em quais dias você vai estudar. A gente monta
+            um plano priorizando o que mais cai no ENEM e mostra aqui as aulas do seu dia.
           </p>
           <Link href="/cronograma" className="btn-primary mt-6">
-            Criar meu cronograma
+            Configurar meu cronograma
           </Link>
         </div>
       )}
 
-      {/* Agenda */}
+      {/* Agenda — só quando há cronograma configurado */}
       {cronograma && <AgendaAulas agenda={agenda} hoje={hoje} />}
 
       {/* Atalhos */}
       <section className="mt-10">
         <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Atalhos</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {ATALHOS.map((a) => (
             <Link
               key={a.href}
