@@ -28,6 +28,7 @@ create table if not exists public.redacao_pdfs (
   titulo text not null default '',
   url text not null default '',
   path text not null default '',
+  tipo text not null default 'pdf',   -- 'pdf' ou 'imagem'
   ordem integer not null default 0,
   created_at timestamptz not null default now()
 );
@@ -45,6 +46,7 @@ create table if not exists public.resumo_pdfs (
   titulo text not null default '',
   url text not null default '',
   path text not null default '',
+  tipo text not null default 'pdf',   -- 'pdf' ou 'imagem'
   ordem integer not null default 0,
   created_at timestamptz not null default now()
 );

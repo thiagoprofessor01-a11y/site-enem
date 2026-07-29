@@ -5,7 +5,7 @@ import { redacaoStore } from "./redacao-store";
 
 const textos = {
   titulo: "Redação",
-  subtitulo: "Baixe os materiais de redação em PDF.",
+  subtitulo: "Os melhores temas para você produzir sua redação.",
   subtituloAdmin: "Adicione PDFs de redação (título + arquivo). O aluno vê a prévia e baixa.",
   placeholderTitulo: "Ex.: Estrutura da dissertação / Tema — Meio ambiente",
 };

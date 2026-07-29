@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PdfCard from "@/components/PdfCard";
-import { uploadPdf } from "@/lib/pdf-upload";
+import { uploadArquivo } from "@/lib/pdf-upload";
 import { useSessao } from "@/modules/auth/auth";
 
 // Banco de PDFs. Dois modos:
@@ -15,7 +15,14 @@ import { useSessao } from "@/modules/auth/auth";
 const input =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
-export default function BancoPdfs({ store, textos, comModulos = false, embutido = false, forcarAdmin = false }) {
+export default function BancoPdfs({
+  store,
+  textos,
+  comModulos = false,
+  aceitaImagem = false,
+  embutido = false,
+  forcarAdmin = false,
+}) {
   const sessao = useSessao();
   const [banco, setBanco] = useState(null);
 
@@ -47,9 +54,24 @@ export default function BancoPdfs({ store, textos, comModulos = false, embutido 
       .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
 
   const corpo = comModulos ? (
-    <ModoModulos banco={banco} admin={admin} store={store} textos={t} recarregar={recarregar} pdfsDe={pdfsDe} />
+    <ModoModulos
+      banco={banco}
+      admin={admin}
+      store={store}
+      textos={t}
+      recarregar={recarregar}
+      pdfsDe={pdfsDe}
+      aceitaImagem={aceitaImagem}
+    />
   ) : (
-    <ModoFlat pdfs={pdfsDe()} admin={admin} store={store} textos={t} recarregar={recarregar} />
+    <ModoFlat
+      pdfs={pdfsDe()}
+      admin={admin}
+      store={store}
+      textos={t}
+      recarregar={recarregar}
+      aceitaImagem={aceitaImagem}
+    />
   );
 
   if (embutido) return <div>{corpo}</div>;
@@ -66,19 +88,20 @@ export default function BancoPdfs({ store, textos, comModulos = false, embutido 
 }
 
 /* ---------- modo simples (Redação) ---------- */
-function ModoFlat({ pdfs, admin, store, textos, recarregar }) {
+function ModoFlat({ pdfs, admin, store, textos, recarregar, aceitaImagem }) {
   return (
     <div className="space-y-6">
       {admin && (
         <UploadForm
           textos={textos}
           pasta="redacao"
+          aceitaImagem={aceitaImagem}
           onSalvar={(dados) => recarregar(store.addPdf(null, dados))}
         />
       )}
       {pdfs.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-400">
-          Nenhum PDF publicado ainda.
+          Nenhum material publicado ainda.
         </div>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,6 +110,7 @@ function ModoFlat({ pdfs, admin, store, textos, recarregar }) {
               key={p.id}
               titulo={p.titulo}
               url={p.url}
+              tipo={p.tipo}
               onExcluir={admin ? () => recarregar(store.deletePdf(p.id)) : undefined}
             />
           ))}
@@ -97,7 +121,7 @@ function ModoFlat({ pdfs, admin, store, textos, recarregar }) {
 }
 
 /* ---------- modo com módulos (Resumos) ---------- */
-function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe }) {
+function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe, aceitaImagem }) {
   const modulos = [...banco.modulos].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
   return (
     <div className="space-y-8">
@@ -114,6 +138,7 @@ function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe }) {
             pdfs={pdfsDe(mod.id)}
             admin={admin}
             textos={textos}
+            aceitaImagem={aceitaImagem}
             onExcluir={() => recarregar(store.deleteModulo(mod.id))}
             onAddPdf={(dados) => recarregar(store.addPdf(mod.id, dados))}
             onDelPdf={(id) => recarregar(store.deletePdf(id))}
@@ -124,7 +149,7 @@ function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe }) {
   );
 }
 
-function ModuloBloco({ modulo, pdfs, admin, textos, onExcluir, onAddPdf, onDelPdf }) {
+function ModuloBloco({ modulo, pdfs, admin, textos, aceitaImagem, onExcluir, onAddPdf, onDelPdf }) {
   const [addindo, setAddindo] = useState(false);
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-card">
@@ -154,6 +179,7 @@ function ModuloBloco({ modulo, pdfs, admin, textos, onExcluir, onAddPdf, onDelPd
               key={p.id}
               titulo={p.titulo}
               url={p.url}
+              tipo={p.tipo}
               onExcluir={admin ? () => onDelPdf(p.id) : undefined}
             />
           ))}
@@ -166,6 +192,7 @@ function ModuloBloco({ modulo, pdfs, admin, textos, onExcluir, onAddPdf, onDelPd
             <UploadForm
               textos={textos}
               pasta="resumos"
+              aceitaImagem={aceitaImagem}
               onSalvar={(dados) => {
                 onAddPdf(dados);
                 setAddindo(false);
@@ -179,7 +206,7 @@ function ModuloBloco({ modulo, pdfs, admin, textos, onExcluir, onAddPdf, onDelPd
             onClick={() => setAddindo(true)}
             className="mt-4 w-full rounded-lg border border-dashed border-slate-300 py-2.5 text-sm font-semibold text-brand-600 transition hover:border-brand-400 hover:bg-brand-50"
           >
-            + Adicionar PDF
+            {aceitaImagem ? "+ Adicionar PDF ou imagem" : "+ Adicionar PDF"}
           </button>
         ))}
     </section>
@@ -215,7 +242,7 @@ function NovoModulo({ textos, onCriar }) {
   );
 }
 
-function UploadForm({ textos, pasta, onSalvar, onCancelar }) {
+function UploadForm({ textos, pasta, aceitaImagem = false, onSalvar, onCancelar }) {
   const [titulo, setTitulo] = useState("");
   const [arquivo, setArquivo] = useState(null);
   const [enviando, setEnviando] = useState(false);
@@ -225,17 +252,17 @@ function UploadForm({ textos, pasta, onSalvar, onCancelar }) {
     e.preventDefault();
     setErro("");
     if (!titulo.trim() || !arquivo) {
-      setErro("Preencha o título e escolha o PDF.");
+      setErro(aceitaImagem ? "Preencha o título e escolha o PDF ou imagem." : "Preencha o título e escolha o PDF.");
       return;
     }
     setEnviando(true);
     try {
-      const { url, path } = await uploadPdf(arquivo, pasta);
-      await onSalvar({ titulo: titulo.trim(), url, path });
+      const { url, path, tipo } = await uploadArquivo(arquivo, pasta, aceitaImagem);
+      await onSalvar({ titulo: titulo.trim(), url, path, tipo });
       setTitulo("");
       setArquivo(null);
     } catch (err) {
-      setErro(err?.message || "Não foi possível enviar o PDF.");
+      setErro(err?.message || "Não foi possível enviar o arquivo.");
     } finally {
       setEnviando(false);
     }
@@ -253,10 +280,12 @@ function UploadForm({ textos, pasta, onSalvar, onCancelar }) {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Arquivo PDF</label>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">
+          {aceitaImagem ? "Arquivo (PDF ou imagem)" : "Arquivo PDF"}
+        </label>
         <input
           type="file"
-          accept="application/pdf"
+          accept={aceitaImagem ? "application/pdf,image/*" : "application/pdf"}
           onChange={(e) => setArquivo(e.target.files?.[0] || null)}
           className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-700"
         />
@@ -268,7 +297,7 @@ function UploadForm({ textos, pasta, onSalvar, onCancelar }) {
           disabled={enviando}
           className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-50"
         >
-          {enviando ? "Enviando…" : "Adicionar PDF"}
+          {enviando ? "Enviando…" : aceitaImagem ? "Adicionar" : "Adicionar PDF"}
         </button>
         {onCancelar && (
           <button

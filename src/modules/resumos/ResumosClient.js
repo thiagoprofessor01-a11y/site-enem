@@ -5,8 +5,8 @@ import { resumosStore } from "./resumos-store";
 
 const textos = {
   titulo: "Resumos",
-  subtitulo: "Resumos em PDF, organizados por matéria. Baixe no seu celular.",
-  subtituloAdmin: "Crie matérias e adicione os resumos em PDF de cada uma.",
+  subtitulo: "Resumos em PDF e imagens, organizados por matéria. Veja aqui ou baixe.",
+  subtituloAdmin: "Crie matérias e adicione os resumos (PDF ou imagem) de cada uma.",
   placeholderModulo: "Nome da matéria (ex.: Matemática, Biologia…)",
   placeholderTitulo: "Ex.: Funções — resumo completo",
 };
@@ -17,8 +17,10 @@ export default function ResumosClient({ embutido = false, forcarAdmin = false })
       store={resumosStore}
       textos={textos}
       comModulos
+      aceitaImagem
       embutido={embutido}
       forcarAdmin={forcarAdmin}
     />
   );
 }
+

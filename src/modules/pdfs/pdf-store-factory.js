@@ -48,7 +48,7 @@ export function makePdfStore({ key, tabelaModulos, tabelaPdfs }) {
         db.pdfs = db.pdfs.filter((x) => x.moduloId !== id);
       });
     },
-    addPdf(moduloId, { titulo, url, path }) {
+    addPdf(moduloId, { titulo, url, path, tipo }) {
       return this.mutate((db) =>
         db.pdfs.push({
           id: genId(),
@@ -56,6 +56,7 @@ export function makePdfStore({ key, tabelaModulos, tabelaPdfs }) {
           titulo: (titulo || "").trim(),
           url,
           path: path || "",
+          tipo: tipo || "pdf",
           ordem: Math.floor(Date.now() / 1000),
         })
       );
@@ -91,6 +92,7 @@ export function makePdfStore({ key, tabelaModulos, tabelaPdfs }) {
           titulo: p.titulo || "",
           url: p.url || "",
           path: p.path || "",
+          tipo: p.tipo || "pdf",
           ordem: p.ordem ?? 0,
         })),
       };
@@ -112,10 +114,16 @@ export function makePdfStore({ key, tabelaModulos, tabelaPdfs }) {
       checar(error);
       return this.fetchAll();
     },
-    async addPdf(moduloId, { titulo, url, path }) {
+    async addPdf(moduloId, { titulo, url, path, tipo }) {
       const { error } = await sb()
         .from(tabelaPdfs)
-        .insert({ modulo_id: moduloId || null, titulo: (titulo || "").trim(), url, path: path || "" });
+        .insert({
+          modulo_id: moduloId || null,
+          titulo: (titulo || "").trim(),
+          url,
+          path: path || "",
+          tipo: tipo || "pdf",
+        });
       checar(error);
       return this.fetchAll();
     },

@@ -3,12 +3,18 @@
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/modules/admin/admin-store";
 
-// Envia um PDF e devolve { url, path }.
-//  • Supabase configurado → sobe para o Storage (bucket "pdfs") e devolve a URL pública.
-//  • Sem Supabase (local/preview) → devolve o PDF como data URL (base64) para testar.
-export async function uploadPdf(file, pasta = "geral") {
+// Envia um arquivo (PDF ou, se permitido, imagem) e devolve { url, path, tipo }.
+//  tipo = "pdf" | "imagem".
+//  • Supabase configurado → sobe para o Storage (bucket "pdfs") → URL pública.
+//  • Sem Supabase (local/preview) → devolve como data URL (base64) para testar.
+export async function uploadArquivo(file, pasta = "geral", aceitaImagem = false) {
   if (!file) throw new Error("Nenhum arquivo selecionado.");
-  if (file.type !== "application/pdf") throw new Error("Envie um arquivo PDF.");
+  const ehPdf = file.type === "application/pdf";
+  const ehImagem = file.type.startsWith("image/");
+  if (!ehPdf && !(aceitaImagem && ehImagem)) {
+    throw new Error(aceitaImagem ? "Envie um PDF ou uma imagem." : "Envie um arquivo PDF.");
+  }
+  const tipo = ehImagem ? "imagem" : "pdf";
 
   if (!isSupabaseConfigured()) {
     const dataUrl = await new Promise((resolve, reject) => {
@@ -17,7 +23,7 @@ export async function uploadPdf(file, pasta = "geral") {
       r.onerror = reject;
       r.readAsDataURL(file);
     });
-    return { url: dataUrl, path: "" };
+    return { url: dataUrl, path: "", tipo };
   }
 
   const supabase = createClient();
@@ -25,8 +31,8 @@ export async function uploadPdf(file, pasta = "geral") {
   const path = `${pasta}/${Date.now()}-${nomeLimpo}`;
   const { error } = await supabase.storage
     .from("pdfs")
-    .upload(path, file, { contentType: "application/pdf", upsert: false });
+    .upload(path, file, { contentType: file.type, upsert: false });
   if (error) throw error;
   const { data } = supabase.storage.from("pdfs").getPublicUrl(path);
-  return { url: data.publicUrl, path };
+  return { url: data.publicUrl, path, tipo };
 }
