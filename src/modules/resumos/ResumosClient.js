@@ -18,6 +18,7 @@ export default function ResumosClient({ embutido = false, forcarAdmin = false })
       textos={textos}
       comModulos
       aceitaImagem
+      paisagem
       embutido={embutido}
       forcarAdmin={forcarAdmin}
     />

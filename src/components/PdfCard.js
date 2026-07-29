@@ -4,9 +4,10 @@ import { useState } from "react";
 
 // Cartão de material (PDF ou imagem): prévia A4, título completo, ver dentro
 // do site (ao clicar) e botão de download.
-export default function PdfCard({ titulo, url, tipo = "pdf", onExcluir }) {
+export default function PdfCard({ titulo, url, tipo = "pdf", orientacao = "retrato", onExcluir }) {
   const [aberto, setAberto] = useState(false);
   const isImg = tipo === "imagem";
+  const aspecto = orientacao === "paisagem" ? "aspect-[297/210]" : "aspect-[210/297]";
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition hover:shadow-card-hover">
@@ -14,24 +15,23 @@ export default function PdfCard({ titulo, url, tipo = "pdf", onExcluir }) {
       <button
         type="button"
         onClick={() => setAberto(true)}
-        className="relative w-full bg-slate-100"
-        style={{ aspectRatio: "1 / 1.414" }}
+        className={`relative block w-full overflow-hidden bg-slate-100 ${aspecto}`}
         aria-label={`Ver ${titulo}`}
       >
         {url ? (
           isImg ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={url} alt={titulo} className="h-full w-full object-cover" />
+            <img src={url} alt={titulo} className="absolute inset-0 h-full w-full object-cover" />
           ) : (
             <iframe
               src={`${url}#toolbar=0&navpanes=0&view=FitH`}
               title={titulo}
-              className="pointer-events-none h-full w-full"
+              className="pointer-events-none absolute inset-0 h-full w-full"
               loading="lazy"
             />
           )
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-slate-300">Arquivo</div>
+          <div className="absolute inset-0 flex items-center justify-center text-slate-300">Arquivo</div>
         )}
         <span className="absolute inset-0 flex items-center justify-center bg-slate-900/0 transition group-hover:bg-slate-900/20">
           <span className="rounded-lg bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-900 opacity-0 shadow transition group-hover:opacity-100">

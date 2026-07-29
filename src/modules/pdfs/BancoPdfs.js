@@ -20,6 +20,7 @@ export default function BancoPdfs({
   textos,
   comModulos = false,
   aceitaImagem = false,
+  paisagem = false,
   embutido = false,
   forcarAdmin = false,
 }) {
@@ -62,6 +63,7 @@ export default function BancoPdfs({
       recarregar={recarregar}
       pdfsDe={pdfsDe}
       aceitaImagem={aceitaImagem}
+      paisagem={paisagem}
     />
   ) : (
     <ModoFlat
@@ -121,7 +123,7 @@ function ModoFlat({ pdfs, admin, store, textos, recarregar, aceitaImagem }) {
 }
 
 /* ---------- modo com módulos (Resumos) ---------- */
-function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe, aceitaImagem }) {
+function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe, aceitaImagem, paisagem }) {
   const modulos = [...banco.modulos].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
   return (
     <div className="space-y-8">
@@ -139,6 +141,7 @@ function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe, aceitaIm
             admin={admin}
             textos={textos}
             aceitaImagem={aceitaImagem}
+            paisagem={paisagem}
             onExcluir={() => recarregar(store.deleteModulo(mod.id))}
             onAddPdf={(dados) => recarregar(store.addPdf(mod.id, dados))}
             onDelPdf={(id) => recarregar(store.deletePdf(id))}
@@ -149,7 +152,10 @@ function ModoModulos({ banco, admin, store, textos, recarregar, pdfsDe, aceitaIm
   );
 }
 
-function ModuloBloco({ modulo, pdfs, admin, textos, aceitaImagem, onExcluir, onAddPdf, onDelPdf }) {
+function ModuloBloco({ modulo, pdfs, admin, textos, aceitaImagem, paisagem, onExcluir, onAddPdf, onDelPdf }) {
+  const gridCls = paisagem
+    ? "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+    : "grid gap-5 sm:grid-cols-2 lg:grid-cols-3";
   const [addindo, setAddindo] = useState(false);
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-card">
@@ -173,13 +179,14 @@ function ModuloBloco({ modulo, pdfs, admin, textos, aceitaImagem, onExcluir, onA
       )}
 
       {pdfs.length > 0 && (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={gridCls}>
           {pdfs.map((p) => (
             <PdfCard
               key={p.id}
               titulo={p.titulo}
               url={p.url}
               tipo={p.tipo}
+              orientacao={paisagem ? "paisagem" : "retrato"}
               onExcluir={admin ? () => onDelPdf(p.id) : undefined}
             />
           ))}

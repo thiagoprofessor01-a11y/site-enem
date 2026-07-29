@@ -41,7 +41,10 @@ export default function MateriaClient({ materiaId }) {
     );
   }
 
-  const modulos = db.modulos.filter((m) => m.materiaId === materia.id);
+  // Mais bolinhas (nível maior) primeiro; empate mantém a ordem de cadastro.
+  const modulos = db.modulos
+    .filter((m) => m.materiaId === materia.id)
+    .sort((a, b) => (b.nivel ?? 3) - (a.nivel ?? 3));
   const info = areaInfo(materia.area);
 
   return (
