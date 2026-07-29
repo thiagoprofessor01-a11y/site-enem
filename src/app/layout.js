@@ -19,8 +19,17 @@ const sans = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://www.meuenem.online"),
   title: `${SITE.nome} — Estudos para o ENEM`,
   description: SITE.descricao,
+  openGraph: {
+    title: `${SITE.nome} — Estudos para o ENEM`,
+    description: SITE.descricao,
+    url: "https://www.meuenem.online",
+    siteName: SITE.nome,
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

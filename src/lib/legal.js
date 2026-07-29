@@ -4,8 +4,10 @@ export const LEGAL = {
   empresa: "[NOME / RAZÃO SOCIAL]",
   cnpj: "[CNPJ ou CPF do responsável]",
   // Canal do titular / Encarregado (DPO)
-  email: "privacidade@seudominio.com.br",
+  email: "contato@meuenem.online", // crie esta caixa de e-mail ou troque pela sua
   encarregado: "[Nome do Encarregado (DPO)]",
+  // Site
+  dominio: "www.meuenem.online",
   // Idade mínima para usar sozinho (sem responsável). Ajuste conforme orientação jurídica.
   idadeMenorConsentimento: 18,
   atualizadoEm: "julho de 2026",
@@ -13,7 +15,7 @@ export const LEGAL = {
   operadores: [
     { nome: "Supabase", papel: "Banco de dados e autenticação (região São Paulo)" },
     { nome: "Vercel", papel: "Hospedagem do site" },
-    { nome: "Mercado Pago", papel: "Processamento de pagamentos" },
+    { nome: "Stripe", papel: "Processamento de pagamentos" },
     { nome: "YouTube (Google)", papel: "Exibição das videoaulas incorporadas" },
   ],
 };
