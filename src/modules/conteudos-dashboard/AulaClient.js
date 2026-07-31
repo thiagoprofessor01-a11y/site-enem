@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { fetchAll } from "@/modules/admin/admin-store";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
 import Icon from "@/components/Icon";
 import { areaInfo } from "./conteudos-ui";
-import { isConcluida, setConcluida } from "./progresso";
+import {
+  isConcluida,
+  setConcluida,
+  isConcluidaQuestao,
+  setConcluidaQuestao,
+} from "./progresso";
 
 const LETRAS = ["A", "B", "C", "D", "E"];
 
@@ -56,7 +61,37 @@ function QuestaoEstruturada({ questao }) {
   );
 }
 
-export default function AulaClient({ materiaId, aulaId }) {
+// Questão com botão "tela cheia" (abre a questão ocupando toda a tela).
+function QuestaoTelaCheia({ children }) {
+  const ref = useRef(null);
+  function abrir() {
+    const el = ref.current;
+    if (el?.requestFullscreen) el.requestFullscreen();
+  }
+  return (
+    <div ref={ref} className="overflow-auto rounded-xl border border-slate-200 bg-white">
+      <div className="flex justify-end border-b border-slate-100 p-2">
+        <button
+          type="button"
+          onClick={abrir}
+          className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+        >
+          ⛶ Tela cheia
+        </button>
+      </div>
+      <div className="p-2">{children}</div>
+    </div>
+  );
+}
+
+export default function AulaClient({
+  materiaId,
+  aulaId,
+  base = "/conteudos",
+  titulo = "Conteúdos",
+  modo = "conteudos",
+}) {
+  const ehQuestoes = modo === "questoes";
   const [db, setDb] = useState(null);
   const [feita, setFeita] = useState(false);
 
@@ -71,19 +106,18 @@ export default function AulaClient({ materiaId, aulaId }) {
   }, []);
 
   useEffect(() => {
-    setFeita(isConcluida(aulaId));
-  }, [aulaId]);
+    setFeita(ehQuestoes ? isConcluidaQuestao(aulaId) : isConcluida(aulaId));
+  }, [aulaId, ehQuestoes]);
 
   function alternarConcluida() {
     const novo = !feita;
-    setConcluida(aulaId, novo);
+    if (ehQuestoes) setConcluidaQuestao(aulaId, novo);
+    else setConcluida(aulaId, novo);
     setFeita(novo);
   }
 
   if (!db) {
-    return (
-      <div className="container py-16 text-center text-slate-400">Carregando…</div>
-    );
+    return <div className="container py-16 text-center text-slate-400">Carregando…</div>;
   }
 
   const aula = db.aulas.find((a) => a.id === aulaId);
@@ -91,10 +125,7 @@ export default function AulaClient({ materiaId, aulaId }) {
     return (
       <div className="container max-w-2xl py-20 text-center">
         <p className="text-slate-500">Aula não encontrada.</p>
-        <Link
-          href={`/conteudos/${materiaId}`}
-          className="mt-4 inline-block text-sm font-semibold text-brand-600"
-        >
+        <Link href={`${base}/${materiaId}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
           ← Voltar
         </Link>
       </div>
@@ -107,25 +138,24 @@ export default function AulaClient({ materiaId, aulaId }) {
   const videos = db.videos.filter((v) => v.aulaId === aula.id);
   const questoes = db.questoes.filter((q) => q.aulaId === aula.id);
 
-  // Aula anterior / próxima dentro do mesmo módulo (para estudar em sequência).
   const irmas = db.aulas.filter((a) => a.moduloId === aula.moduloId);
   const pos = irmas.findIndex((a) => a.id === aula.id);
   const anterior = pos > 0 ? irmas[pos - 1] : null;
   const proxima = pos < irmas.length - 1 ? irmas[pos + 1] : null;
-  const linkAula = (a) => `/conteudos/${materia?.id || materiaId}/${a.id}`;
+  const linkAula = (a) => `${base}/${materia?.id || materiaId}/${a.id}`;
 
   return (
     <div className="container max-w-6xl py-10">
       {/* Breadcrumb */}
       <nav className="mb-5 flex flex-wrap items-center gap-1 text-sm">
-        <Link href="/conteudos" className="font-medium text-brand-600 hover:text-brand-700">
-          Conteúdos
+        <Link href={base} className="font-medium text-brand-600 hover:text-brand-700">
+          {titulo}
         </Link>
         {materia && (
           <>
             <span className="text-slate-300">/</span>
             <Link
-              href={`/conteudos/${materia.id}`}
+              href={`${base}/${materia.id}`}
               className="font-medium text-brand-600 hover:text-brand-700"
             >
               {materia.nome}
@@ -153,44 +183,12 @@ export default function AulaClient({ materiaId, aulaId }) {
           </h1>
           <NivelDots nivel={aula.nivel} tamanho="lg" />
         </div>
-        {aula.resumo && (
-          <p className="mt-2 text-slate-600">{aula.resumo}</p>
-        )}
+        {aula.resumo && <p className="mt-2 text-slate-600">{aula.resumo}</p>}
       </header>
 
-      {/* Vídeos */}
-      {videos.length > 0 ? (
-        <div className="space-y-6">
-          {videos.map((v) => (
-            <figure key={v.id}>
-              <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
-                <iframe
-                  className="h-full w-full"
-                  src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
-                  title={v.titulo}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-              {v.titulo && (
-                <figcaption className="mt-2 text-sm font-medium text-slate-700">
-                  {v.titulo}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
-          Videoaula em breve para este tópico.
-        </div>
-      )}
-
-      {/* Questionário */}
-      {questoes.length > 0 && (
-        <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">Questionário</h2>
+      {ehQuestoes ? (
+        /* QUESTÕES — código HTML com visualização em tela cheia */
+        questoes.length > 0 ? (
           <div className="space-y-5">
             {questoes.map((q, i) => (
               <div key={q.id}>
@@ -200,26 +198,59 @@ export default function AulaClient({ materiaId, aulaId }) {
                   </p>
                 )}
                 {q.formato === "html" ? (
-                  <div className="overflow-hidden rounded-lg border border-slate-200">
+                  <QuestaoTelaCheia>
                     <HtmlEmbed html={q.html} />
-                  </div>
+                  </QuestaoTelaCheia>
                 ) : (
                   <QuestaoEstruturada questao={q} />
                 )}
               </div>
             ))}
           </div>
-        </section>
+        ) : (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
+            Questões em breve para este tópico.
+          </div>
+        )
+      ) : (
+        /* CONTEÚDOS — apenas os vídeos */
+        videos.length > 0 ? (
+          <div className="space-y-6">
+            {videos.map((v) => (
+              <figure key={v.id}>
+                <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
+                  <iframe
+                    className="h-full w-full"
+                    src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
+                    title={v.titulo}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                {v.titulo && (
+                  <figcaption className="mt-2 text-sm font-medium text-slate-700">
+                    {v.titulo}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
+            Videoaula em breve para este tópico.
+          </div>
+        )
       )}
 
-      {/* Concluir aula — quadrado que se preenche ao clicar */}
+      {/* Concluir — quadrado que se preenche ao clicar */}
       <div className="mt-10 flex items-center gap-3">
         <button
           type="button"
           onClick={alternarConcluida}
           role="checkbox"
           aria-checked={feita}
-          aria-label="Marcar aula como concluída"
+          aria-label={ehQuestoes ? "Marcar questões como concluídas" : "Marcar aula como concluída"}
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
             feita
               ? "border-green-600 bg-green-600 text-white"
@@ -237,7 +268,13 @@ export default function AulaClient({ materiaId, aulaId }) {
           )}
         </button>
         <span className="text-sm font-medium text-slate-700">
-          {feita ? "Aula concluída" : "Marcar aula como concluída"}
+          {ehQuestoes
+            ? feita
+              ? "Questões concluídas"
+              : "Marcar questões como concluídas"
+            : feita
+            ? "Aula concluída"
+            : "Marcar aula como concluída"}
         </span>
       </div>
 
@@ -255,7 +292,7 @@ export default function AulaClient({ materiaId, aulaId }) {
             {proxima.titulo} →
           </Link>
         ) : (
-          <Link href={`/conteudos/${materia?.id || materiaId}`} className="btn-secondary">
+          <Link href={`${base}/${materia?.id || materiaId}`} className="btn-secondary">
             Voltar para a matéria
           </Link>
         )}

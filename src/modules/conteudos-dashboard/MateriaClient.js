@@ -6,12 +6,18 @@ import { fetchAll } from "@/modules/admin/admin-store";
 import NivelDots from "@/components/NivelDots";
 import Icon from "@/components/Icon";
 import { areaInfo } from "./conteudos-ui";
-import { useConcluidas } from "./progresso";
+import { useConcluidas, useConcluidasQuestoes } from "./progresso";
 
-export default function MateriaClient({ materiaId }) {
+export default function MateriaClient({
+  materiaId,
+  base = "/conteudos",
+  titulo = "Conteúdos",
+  modo = "conteudos",
+}) {
   const [db, setDb] = useState(null);
-  const concluidas = useConcluidas();
-  const feitasSet = new Set(concluidas || []);
+  const concluidasAulas = useConcluidas();
+  const concluidasQuestoes = useConcluidasQuestoes();
+  const feitasSet = new Set((modo === "questoes" ? concluidasQuestoes : concluidasAulas) || []);
 
   useEffect(() => {
     let ativo = true;
@@ -34,8 +40,8 @@ export default function MateriaClient({ materiaId }) {
     return (
       <div className="container max-w-2xl py-20 text-center">
         <p className="text-slate-500">Matéria não encontrada.</p>
-        <Link href="/conteudos" className="mt-4 inline-block text-sm font-semibold text-brand-600">
-          ← Voltar para Conteúdos
+        <Link href={base} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+          ← Voltar para {titulo}
         </Link>
       </div>
     );
@@ -51,8 +57,8 @@ export default function MateriaClient({ materiaId }) {
     <div className="container max-w-3xl py-10">
       {/* Breadcrumb */}
       <nav className="mb-5 flex items-center gap-1 text-sm">
-        <Link href="/conteudos" className="font-medium text-brand-600 hover:text-brand-700">
-          Conteúdos
+        <Link href={base} className="font-medium text-brand-600 hover:text-brand-700">
+          {titulo}
         </Link>
         <span className="text-slate-300">/</span>
         <span className="font-semibold text-slate-900">{materia.nome}</span>
@@ -99,7 +105,7 @@ export default function MateriaClient({ materiaId }) {
                     return (
                       <li key={aula.id}>
                         <Link
-                          href={`/conteudos/${materia.id}/${aula.id}`}
+                          href={`${base}/${materia.id}/${aula.id}`}
                           className={`card flex items-center justify-between gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-card-hover ${info.ring}`}
                         >
                           <span className="min-w-0">
@@ -119,10 +125,13 @@ export default function MateriaClient({ materiaId }) {
                               <NivelDots nivel={aula.nivel} />
                             </span>
                             <span className="mt-0.5 block text-xs text-slate-500">
-                              {nVideos > 0 && `${nVideos} vídeo(s)`}
-                              {nVideos > 0 && nQuestoes > 0 && " · "}
-                              {nQuestoes > 0 && `${nQuestoes} questão(ões)`}
-                              {nVideos === 0 && nQuestoes === 0 && "Abrir aula"}
+                              {modo === "questoes"
+                                ? nQuestoes > 0
+                                  ? `${nQuestoes} questão(ões)`
+                                  : "Abrir questões"
+                                : nVideos > 0
+                                ? `${nVideos} vídeo(s)`
+                                : "Abrir aula"}
                             </span>
                           </span>
                           <span className={`shrink-0 text-lg font-bold ${info.text}`}>→</span>

@@ -138,6 +138,7 @@ export async function excluirConta() {
   if (typeof window !== "undefined") {
     window.localStorage.removeItem("meuenem:cronograma");
     window.localStorage.removeItem("meuenem:concluidas");
+    window.localStorage.removeItem("meuenem:concluidas-questoes");
   }
   if (authFake()) {
     limparSessaoLocal();

@@ -55,10 +55,9 @@ export default function AgendaAulas({ agenda, hoje }) {
             {hojeDia.aulas.map((aula) => {
               const info = areaInfo(aula.areaSlug);
               return (
-                <Link
+                <div
                   key={aula.id}
-                  href={`/conteudos/${aula.materiaId}/${aula.id}`}
-                  className={`card group flex items-center gap-4 border ${info.border} p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover sm:p-5`}
+                  className={`card flex flex-col gap-3 border ${info.border} p-4 shadow-card sm:flex-row sm:items-center sm:p-5`}
                 >
                   <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${info.solid} text-white`}>
                     <Icon name="play" className="h-6 w-6" />
@@ -75,10 +74,22 @@ export default function AgendaAulas({ agenda, hoje }) {
                     </span>
                     <span className="block truncate text-xs text-slate-400">{aula.modNome}</span>
                   </span>
-                  <span className="hidden shrink-0 items-center gap-1 rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition group-hover:bg-brand-600 sm:flex">
-                    Estudar →
+                  {/* Escolha: assistir a aula ou responder as questões */}
+                  <span className="flex shrink-0 gap-2">
+                    <Link
+                      href={`/conteudos/${aula.materiaId}/${aula.id}`}
+                      className="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-brand-600 sm:flex-none"
+                    >
+                      Aula
+                    </Link>
+                    <Link
+                      href={`/questoes/${aula.materiaId}/${aula.id}`}
+                      className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:flex-none"
+                    >
+                      Questões
+                    </Link>
                   </span>
-                </Link>
+                </div>
               );
             })}
           </div>

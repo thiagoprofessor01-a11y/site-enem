@@ -25,7 +25,6 @@ import {
 import { Campo, inputClass, Botao, CardVazio, Tag } from "./ui";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
-import QuestoesClient from "@/modules/questoes/QuestoesClient";
 import RedacaoClient from "@/modules/redacao/RedacaoClient";
 import SimuladosClient from "@/modules/simulados/SimuladosClient";
 import ResumosClient from "@/modules/resumos/ResumosClient";
@@ -78,7 +77,7 @@ export default function AdminApp() {
 
   return (
     <div className="container max-w-4xl py-10">
-      <Cabecalho db={db} mostrarStats={secao === "aulas"} />
+      <Cabecalho db={db} mostrarStats={secao === "aulas" || secao === "questoes"} />
 
       {/* Divisões do painel: Aulas · Questões · Simulados · Redação · Resumos */}
       <div className="mb-6 flex gap-2 overflow-x-auto rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
@@ -97,24 +96,25 @@ export default function AdminApp() {
         ))}
       </div>
 
-      {secao === "questoes" ? (
-        <QuestoesClient embutido forcarAdmin />
-      ) : secao === "simulados" ? (
+      {secao === "simulados" ? (
         <SimuladosClient embutido forcarAdmin />
       ) : secao === "redacao" ? (
         <RedacaoClient embutido forcarAdmin />
       ) : secao === "resumos" ? (
         <ResumosClient embutido forcarAdmin />
       ) : (
+        /* "aulas" e "questoes" navegam a MESMA árvore (matéria → módulo → aula);
+           só o detalhe da aula muda: vídeos (aulas) ou questões HTML (questoes). */
         <>
           <Breadcrumb crumbs={crumbs} />
           {aula ? (
-            <AulaDetalhe db={db} aula={aula} setDb={setDb} />
+            <AulaDetalhe db={db} aula={aula} setDb={setDb} modo={secao} />
           ) : modulo ? (
             <AulasView
               db={db}
               modulo={modulo}
               setDb={setDb}
+              modo={secao}
               abrir={(a) =>
                 setNav({ materiaId: materia.id, moduloId: modulo.id, aulaId: a.id })
               }
@@ -423,7 +423,7 @@ function ModuloForm({ inicial, onSalvar, onCancelar }) {
 /* ==================================================================== */
 /* Aulas                                                                */
 /* ==================================================================== */
-function AulasView({ db, modulo, setDb, abrir }) {
+function AulasView({ db, modulo, setDb, abrir, modo = "aulas" }) {
   const [form, setForm] = useState(null);
   const aulas = db.aulas
     .filter((a) => a.moduloId === modulo.id)
@@ -486,7 +486,11 @@ function AulasView({ db, modulo, setDb, abrir }) {
                 key={a.id}
                 titulo={a.titulo}
                 nivel={a.nivel}
-                sub={`${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s) · ${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`}
+                sub={
+                  modo === "questoes"
+                    ? `${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`
+                    : `${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s)`
+                }
                 onSubir={podeMover(i, "cima") ? () => mover(i, "cima") : null}
                 onDescer={podeMover(i, "baixo") ? () => mover(i, "baixo") : null}
                 onAbrir={() => abrir(a)}
@@ -565,11 +569,12 @@ function NivelPicker({ value, onChange }) {
 /* ==================================================================== */
 /* Detalhe da aula: vídeos + questionário                              */
 /* ==================================================================== */
-function AulaDetalhe({ db, aula, setDb }) {
+function AulaDetalhe({ db, aula, setDb, modo = "aulas" }) {
   const videos = db.videos.filter((v) => v.aulaId === aula.id);
   const questoes = db.questoes.filter((q) => q.aulaId === aula.id);
   const [addVid, setAddVid] = useState(false);
   const [addQ, setAddQ] = useState(false);
+  const ehQuestoes = modo === "questoes";
 
   return (
     <div className="space-y-8">
@@ -579,7 +584,8 @@ function AulaDetalhe({ db, aula, setDb }) {
         </p>
       )}
 
-      {/* Vídeos */}
+      {/* Vídeos — só na seção Aulas */}
+      {!ehQuestoes && (
       <Secao
         titulo="Vídeos do YouTube"
         acao={
@@ -636,10 +642,12 @@ function AulaDetalhe({ db, aula, setDb }) {
           </div>
         )}
       </Secao>
+      )}
 
-      {/* Questionário */}
+      {/* Questionário — só na seção Questões */}
+      {ehQuestoes && (
       <Secao
-        titulo="Questionário"
+        titulo="Questões (código HTML)"
         acao={!addQ && <Botao onClick={() => setAddQ(true)}>+ Nova questão</Botao>}
       >
         {addQ && (
@@ -698,6 +706,7 @@ function AulaDetalhe({ db, aula, setDb }) {
           </ol>
         )}
       </Secao>
+      )}
     </div>
   );
 }

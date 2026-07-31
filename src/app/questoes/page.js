@@ -1,11 +1,16 @@
 import Protegido from "@/modules/auth/Protegido";
-import QuestoesClient from "@/modules/questoes/QuestoesClient";
+import ConteudosClient from "@/modules/conteudos-dashboard/ConteudosClient";
 
-// TIME B — Banco de questões por módulo (HTML colado), gerenciado pelo admin.
+// Questões — mesma estrutura de Conteúdos (matéria → módulo → aula),
+// mas cada aula abre o questionário em HTML.
 export default function QuestoesPage() {
   return (
     <Protegido>
-      <QuestoesClient />
+      <ConteudosClient
+        base="/questoes"
+        titulo="Questões"
+        subtitulo="Pratique as questões por matéria, do que mais cai para o que menos cai."
+      />
     </Protegido>
   );
 }

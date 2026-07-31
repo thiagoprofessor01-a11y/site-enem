@@ -8,7 +8,11 @@ import { areaInfo, ORDEM_AREAS } from "./conteudos-ui";
 
 const plural = (n, um, muitos) => `${n} ${n === 1 ? um : muitos}`;
 
-export default function ConteudosClient() {
+export default function ConteudosClient({
+  base = "/conteudos",
+  titulo = "Conteúdos",
+  subtitulo = "Estude por matéria, do que mais cai para o que menos cai.",
+}) {
   const [db, setDb] = useState(null);
 
   useEffect(() => {
@@ -39,10 +43,8 @@ export default function ConteudosClient() {
   return (
     <div className="container max-w-2xl py-12">
       <header className="mb-10 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Conteúdos</h1>
-        <p className="mx-auto mt-2 max-w-lg text-slate-600">
-          Estude por matéria, do que mais cai para o que menos cai.
-        </p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">{titulo}</h1>
+        <p className="mx-auto mt-2 max-w-lg text-slate-600">{subtitulo}</p>
       </header>
 
       {porArea.length === 0 ? (
@@ -70,7 +72,7 @@ export default function ConteudosClient() {
                   {materias.map((m) => (
                     <Link
                       key={m.id}
-                      href={`/conteudos/${m.id}`}
+                      href={`${base}/${m.id}`}
                       className="card group block overflow-hidden transition hover:-translate-y-0.5 hover:shadow-card-hover"
                     >
                       <div className="relative aspect-[16/6] w-full">
