@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // Cartão de material (PDF ou imagem): prévia A4, título completo, ver dentro
 // do site (ao clicar) e botão de download.
-export default function PdfCard({ titulo, url, tipo = "pdf", orientacao = "retrato", onExcluir }) {
+export default function PdfCard({ titulo, url, tipo = "pdf", orientacao = "retrato", ocultarTitulo = false, onExcluir }) {
   const [aberto, setAberto] = useState(false);
   const isImg = tipo === "imagem";
   const aspecto = orientacao === "paisagem" ? "aspect-[297/210]" : "aspect-[210/297]";
@@ -40,9 +40,11 @@ export default function PdfCard({ titulo, url, tipo = "pdf", orientacao = "retra
         </span>
       </button>
 
-      {/* Título completo + ações */}
+      {/* Título completo (opcional) + ações */}
       <div className="flex flex-col gap-2 border-t border-slate-100 p-3">
-        <p className="break-words text-sm font-bold text-slate-800">{titulo}</p>
+        {!ocultarTitulo && (
+          <p className="break-words text-sm font-bold text-slate-800">{titulo}</p>
+        )}
         <div className="flex items-center gap-2">
           <button
             type="button"

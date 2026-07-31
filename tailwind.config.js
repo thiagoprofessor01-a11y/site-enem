@@ -1,4 +1,32 @@
 /** @type {import('tailwindcss').Config} */
+
+// Identidade de marca removida: tudo em tons de cinza (preto e branco).
+// Rampa neutra reutilizada por todas as famílias de cor usadas no código.
+const bw = {
+  50: "#fafafa",
+  100: "#f4f4f5",
+  200: "#e4e4e7",
+  300: "#d4d4d8",
+  400: "#a1a1aa",
+  500: "#71717a",
+  600: "#52525b",
+  700: "#3f3f46",
+  800: "#27272a",
+  900: "#18181b",
+  950: "#0a0a0a",
+};
+
+const sistema = [
+  "ui-sans-serif",
+  "system-ui",
+  "-apple-system",
+  "Segoe UI",
+  "Roboto",
+  "Helvetica Neue",
+  "Arial",
+  "sans-serif",
+];
+
 module.exports = {
   content: [
     "./src/app/**/*.{js,jsx}",
@@ -13,47 +41,29 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: [
-          "var(--font-sans)",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "Arial",
-          "sans-serif",
-        ],
-        display: [
-          "var(--font-display)",
-          "ui-sans-serif",
-          "system-ui",
-          "Arial",
-          "sans-serif",
-        ],
+        sans: sistema,
+        display: sistema,
       },
       colors: {
-        // Identidade visual do site — navy neutro da logo MeuENEM
-        brand: {
-          50: "#eef1f7",
-          100: "#dae0ee",
-          200: "#b7c3dd",
-          300: "#8b9cc3",
-          400: "#5f74a4",
-          500: "#415888",
-          600: "#2f426c",
-          700: "#243354",
-          800: "#1e2749",
-          900: "#151d31",
-        },
-        // Paleta vibrante da página de vendas
-        ink: "#1b1430",
-        paper: "#fff6ee",
-        coral: "#ff6a4d",
-        sun: "#ffc93c",
-        teal: "#10bfa5",
-        pink: "#ff5d9e",
-        grape: "#7b5cff",
+        // Marca e todas as famílias cromáticas → escala de cinza
+        brand: bw,
+        blue: bw,
+        emerald: bw,
+        red: bw,
+        green: bw,
+        yellow: bw,
+        amber: bw,
+        orange: bw,
+        violet: bw,
+        rose: bw,
+        teal: bw,
+        // Cores personalizadas (antiga página de vendas) neutralizadas
+        ink: "#18181b",
+        paper: "#ffffff",
+        coral: "#52525b",
+        sun: "#a1a1aa",
+        pink: "#52525b",
+        grape: "#52525b",
       },
       boxShadow: {
         card: "0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.06)",

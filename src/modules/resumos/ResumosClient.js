@@ -19,6 +19,7 @@ export default function ResumosClient({ embutido = false, forcarAdmin = false })
       comModulos
       aceitaImagem
       paisagem
+      ocultarTitulo
       embutido={embutido}
       forcarAdmin={forcarAdmin}
     />
