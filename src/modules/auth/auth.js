@@ -90,7 +90,41 @@ export async function login(email, senha) {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email: alvo, password: senha });
   if (error || !data?.user) return null;
+  await registrarDispositivo(supabase); // este vira o dispositivo ativo
   return montarSessao(supabase, data.user);
+}
+
+// ---- Uma conta = um dispositivo por vez ----
+const DEVICE_KEY = "meuenem:dispositivo";
+
+function novoToken() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+
+// Registra ESTE dispositivo como o ativo (grava um token no perfil e localmente).
+async function registrarDispositivo(supabase) {
+  if (authFake() || typeof window === "undefined") return;
+  const token = novoToken();
+  window.localStorage.setItem(DEVICE_KEY, token);
+  await supabase.rpc("registrar_sessao", { p_token: token });
+}
+
+// true = este dispositivo ainda é o ativo; false = alguém logou em outro lugar.
+export async function verificarSessaoAtual() {
+  if (authFake()) return true;
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return true; // ninguém logado aqui
+  const { data } = await supabase
+    .from("profiles")
+    .select("sessao_atual")
+    .eq("id", user.id)
+    .single();
+  if (!data?.sessao_atual) return true; // ainda não registrado
+  const local = typeof window !== "undefined" ? window.localStorage.getItem(DEVICE_KEY) : null;
+  return data.sessao_atual === local;
 }
 
 export async function cadastrar({ nome, email, senha, nascimento, consentimento }) {
@@ -120,11 +154,14 @@ export async function cadastrar({ nome, email, senha, nascimento, consentimento 
       })
       .eq("id", data.user.id);
   }
+  // Se já entrou direto (sem confirmar e-mail), registra o dispositivo.
+  if (data?.session) await registrarDispositivo(supabase);
   // Sem sessão = precisa confirmar o e-mail antes de entrar.
   return { ok: true, precisaConfirmar: !data?.session };
 }
 
 export async function logout() {
+  if (typeof window !== "undefined") window.localStorage.removeItem(DEVICE_KEY);
   if (authFake()) {
     limparSessaoLocal();
     return;

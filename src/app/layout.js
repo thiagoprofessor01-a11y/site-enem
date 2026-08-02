@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import SentinelaSessao from "@/modules/auth/SentinelaSessao";
 import { SITE } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />
+        <SentinelaSessao />
       </body>
     </html>
   );
