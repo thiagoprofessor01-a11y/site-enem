@@ -23,6 +23,7 @@ import {
   areaNome,
 } from "./admin-store";
 import { Campo, inputClass, Botao, CardVazio, Tag } from "./ui";
+import { uploadArquivo } from "@/lib/pdf-upload";
 import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
 import RedacaoClient from "@/modules/redacao/RedacaoClient";
@@ -280,6 +281,24 @@ function MateriaForm({ inicial, onSalvar, onCancelar }) {
   const [nome, setNome] = useState(inicial?.nome || "");
   const [area, setArea] = useState(inicial?.area || AREAS_MATERIA[0].slug);
   const [banner, setBanner] = useState(inicial?.banner || "");
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState("");
+
+  async function escolherBanner(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setErro("");
+    setEnviando(true);
+    try {
+      const { url } = await uploadArquivo(file, "banners", true);
+      setBanner(url);
+    } catch (err) {
+      setErro(err?.message || "Não foi possível enviar a imagem.");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   return (
     <FormCard
       onSubmit={() => nome.trim() && onSalvar({ nome, area, banner })}
@@ -307,18 +326,29 @@ function MateriaForm({ inicial, onSalvar, onCancelar }) {
           ))}
         </select>
       </Campo>
-      <Campo label="Banner (URL de uma imagem) — opcional">
+      <Campo label="Banner da matéria — opcional (imagem 16:6, ex.: 1600×600)">
         <input
-          className={inputClass()}
-          value={banner}
-          onChange={(e) => setBanner(e.target.value)}
-          placeholder="https://.../banner-matematica.jpg"
+          type="file"
+          accept="image/*"
+          onChange={escolherBanner}
+          className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-700"
         />
+        {enviando && <p className="mt-1 text-xs text-slate-500">Enviando imagem…</p>}
+        {erro && <p className="mt-1 text-xs font-medium text-rose-600">{erro}</p>}
       </Campo>
-      {banner.trim() && (
-        <div className="aspect-[16/6] w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={banner} alt="Prévia do banner" className="h-full w-full object-cover" />
+      {banner && (
+        <div>
+          <div className="aspect-[16/6] w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={banner} alt="Prévia do banner" className="h-full w-full object-cover" />
+          </div>
+          <button
+            type="button"
+            onClick={() => setBanner("")}
+            className="mt-2 text-xs font-medium text-rose-500 hover:text-rose-600"
+          >
+            Remover banner
+          </button>
         </div>
       )}
     </FormCard>
