@@ -12,6 +12,7 @@ export default function ConteudosClient({
   base = "/conteudos",
   titulo = "Conteúdos",
   subtitulo = "Estude por matéria, do que mais cai para o que menos cai.",
+  bannerKey = "banner",
 }) {
   const [db, setDb] = useState(null);
 
@@ -76,9 +77,9 @@ export default function ConteudosClient({
                       className="card group block overflow-hidden transition hover:-translate-y-0.5 hover:shadow-card-hover"
                     >
                       <div className="relative aspect-[16/6] w-full">
-                        {m.banner ? (
+                        {m[bannerKey] ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={m.banner} alt={m.nome} className="h-full w-full object-cover" />
+                          <img src={m[bannerKey]} alt={m.nome} className="h-full w-full object-cover" />
                         ) : (
                           <div className={`flex h-full w-full items-center justify-center ${info.solid}`}>
                             <Icon name={info.icon} className="h-10 w-10 text-white/90" />

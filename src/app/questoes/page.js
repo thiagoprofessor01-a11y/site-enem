@@ -10,6 +10,7 @@ export default function QuestoesPage() {
         base="/questoes"
         titulo="Questões"
         subtitulo="Pratique as questões por matéria, do que mais cai para o que menos cai."
+        bannerKey="bannerQuestoes"
       />
     </Protegido>
   );

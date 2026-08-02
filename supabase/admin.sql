@@ -13,7 +13,8 @@ create table if not exists public.materias (
   id uuid primary key default gen_random_uuid(),
   nome text not null,
   area text not null,
-  banner text, -- URL de imagem do banner da matéria (opcional)
+  banner text, -- banner da aba Conteúdos (opcional)
+  banner_questoes text, -- banner da aba Questões (opcional)
   created_at timestamptz not null default now()
 );
 

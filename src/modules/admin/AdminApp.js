@@ -277,31 +277,62 @@ function MateriasView({ db, setDb, abrir }) {
   );
 }
 
-function MateriaForm({ inicial, onSalvar, onCancelar }) {
-  const [nome, setNome] = useState(inicial?.nome || "");
-  const [area, setArea] = useState(inicial?.area || AREAS_MATERIA[0].slug);
-  const [banner, setBanner] = useState(inicial?.banner || "");
+// Campo de upload de banner (16:6) com prévia e remover.
+function CampoBanner({ label, valor, onValor }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
-
-  async function escolherBanner(e) {
+  async function escolher(e) {
     const file = e.target.files?.[0];
     if (!file) return;
     setErro("");
     setEnviando(true);
     try {
       const { url } = await uploadArquivo(file, "banners", true);
-      setBanner(url);
+      onValor(url);
     } catch (err) {
       setErro(err?.message || "Não foi possível enviar a imagem.");
     } finally {
       setEnviando(false);
     }
   }
+  return (
+    <Campo label={label}>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={escolher}
+        className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-700"
+      />
+      {enviando && <p className="mt-1 text-xs text-slate-500">Enviando imagem…</p>}
+      {erro && <p className="mt-1 text-xs font-medium text-rose-600">{erro}</p>}
+      {valor && (
+        <div className="mt-2">
+          <div className="aspect-[16/6] w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={valor} alt="Prévia do banner" className="h-full w-full object-cover" />
+          </div>
+          <button
+            type="button"
+            onClick={() => onValor("")}
+            className="mt-2 text-xs font-medium text-rose-500 hover:text-rose-600"
+          >
+            Remover
+          </button>
+        </div>
+      )}
+    </Campo>
+  );
+}
+
+function MateriaForm({ inicial, onSalvar, onCancelar }) {
+  const [nome, setNome] = useState(inicial?.nome || "");
+  const [area, setArea] = useState(inicial?.area || AREAS_MATERIA[0].slug);
+  const [banner, setBanner] = useState(inicial?.banner || "");
+  const [bannerQuestoes, setBannerQuestoes] = useState(inicial?.bannerQuestoes || "");
 
   return (
     <FormCard
-      onSubmit={() => nome.trim() && onSalvar({ nome, area, banner })}
+      onSubmit={() => nome.trim() && onSalvar({ nome, area, banner, bannerQuestoes })}
       onCancelar={onCancelar}
     >
       <Campo label="Nome da matéria">
@@ -326,31 +357,16 @@ function MateriaForm({ inicial, onSalvar, onCancelar }) {
           ))}
         </select>
       </Campo>
-      <Campo label="Banner da matéria — opcional (imagem 16:6, ex.: 1600×600)">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={escolherBanner}
-          className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-700"
-        />
-        {enviando && <p className="mt-1 text-xs text-slate-500">Enviando imagem…</p>}
-        {erro && <p className="mt-1 text-xs font-medium text-rose-600">{erro}</p>}
-      </Campo>
-      {banner && (
-        <div>
-          <div className="aspect-[16/6] w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={banner} alt="Prévia do banner" className="h-full w-full object-cover" />
-          </div>
-          <button
-            type="button"
-            onClick={() => setBanner("")}
-            className="mt-2 text-xs font-medium text-rose-500 hover:text-rose-600"
-          >
-            Remover banner
-          </button>
-        </div>
-      )}
+      <CampoBanner
+        label="Banner da aba CONTEÚDOS — opcional (16:6, ex.: 1600×600)"
+        valor={banner}
+        onValor={setBanner}
+      />
+      <CampoBanner
+        label="Banner da aba QUESTÕES — opcional (16:6, ex.: 1600×600)"
+        valor={bannerQuestoes}
+        onValor={setBannerQuestoes}
+      />
     </FormCard>
   );
 }

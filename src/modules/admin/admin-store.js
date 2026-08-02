@@ -66,9 +66,15 @@ const local = {
     fn(db);
     return this.write({ ...db });
   },
-  addMateria({ nome, area, banner = "" }) {
+  addMateria({ nome, area, banner = "", bannerQuestoes = "" }) {
     return this.mutate((db) =>
-      db.materias.push({ id: genId(), nome: nome.trim(), area, banner: (banner || "").trim() })
+      db.materias.push({
+        id: genId(),
+        nome: nome.trim(),
+        area,
+        banner: (banner || "").trim(),
+        bannerQuestoes: (bannerQuestoes || "").trim(),
+      })
     );
   },
   updateMateria(id, dados) {
@@ -208,6 +214,7 @@ const supa = {
         nome: m.nome,
         area: m.area,
         banner: m.banner || "",
+        bannerQuestoes: m.banner_questoes || "",
       })),
       modulos: (modulos.data || []).map((m) => ({
         id: m.id,
@@ -241,13 +248,23 @@ const supa = {
       })),
     };
   },
-  async addMateria({ nome, area, banner = "" }) {
-    const { error } = await sb().from("materias").insert({ nome: nome.trim(), area, banner: (banner || "").trim() });
+  async addMateria({ nome, area, banner = "", bannerQuestoes = "" }) {
+    const { error } = await sb().from("materias").insert({
+      nome: nome.trim(),
+      area,
+      banner: (banner || "").trim(),
+      banner_questoes: (bannerQuestoes || "").trim(),
+    });
     checar(error);
     return this.fetchAll();
   },
   async updateMateria(id, dados) {
-    const { error } = await sb().from("materias").update(dados).eq("id", id);
+    // converte o campo camelCase para a coluna do banco (snake_case)
+    const { bannerQuestoes, ...resto } = dados;
+    const patch = bannerQuestoes === undefined
+      ? resto
+      : { ...resto, banner_questoes: bannerQuestoes };
+    const { error } = await sb().from("materias").update(patch).eq("id", id);
     checar(error);
     return this.fetchAll();
   },
