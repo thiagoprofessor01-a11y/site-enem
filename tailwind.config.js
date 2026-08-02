@@ -1,31 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 
-// Identidade de marca removida: tudo em tons de cinza (preto e branco).
-// Rampa neutra reutilizada por todas as famílias de cor usadas no código.
-const bw = {
-  50: "#fafafa",
-  100: "#f4f4f5",
-  200: "#e4e4e7",
-  300: "#d4d4d8",
-  400: "#a1a1aa",
-  500: "#71717a",
-  600: "#52525b",
-  700: "#3f3f46",
-  800: "#27272a",
-  900: "#18181b",
-  950: "#0a0a0a",
+// Identidade Meu ENEM (brand book).
+// Azul ENEM #3028D0 · Azul profundo #17106F · Ciano #00C8FF
+// Lilás #D7D3FF · Verde acerto #21B573 · Amarelo meta #FFC857
+const brand = {
+  50: "#eeecfd",
+  100: "#dcd9fb",
+  200: "#bcb6f6",
+  300: "#9a90f0",
+  400: "#6d5fe8",
+  500: "#4a3fdd",
+  600: "#3028d0", // Azul ENEM (principal)
+  700: "#2820a8",
+  800: "#1f1a85",
+  900: "#17106f", // Azul profundo
+  950: "#0f0a4d",
 };
-
-const sistema = [
-  "ui-sans-serif",
-  "system-ui",
-  "-apple-system",
-  "Segoe UI",
-  "Roboto",
-  "Helvetica Neue",
-  "Arial",
-  "sans-serif",
-];
 
 module.exports = {
   content: [
@@ -41,29 +31,16 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: sistema,
-        display: sistema,
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "Arial", "sans-serif"],
+        display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "Arial", "sans-serif"],
       },
       colors: {
-        // Marca e todas as famílias cromáticas → escala de cinza
-        brand: bw,
-        blue: bw,
-        emerald: bw,
-        red: bw,
-        green: bw,
-        yellow: bw,
-        amber: bw,
-        orange: bw,
-        violet: bw,
-        rose: bw,
-        teal: bw,
-        // Cores personalizadas (antiga página de vendas) neutralizadas
-        ink: "#18181b",
-        paper: "#ffffff",
-        coral: "#52525b",
-        sun: "#a1a1aa",
-        pink: "#52525b",
-        grape: "#52525b",
+        brand,
+        // Acentos do brand book
+        ciano: "#00c8ff",
+        lilas: "#d7d3ff",
+        acerto: "#21b573", // verde
+        meta: "#ffc857", // amarelo
       },
       boxShadow: {
         card: "0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.06)",
