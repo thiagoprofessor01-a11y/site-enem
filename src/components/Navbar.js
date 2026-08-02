@@ -6,15 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSessao, logout } from "@/modules/auth/auth";
 import Logo from "@/components/Logo";
 
-// Ordem pedida (da direita p/ esquerda): Cronograma, Conteúdos, Questões,
-// Simulados, Resumos, Redação → então da esquerda p/ direita fica ao contrário.
+// Ordem (esquerda → direita): Cronograma, Conteúdos, Questões, Simulados,
+// Resumos, Redação.
 const LINKS_ALUNO = [
-  { href: "/redacao", label: "Redação" },
-  { href: "/resumos", label: "Resumos" },
-  { href: "/simulados", label: "Simulados" },
-  { href: "/questoes", label: "Questões" },
-  { href: "/conteudos", label: "Conteúdos" },
   { href: "/cronograma", label: "Cronograma" },
+  { href: "/conteudos", label: "Conteúdos" },
+  { href: "/questoes", label: "Questões" },
+  { href: "/simulados", label: "Simulados" },
+  { href: "/resumos", label: "Resumos" },
+  { href: "/redacao", label: "Redação" },
 ];
 
 function PerfilBtn({ onClick }) {
