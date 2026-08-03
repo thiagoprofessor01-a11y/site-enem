@@ -13,6 +13,9 @@ export const metadata = {
   title: `${SITE.nome} — Estudos para o ENEM`,
   description: SITE.descricao,
   icons: { icon: "/icone-meuenem.png" },
+  other: {
+    "facebook-domain-verification": "5w1ma4p9gv89lid6rhjk1dois4r7el",
+  },
   openGraph: {
     title: `${SITE.nome} — Estudos para o ENEM`,
     description: SITE.descricao,
