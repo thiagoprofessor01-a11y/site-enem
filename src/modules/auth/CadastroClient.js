@@ -62,7 +62,10 @@ export default function CadastroClient() {
         setAviso("Conta criada! Verifique seu e-mail para confirmar antes de entrar.");
         return;
       }
-      router.replace("/conteudos");
+      // Se o visitante veio escolhendo um plano, leva-o direto à seção de planos
+      // (já logado) para concluir a assinatura; senão, entra na plataforma.
+      const plano = new URLSearchParams(window.location.search).get("plano");
+      router.replace(plano ? "/#comprar" : "/conteudos");
     } catch (err) {
       setErro("Não foi possível criar a conta. Tente novamente.");
     } finally {

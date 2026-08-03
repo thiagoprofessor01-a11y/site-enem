@@ -1,6 +1,6 @@
 import { LegalShell, Secao, Aviso } from "@/components/LegalShell";
 import { LEGAL } from "@/lib/legal";
-import { SITE, OFERTA } from "@/lib/config";
+import { SITE, PLANOS } from "@/lib/config";
 
 export const metadata = { title: "Termos de Uso — " + SITE.nome };
 
@@ -40,11 +40,14 @@ export default function TermosPage() {
 
       <Secao titulo="3. Pagamento e acesso">
         <p>
-          O acesso custa R$ {OFERTA.preco} ({OFERTA.parcelaOuAvista}). O
-          pagamento é processado pelo Mercado Pago e o acesso é liberado após a
-          confirmação. Direito de arrependimento em compras online: você pode
-          desistir em até 7 dias corridos, conforme o art. 49 do Código de Defesa
-          do Consumidor.
+          O acesso é por assinatura, com dois planos: mensal (R${" "}
+          {PLANOS[0].preco}, renovado a cada mês) e trimestral (R${" "}
+          {PLANOS[1].preco}, renovado a cada 3 meses). A assinatura renova
+          automaticamente ao fim de cada período até que você cancele, e o acesso
+          é liberado após a confirmação do pagamento. Você pode cancelar a
+          qualquer momento e mantém o acesso até o fim do período já pago. Direito
+          de arrependimento em compras online: você pode desistir em até 7 dias
+          corridos, conforme o art. 49 do Código de Defesa do Consumidor.
         </p>
       </Secao>
 
