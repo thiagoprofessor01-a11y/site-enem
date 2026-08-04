@@ -84,11 +84,15 @@ export const BENEFICIOS = [
 ];
 
 // Depoimentos (SUBSTITUA pelos textos reais dos seus 3 alunos aprovados).
+// Para mostrar a FOTO do aluno: coloque o arquivo em `public/aprovados/`
+// e informe o caminho no campo `foto` (ex.: "/aprovados/marina.jpg").
+// Se `foto` ficar vazio (""), a seção mostra um espaço reservado.
 export const DEPOIMENTOS = [
   {
     inicial: "M",
     nome: "Marina S.",
     resultado: "Aprovada em Enfermagem — Universidade Federal",
+    foto: "", // ex.: "/aprovados/marina.jpg"
     texto:
       "Eu estudava sem direção e vivia ansiosa. Com o cronograma pronto e as videoaulas certas, parei de me perder e finalmente rendi. Passei na federal!",
   },
@@ -96,6 +100,7 @@ export const DEPOIMENTOS = [
     inicial: "L",
     nome: "Lucas P.",
     resultado: "Aprovado em Engenharia — Universidade Federal",
+    foto: "", // ex.: "/aprovados/lucas.jpg"
     texto:
       "Os simulados e o banco de questões fizeram toda a diferença. Fui pra prova sabendo o que mais caía e como o tempo funcionava. Recomendo demais.",
   },
@@ -103,6 +108,7 @@ export const DEPOIMENTOS = [
     inicial: "B",
     nome: "Beatriz A.",
     resultado: "Aprovada em Direito — Universidade Federal",
+    foto: "", // ex.: "/aprovados/beatriz.jpg"
     texto:
       "A parte de redação me destravou. Entendi as 5 competências e minha nota subiu muito. Valeu cada centavo pelo que entrega.",
   },

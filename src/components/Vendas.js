@@ -356,15 +356,24 @@ export default function Vendas() {
           <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-3">
             {DEPOIMENTOS.map((d) => (
               <figure key={d.nome} className="flex flex-col overflow-hidden rounded-3xl bg-white text-slate-900 shadow-xl">
-                {/* Espaço para a foto do aluno aprovado (troque pela foto real) */}
-                <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-lilas to-brand-100">
-                  <div className="text-center text-brand-700/70">
-                    <svg viewBox="0 0 24 24" className="mx-auto h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="12" cy="8" r="3.5" />
-                      <path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5" strokeLinecap="round" />
-                    </svg>
-                    <span className="mt-1 block text-xs font-semibold">Foto do aluno aprovado</span>
-                  </div>
+                {/* Foto do aluno aprovado: coloque o arquivo em public/aprovados/
+                    e informe o caminho em `foto` no config. Sem foto, mostra o espaço reservado. */}
+                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-lilas to-brand-100">
+                  {d.foto ? (
+                    <img
+                      src={d.foto}
+                      alt={`Foto de ${d.nome}, ${d.resultado}`}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-center text-brand-700/70">
+                      <svg viewBox="0 0 24 24" className="mx-auto h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <circle cx="12" cy="8" r="3.5" />
+                        <path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5" strokeLinecap="round" />
+                      </svg>
+                      <span className="mt-1 block text-xs font-semibold">Foto do aluno aprovado</span>
+                    </div>
+                  )}
                   <span className="absolute left-3 top-3 rounded-full bg-acerto px-2.5 py-1 text-xs font-bold text-white shadow">
                     Aprovado(a)
                   </span>

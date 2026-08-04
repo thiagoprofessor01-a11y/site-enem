@@ -1,0 +1,25 @@
+COMO ADICIONAR AS FOTOS DOS ALUNOS APROVADOS
+=============================================
+
+1) Coloque os arquivos de imagem DENTRO desta pasta (public/aprovados/).
+   Exemplos de nomes: marina.jpg, lucas.jpg, beatriz.jpg
+   (use letras minúsculas, sem espaços e sem acentos no nome do arquivo)
+
+2) Abra o arquivo:  src/lib/config.js
+   Na lista DEPOIMENTOS, preencha o campo "foto" de cada aluno com o caminho:
+
+       foto: "/aprovados/marina.jpg",
+
+   IMPORTANTE: o caminho começa com  /aprovados/  (a pasta "public" NÃO entra no caminho).
+
+3) Salve. A foto aparece automaticamente na seção "Quem estudou com direção, passou".
+   Se o campo "foto" ficar vazio (""), aparece um espaço reservado no lugar.
+
+DICA DE IMAGEM
+--------------
+- Formato: JPG ou PNG
+- Proporção ideal: paisagem 4:3 (ex.: 800 x 600 pixels) — a foto é cortada para caber
+- Peso: de preferência abaixo de 300 KB para carregar rápido
+
+Você pode ter mais de 3 depoimentos: basta adicionar novos itens na lista
+DEPOIMENTOS em src/lib/config.js, cada um com nome, resultado, foto e texto.
