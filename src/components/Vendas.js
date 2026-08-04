@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
-import { OFERTA, BENEFICIOS, DEPOIMENTOS } from "@/lib/config";
+import { OFERTA, PLANOS, BENEFICIOS, DEPOIMENTOS } from "@/lib/config";
 
 // Landing page de vendas do Meu ENEM — identidade do brand book
 // (Azul ENEM #3028D0 · Azul profundo #17106F · Ciano · Lilás · Verde · Amarelo).
@@ -16,7 +16,7 @@ const FEATURES = [
 ];
 
 const COMO = [
-  { n: "1", titulo: "Garanta seu acesso", desc: "Pagamento único e você entra na plataforma na hora." },
+  { n: "1", titulo: "Escolha seu plano", desc: "Assine no mensal ou no trimestral e entre na plataforma na hora." },
   { n: "2", titulo: "Monte seu cronograma", desc: "Diga quantas horas por dia você tem e receba um plano sob medida." },
   { n: "3", titulo: "Estude com direção", desc: "Cada dia mostra o que estudar: aula, questões, simulado ou redação." },
 ];
@@ -24,14 +24,15 @@ const COMO = [
 const NUMEROS = [
   { v: "5", r: "áreas do conhecimento cobertas" },
   { v: "1", r: "plano de estudos só seu" },
-  { v: "∞", r: "acesso vitalício, sem mensalidade" },
+  { v: "R$ 24,90", r: "por mês para começar" },
 ];
 
 const FAQ = [
-  { q: "O pagamento é único mesmo?", a: "Sim. Você paga uma vez e tem acesso vitalício — sem mensalidade e sem cobranças surpresa." },
+  { q: "Como funciona a cobrança?", a: "Você escolhe entre o plano mensal (R$ 24,90) ou o trimestral (R$ 57,90). A assinatura renova automaticamente no fim de cada período e você pode cancelar quando quiser." },
+  { q: "Posso cancelar quando quiser?", a: "Sim. Você cancela a qualquer momento e continua com acesso até o fim do período já pago — sem multa e sem burocracia." },
+  { q: "Qual a diferença entre mensal e trimestral?", a: "O conteúdo é o mesmo nos dois. No trimestral você paga a cada 3 meses e sai mais barato por mês — ideal para a reta final até a prova." },
   { q: "Funciona no celular?", a: "Funciona. A plataforma abre no navegador do celular, tablet ou computador." },
   { q: "Serve para qualquer curso?", a: "Sim. O conteúdo cobre todas as áreas do ENEM, então serve para qualquer curso e universidade que usam a nota." },
-  { q: "Preciso ter uma base forte para começar?", a: "Não. O cronograma se adapta ao seu tempo e prioriza o que mais cai, do básico ao avançado." },
 ];
 
 function Estrelas() {
@@ -69,9 +70,12 @@ export default function Vendas() {
             </p>
 
             <div className="animate-fade-up mt-8 flex flex-col gap-3 sm:flex-row">
-              <ComprarAcesso className="rounded-xl bg-meta px-7 py-4 text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105">
-                Quero meu acesso — R$ {OFERTA.preco}
-              </ComprarAcesso>
+              <Link
+                href="#comprar"
+                className="rounded-xl bg-meta px-7 py-4 text-center text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              >
+                Ver planos — a partir de R$ {PLANOS[0].preco}
+              </Link>
               <Link
                 href="#recursos"
                 className="rounded-xl border border-white/25 bg-white/5 px-7 py-4 text-center text-base font-semibold text-white transition hover:bg-white/10"
@@ -305,52 +309,89 @@ export default function Vendas() {
         </div>
       </section>
 
-      {/* ============================ OFERTA ========================== */}
+      {/* ============================ PLANOS ========================== */}
       <section id="comprar" className="scroll-mt-20 py-20">
         <div className="container">
-          <div className="mx-auto max-w-lg">
-            <div className="overflow-hidden rounded-3xl border-2 border-brand-600 bg-white shadow-2xl">
-              <div className="bg-brand-600 px-8 py-6 text-center text-white">
-                <span className="inline-flex rounded-full bg-meta px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-brand-900">
-                  Oferta de lançamento
-                </span>
-                <div className="mt-4 flex items-end justify-center gap-1">
-                  <span className="mb-2 text-2xl font-bold">R$</span>
-                  <span className="text-6xl font-extrabold leading-none">{OFERTA.preco.split(",")[0]}</span>
-                  <span className="mb-2 text-2xl font-bold">,{OFERTA.preco.split(",")[1]}</span>
-                </div>
-                <p className="mt-1 text-sm font-semibold text-lilas">
-                  {OFERTA.parcelaOuAvista} · {OFERTA.acesso}
-                </p>
-              </div>
-              <div className="px-8 py-8">
-                <ul className="space-y-3">
-                  {[
-                    "Cronograma inteligente sob medida",
-                    "Videoaulas selecionadas por matéria",
-                    "Banco de questões com correção",
-                    "Simulados no estilo da prova",
-                    "Redação: temas e materiais",
-                    "Resumos em PDF e imagem",
-                    "Acesso vitalício, no celular ou computador",
-                  ].map((b) => (
-                    <li key={b} className="flex items-start gap-3 text-sm">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-acerto text-xs font-black text-white">
-                        ✓
-                      </span>
-                      <span className="font-medium text-slate-700">{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                <ComprarAcesso className="mt-8 flex w-full items-center justify-center rounded-xl bg-meta px-6 py-4 text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105">
-                  Garantir meu acesso agora
-                </ComprarAcesso>
-                <p className="mt-3 text-center text-xs font-medium text-slate-500">
-                  Pagamento 100% seguro · acesso liberado na hora
-                </p>
-              </div>
-            </div>
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-sm font-bold uppercase tracking-widest text-brand-600">
+              Escolha seu plano
+            </span>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+              Comece hoje e estude com direção
+            </h2>
+            <p className="mt-4 text-slate-600">
+              Os dois planos dão acesso a <strong>tudo</strong>. Escolha a periodicidade que
+              cabe no seu bolso — e cancele quando quiser.
+            </p>
           </div>
+
+          {/* Cards dos planos */}
+          <div className="mx-auto mt-14 grid max-w-4xl items-start gap-6 sm:grid-cols-2">
+            {PLANOS.map((p) => (
+              <div
+                key={p.id}
+                className={`relative overflow-hidden rounded-3xl bg-white shadow-2xl ${
+                  p.destaque ? "border-2 border-brand-600 ring-2 ring-brand-600/20" : "border border-slate-200"
+                }`}
+              >
+                {p.selo && (
+                  <span className="absolute right-4 top-4 rounded-full bg-meta px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-brand-900">
+                    {p.selo}
+                  </span>
+                )}
+                <div className={`px-8 py-8 text-center ${p.destaque ? "bg-brand-600 text-white" : "text-slate-900"}`}>
+                  <h3 className={`text-lg font-extrabold ${p.destaque ? "text-white" : "text-brand-600"}`}>
+                    Plano {p.nome}
+                  </h3>
+                  <div className="mt-4 flex items-end justify-center gap-1">
+                    <span className="mb-2 text-2xl font-bold">R$</span>
+                    <span className="text-6xl font-extrabold leading-none">{p.preco.split(",")[0]}</span>
+                    <span className="mb-2 text-2xl font-bold">,{p.preco.split(",")[1]}</span>
+                    <span className={`mb-2 ml-1 text-sm font-semibold ${p.destaque ? "text-lilas" : "text-slate-500"}`}>
+                      {p.periodo}
+                    </span>
+                  </div>
+                  <p className={`mt-2 text-sm font-medium ${p.destaque ? "text-lilas" : "text-slate-500"}`}>
+                    {p.renovacao}
+                  </p>
+                </div>
+                <div className="px-8 py-8">
+                  <p className="text-sm font-medium text-slate-600">{p.resumo}</p>
+                  <ul className="mt-5 space-y-3">
+                    {[
+                      "Cronograma inteligente sob medida",
+                      "Videoaulas selecionadas por matéria",
+                      "Banco de questões com correção",
+                      "Simulados no estilo da prova",
+                      "Redação: temas e materiais",
+                      "Resumos em PDF e imagem",
+                      "Acesso no celular ou computador",
+                    ].map((b) => (
+                      <li key={b} className="flex items-start gap-3 text-sm">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-acerto text-xs font-black text-white">
+                          ✓
+                        </span>
+                        <span className="font-medium text-slate-700">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <ComprarAcesso
+                    plano={p.id}
+                    className={`mt-8 flex w-full items-center justify-center rounded-xl px-6 py-4 text-base font-extrabold shadow-lg transition hover:-translate-y-0.5 hover:brightness-105 ${
+                      p.destaque
+                        ? "bg-meta text-brand-900"
+                        : "bg-brand-600 text-white"
+                    }`}
+                  >
+                    Assinar o {p.nome.toLowerCase()}
+                  </ComprarAcesso>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 text-center text-xs font-medium text-slate-500">
+            Pagamento 100% seguro · acesso liberado na hora · cancele quando quiser
+          </p>
         </div>
       </section>
 
@@ -388,13 +429,16 @@ export default function Vendas() {
               {OFERTA.promessa}
             </h2>
             <p className="relative mx-auto mt-4 max-w-xl text-white/80">
-              Comece hoje com um plano claro e estude com foco até o dia da prova. Pagamento único,
-              acesso para sempre.
+              Comece hoje com um plano claro e estude com foco até o dia da prova. Planos a partir
+              de R$ {PLANOS[0].preco} por mês, cancele quando quiser.
             </p>
             <div className="relative mt-8 flex justify-center">
-              <ComprarAcesso className="rounded-xl bg-meta px-8 py-4 text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105">
-                Quero meu acesso — R$ {OFERTA.preco}
-              </ComprarAcesso>
+              <Link
+                href="#comprar"
+                className="rounded-xl bg-meta px-8 py-4 text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              >
+                Ver planos — a partir de R$ {PLANOS[0].preco}
+              </Link>
             </div>
           </div>
         </div>

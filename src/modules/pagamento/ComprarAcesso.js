@@ -8,7 +8,7 @@ import { useSessao } from "@/modules/auth/auth";
 //  - visitante (sem login) → vai criar conta primeiro
 //  - aluno logado sem acesso → inicia o checkout da Stripe
 //  - aluno já pago / admin → vai direto para os conteúdos
-export default function ComprarAcesso({ className = "", children = "Garantir meu acesso" }) {
+export default function ComprarAcesso({ className = "", children = "Garantir meu acesso", plano = "mensal" }) {
   const sessao = useSessao();
   const router = useRouter();
   const [carregando, setCarregando] = useState(false);
@@ -17,7 +17,8 @@ export default function ComprarAcesso({ className = "", children = "Garantir meu
     if (sessao === undefined) return; // ainda carregando a sessão
 
     if (!sessao) {
-      router.push("/cadastro");
+      // guarda o plano escolhido para retomar o checkout após o cadastro
+      router.push(`/cadastro?plano=${plano}`);
       return;
     }
     if (sessao.pago || sessao.role === "admin") {
@@ -27,7 +28,11 @@ export default function ComprarAcesso({ className = "", children = "Garantir meu
 
     setCarregando(true);
     try {
-      const r = await fetch("/api/stripe/checkout", { method: "POST" });
+      const r = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plano }),
+      });
       const data = await r.json();
       if (data.url) {
         window.location.href = data.url; // redireciona para o checkout da Stripe

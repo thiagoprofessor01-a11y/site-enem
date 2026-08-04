@@ -24,10 +24,35 @@ export const OFERTA = {
   promessa: "Passe no ENEM ainda em 2026",
   subpromessa:
     "O método completo para você organizar os estudos, focar no que mais cai e chegar confiante no dia da prova.",
-  preco: "47,90",
-  parcelaOuAvista: "Pagamento único",
-  acesso: "Acesso vitalício — sem mensalidade",
 };
+
+// ---------------------------------------------------------------------
+// PLANOS — assinaturas exibidas na página de vendas.
+// Edite preço/periodicidade aqui; o valor de cobrança (em centavos) e o
+// intervalo de renovação ficam em src/lib/stripe.js (PLANOS_STRIPE).
+// ---------------------------------------------------------------------
+export const PLANOS = [
+  {
+    id: "mensal",
+    nome: "Mensal",
+    preco: "24,90",
+    periodo: "/mês",
+    renovacao: "Renova todo mês · cancele quando quiser",
+    resumo: "Ideal para começar agora e testar a plataforma.",
+    destaque: false,
+    selo: null,
+  },
+  {
+    id: "trimestral",
+    nome: "Trimestral",
+    preco: "57,90",
+    periodo: "/trimestre",
+    renovacao: "Renova a cada 3 meses · cancele quando quiser",
+    resumo: "Melhor custo-benefício para a reta final de estudos.",
+    destaque: true,
+    selo: "Mais escolhido",
+  },
+];
 
 // Benefícios inclusos no acesso (usados na página de vendas).
 export const BENEFICIOS = [

@@ -12,6 +12,21 @@ export function getStripe() {
   return _stripe;
 }
 
-// Preço do acesso em centavos (R$ 47,90). Ajuste aqui se mudar o valor.
-export const PRECO_CENTAVOS = 4790;
-export const PRODUTO_NOME = "MeuENEM — Acesso vitalício";
+// Planos de assinatura (cobrança recorrente).
+//  - valorCentavos: quanto é cobrado a cada ciclo, em centavos
+//  - intervalo / intervaloContagem: periodicidade da renovação na Stripe
+// Para trocar para pagamento avulso (Pix/boleto), veja o checkout route.
+export const PLANOS_STRIPE = {
+  mensal: {
+    nome: "MeuENEM — Assinatura mensal",
+    valorCentavos: 2490,
+    intervalo: "month",
+    intervaloContagem: 1,
+  },
+  trimestral: {
+    nome: "MeuENEM — Assinatura trimestral",
+    valorCentavos: 5790,
+    intervalo: "month",
+    intervaloContagem: 3,
+  },
+};
