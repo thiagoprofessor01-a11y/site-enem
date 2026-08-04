@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { enviarEmail, emailBoasVindas } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,12 +38,40 @@ export async function POST(req) {
 
   try {
     switch (event.type) {
-      // Primeira assinatura concluída no checkout → libera o acesso.
+      // Primeira assinatura concluída no checkout → libera o acesso
+      // e envia o e-mail de confirmação/boas-vindas (uma vez por checkout).
       case "checkout.session.completed": {
         const session = event.data.object;
         if (session.mode === "subscription") {
           const userId = session.client_reference_id || session.metadata?.user_id;
           await definirAcesso(userId, true);
+
+          // Descobre o nome do aluno (para personalizar o e-mail).
+          let nome = session.customer_details?.name || "";
+          if (!nome && userId) {
+            try {
+              const admin = createAdminClient();
+              const { data } = await admin
+                .from("profiles")
+                .select("nome")
+                .eq("id", userId)
+                .single();
+              nome = data?.nome || "";
+            } catch {
+              // segue sem o nome
+            }
+          }
+
+          const para = session.customer_details?.email || session.customer_email;
+          const plano =
+            session.metadata?.plano === "trimestral"
+              ? "Trimestral (R$ 57,90)"
+              : session.metadata?.plano === "mensal"
+              ? "Mensal (R$ 24,90)"
+              : null;
+          const { assunto, html } = emailBoasVindas({ nome, plano });
+          // Não bloqueia a resposta ao Stripe se o e-mail falhar.
+          await enviarEmail({ para, assunto, html });
         }
         break;
       }
