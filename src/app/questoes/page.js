@@ -1,17 +1,6 @@
-import Protegido from "@/modules/auth/Protegido";
-import ConteudosClient from "@/modules/conteudos-dashboard/ConteudosClient";
+import { redirect } from "next/navigation";
 
-// Questões — mesma estrutura de Conteúdos (matéria → módulo → aula),
-// mas cada aula abre o questionário em HTML.
+// As questões foram unificadas dentro de cada aula em Conteúdos.
 export default function QuestoesPage() {
-  return (
-    <Protegido>
-      <ConteudosClient
-        base="/questoes"
-        titulo="Questões"
-        subtitulo="Pratique as questões por matéria, do que mais cai para o que menos cai."
-        bannerKey="bannerQuestoes"
-      />
-    </Protegido>
-  );
+  redirect("/conteudos");
 }

@@ -13,7 +13,6 @@ import AgendaAulas from "./AgendaAulas";
 const ATALHOS = [
   { href: "/conteudos", titulo: "Conteúdos", icon: "livro", cor: "bg-blue-600" },
   { href: "/cronograma", titulo: "Cronograma", icon: "calendario", cor: "bg-amber-600" },
-  { href: "/questoes", titulo: "Questões", icon: "lista", cor: "bg-emerald-600" },
   { href: "/simulados", titulo: "Simulados", icon: "raio", cor: "bg-violet-600" },
   { href: "/redacao", titulo: "Redação", icon: "lapis", cor: "bg-rose-600" },
   { href: "/resumos", titulo: "Resumos", icon: "livro", cor: "bg-slate-600" },

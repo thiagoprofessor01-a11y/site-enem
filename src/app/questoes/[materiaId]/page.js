@@ -1,15 +1,6 @@
-import Protegido from "@/modules/auth/Protegido";
-import MateriaClient from "@/modules/conteudos-dashboard/MateriaClient";
+import { redirect } from "next/navigation";
 
+// Unificado com Conteúdos: a matéria abre a mesma lista de aulas.
 export default function QuestoesMateriaPage({ params }) {
-  return (
-    <Protegido>
-      <MateriaClient
-        materiaId={params.materiaId}
-        base="/questoes"
-        titulo="Questões"
-        modo="questoes"
-      />
-    </Protegido>
-  );
+  redirect(`/conteudos/${params.materiaId}`);
 }
