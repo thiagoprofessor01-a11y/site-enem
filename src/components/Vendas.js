@@ -54,7 +54,6 @@ const NUMEROS = [
 
 const FAQ = [
   { q: "Como funciona a cobrança?", a: "Você escolhe entre o plano mensal (R$ 24,90) ou o trimestral (R$ 57,90). A assinatura renova automaticamente no fim de cada período e você pode cancelar quando quiser." },
-  { q: "Tem garantia? Posso testar?", a: "Tem. Você tem 7 dias de garantia: se não for pra você, é só pedir o reembolso por e-mail que devolvemos 100% — é o seu direito de arrependimento previsto em lei (art. 49 do CDC)." },
   { q: "Posso cancelar quando quiser?", a: "Sim. Você cancela a qualquer momento e continua com acesso até o fim do período já pago — sem multa e sem burocracia." },
   { q: "Qual a diferença entre mensal e trimestral?", a: "O conteúdo é o mesmo nos dois. No trimestral você paga a cada 3 meses e sai mais barato por mês — ideal para a reta final até a prova." },
   { q: "Funciona no celular?", a: "Funciona. A plataforma abre no navegador do celular, tablet ou computador." },
@@ -108,7 +107,7 @@ export default function Vendas() {
               </div>
               <span className="h-10 w-px bg-white/15" />
               <p className="max-w-[9rem] text-xs font-medium text-white/70">
-                Cancele quando quiser · 7 dias de garantia
+                Cancele quando quiser · sem fidelidade
               </p>
             </div>
 
@@ -458,36 +457,6 @@ export default function Vendas() {
           <p className="mt-8 text-center text-xs font-medium text-white/60">
             Pagamento 100% seguro · acesso liberado na hora · cancele quando quiser
           </p>
-        </div>
-      </section>
-
-      {/* ============================ GARANTIA ======================== */}
-      <section className="py-20">
-        <div className="container">
-          <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card sm:flex-row sm:p-12">
-            {/* Selo */}
-            <div className="relative flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-meta to-amber-400 text-brand-900 shadow-lg">
-              <Icon name="escudo" className="absolute h-full w-full text-brand-900/10" strokeWidth={1} />
-              <div className="text-center">
-                <span className="block text-4xl font-extrabold leading-none">7</span>
-                <span className="text-xs font-bold uppercase tracking-wide">dias</span>
-              </div>
-            </div>
-            {/* Texto */}
-            <div className="text-center sm:text-left">
-              <span className="text-sm font-bold uppercase tracking-widest text-brand-600">
-                Pode ficar tranquilo(a)
-              </span>
-              <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-                O risco é todo nosso
-              </h2>
-              <p className="mt-3 text-slate-600">
-                Teste a plataforma por <strong>7 dias</strong>. Se por algum motivo não for pra
-                você, é só pedir o reembolso por e-mail — devolvemos <strong>100%</strong>, sem
-                enrolação. É o seu direito de arrependimento garantido por lei (art. 49 do CDC).
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
