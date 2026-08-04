@@ -32,7 +32,6 @@ import ResumosClient from "@/modules/resumos/ResumosClient";
 
 const SECOES = [
   { id: "aulas", label: "Aulas" },
-  { id: "questoes", label: "Questões" },
   { id: "simulados", label: "Simulados" },
   { id: "redacao", label: "Redação" },
   { id: "resumos", label: "Resumos" },
@@ -109,13 +108,12 @@ export default function AdminApp() {
         <>
           <Breadcrumb crumbs={crumbs} />
           {aula ? (
-            <AulaDetalhe db={db} aula={aula} setDb={setDb} modo={secao} />
+            <AulaDetalhe db={db} aula={aula} setDb={setDb} />
           ) : modulo ? (
             <AulasView
               db={db}
               modulo={modulo}
               setDb={setDb}
-              modo={secao}
               abrir={(a) =>
                 setNav({ materiaId: materia.id, moduloId: modulo.id, aulaId: a.id })
               }
@@ -532,11 +530,9 @@ function AulasView({ db, modulo, setDb, abrir, modo = "aulas" }) {
                 key={a.id}
                 titulo={a.titulo}
                 nivel={a.nivel}
-                sub={
-                  modo === "questoes"
-                    ? `${db.questoes.filter((q) => q.aulaId === a.id).length} questão(ões)`
-                    : `${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s)`
-                }
+                sub={`${db.videos.filter((v) => v.aulaId === a.id).length} vídeo(s) · ${
+                  db.questoes.filter((q) => q.aulaId === a.id).length
+                } questão(ões)`}
                 onSubir={podeMover(i, "cima") ? () => mover(i, "cima") : null}
                 onDescer={podeMover(i, "baixo") ? () => mover(i, "baixo") : null}
                 onAbrir={() => abrir(a)}
@@ -615,12 +611,11 @@ function NivelPicker({ value, onChange }) {
 /* ==================================================================== */
 /* Detalhe da aula: vídeos + questionário                              */
 /* ==================================================================== */
-function AulaDetalhe({ db, aula, setDb, modo = "aulas" }) {
+function AulaDetalhe({ db, aula, setDb }) {
   const videos = db.videos.filter((v) => v.aulaId === aula.id);
   const questoes = db.questoes.filter((q) => q.aulaId === aula.id);
   const [addVid, setAddVid] = useState(false);
   const [addQ, setAddQ] = useState(false);
-  const ehQuestoes = modo === "questoes";
 
   return (
     <div className="space-y-8">
@@ -630,8 +625,7 @@ function AulaDetalhe({ db, aula, setDb, modo = "aulas" }) {
         </p>
       )}
 
-      {/* Vídeos — só na seção Aulas */}
-      {!ehQuestoes && (
+      {/* Vídeos da aula */}
       <Secao
         titulo="Vídeos do YouTube"
         acao={
@@ -688,10 +682,8 @@ function AulaDetalhe({ db, aula, setDb, modo = "aulas" }) {
           </div>
         )}
       </Secao>
-      )}
 
-      {/* Questionário — só na seção Questões */}
-      {ehQuestoes && (
+      {/* Questões da aula — cole o código HTML de cada questão */}
       <Secao
         titulo="Questões (código HTML)"
         acao={!addQ && <Botao onClick={() => setAddQ(true)}>+ Nova questão</Botao>}
@@ -752,7 +744,6 @@ function AulaDetalhe({ db, aula, setDb, modo = "aulas" }) {
           </ol>
         )}
       </Secao>
-      )}
     </div>
   );
 }

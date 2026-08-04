@@ -7,12 +7,7 @@ import HtmlEmbed from "@/components/HtmlEmbed";
 import NivelDots from "@/components/NivelDots";
 import Icon from "@/components/Icon";
 import { areaInfo } from "./conteudos-ui";
-import {
-  isConcluida,
-  setConcluida,
-  isConcluidaQuestao,
-  setConcluidaQuestao,
-} from "./progresso";
+import { isConcluida, setConcluida } from "./progresso";
 
 const LETRAS = ["A", "B", "C", "D", "E"];
 
@@ -89,9 +84,7 @@ export default function AulaClient({
   aulaId,
   base = "/conteudos",
   titulo = "Conteúdos",
-  modo = "conteudos",
 }) {
-  const ehQuestoes = modo === "questoes";
   const [db, setDb] = useState(null);
   const [feita, setFeita] = useState(false);
 
@@ -106,13 +99,12 @@ export default function AulaClient({
   }, []);
 
   useEffect(() => {
-    setFeita(ehQuestoes ? isConcluidaQuestao(aulaId) : isConcluida(aulaId));
-  }, [aulaId, ehQuestoes]);
+    setFeita(isConcluida(aulaId));
+  }, [aulaId]);
 
   function alternarConcluida() {
     const novo = !feita;
-    if (ehQuestoes) setConcluidaQuestao(aulaId, novo);
-    else setConcluida(aulaId, novo);
+    setConcluida(aulaId, novo);
     setFeita(novo);
   }
 
@@ -186,9 +178,42 @@ export default function AulaClient({
         {aula.resumo && <p className="mt-2 text-slate-600">{aula.resumo}</p>}
       </header>
 
-      {ehQuestoes ? (
-        /* QUESTÕES — código HTML com visualização em tela cheia */
-        questoes.length > 0 ? (
+      {/* VÍDEO(S) DA AULA */}
+      {videos.length > 0 ? (
+        <div className="space-y-6">
+          {videos.map((v) => (
+            <figure key={v.id}>
+              <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
+                <iframe
+                  className="h-full w-full"
+                  src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
+                  title={v.titulo}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              {v.titulo && (
+                <figcaption className="mt-2 text-sm font-medium text-slate-700">
+                  {v.titulo}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
+          Videoaula em breve para este tópico.
+        </div>
+      )}
+
+      {/* QUESTÕES DA AULA — logo abaixo do vídeo */}
+      {questoes.length > 0 && (
+        <section className="mt-12">
+          <h2 className="mb-5 flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+            <Icon name="lista" className="h-5 w-5 text-brand-600" />
+            Questões desta aula
+          </h2>
           <div className="space-y-5">
             {questoes.map((q, i) => (
               <div key={q.id}>
@@ -207,40 +232,7 @@ export default function AulaClient({
               </div>
             ))}
           </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
-            Questões em breve para este tópico.
-          </div>
-        )
-      ) : (
-        /* CONTEÚDOS — apenas os vídeos */
-        videos.length > 0 ? (
-          <div className="space-y-6">
-            {videos.map((v) => (
-              <figure key={v.id}>
-                <div className="aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
-                  <iframe
-                    className="h-full w-full"
-                    src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
-                    title={v.titulo}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-                {v.titulo && (
-                  <figcaption className="mt-2 text-sm font-medium text-slate-700">
-                    {v.titulo}
-                  </figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-400">
-            Videoaula em breve para este tópico.
-          </div>
-        )
+        </section>
       )}
 
       {/* Concluir — quadrado que se preenche ao clicar */}
@@ -250,7 +242,7 @@ export default function AulaClient({
           onClick={alternarConcluida}
           role="checkbox"
           aria-checked={feita}
-          aria-label={ehQuestoes ? "Marcar questões como concluídas" : "Marcar aula como concluída"}
+          aria-label="Marcar aula como concluída"
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
             feita
               ? "border-green-600 bg-green-600 text-white"
@@ -268,13 +260,7 @@ export default function AulaClient({
           )}
         </button>
         <span className="text-sm font-medium text-slate-700">
-          {ehQuestoes
-            ? feita
-              ? "Questões concluídas"
-              : "Marcar questões como concluídas"
-            : feita
-            ? "Aula concluída"
-            : "Marcar aula como concluída"}
+          {feita ? "Aula concluída" : "Marcar aula como concluída"}
         </span>
       </div>
 

@@ -8,7 +8,6 @@ const COLUNAS = [
     links: [
       { href: "/conteudos", label: "Conteúdos" },
       { href: "/cronograma", label: "Cronograma" },
-      { href: "/questoes", label: "Questões" },
       { href: "/simulados", label: "Simulados" },
       { href: "/redacao", label: "Redação" },
       { href: "/resumos", label: "Resumos" },

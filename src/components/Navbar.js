@@ -6,12 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSessao, logout } from "@/modules/auth/auth";
 import Logo from "@/components/Logo";
 
-// Ordem (esquerda → direita): Cronograma, Conteúdos, Questões, Simulados,
-// Resumos, Redação.
+// Ordem (esquerda → direita): Cronograma, Conteúdos, Simulados, Resumos, Redação.
+// As questões agora ficam dentro de cada aula em Conteúdos.
 const LINKS_ALUNO = [
   { href: "/cronograma", label: "Cronograma" },
   { href: "/conteudos", label: "Conteúdos" },
-  { href: "/questoes", label: "Questões" },
   { href: "/simulados", label: "Simulados" },
   { href: "/resumos", label: "Resumos" },
   { href: "/redacao", label: "Redação" },

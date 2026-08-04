@@ -74,19 +74,13 @@ export default function AgendaAulas({ agenda, hoje }) {
                     </span>
                     <span className="block truncate text-xs text-slate-400">{aula.modNome}</span>
                   </span>
-                  {/* Escolha: assistir a aula ou responder as questões */}
+                  {/* Aula com vídeo + questões na mesma página */}
                   <span className="flex shrink-0 gap-2">
                     <Link
                       href={`/conteudos/${aula.materiaId}/${aula.id}`}
                       className="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-brand-600 sm:flex-none"
                     >
-                      Aula
-                    </Link>
-                    <Link
-                      href={`/questoes/${aula.materiaId}/${aula.id}`}
-                      className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:flex-none"
-                    >
-                      Questões
+                      Abrir aula
                     </Link>
                   </span>
                 </div>
