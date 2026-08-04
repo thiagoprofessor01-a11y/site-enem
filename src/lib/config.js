@@ -89,20 +89,20 @@ export const BENEFICIOS = [
 // Se `foto` ficar vazio (""), a seção mostra um espaço reservado.
 export const DEPOIMENTOS = [
   {
-    inicial: "M",
-    nome: "Marina S.",
-    resultado: "Aprovada em Enfermagem — Universidade Federal",
-    foto: "/aprovados/marina.jpg",
+    inicial: "P",
+    nome: "Pedro Neto",
+    resultado: "Aprovado em Inteligência Artificial — UFT",
+    foto: "/aprovados/pedro.jpg",
     texto:
-      "Eu estudava sem direção e vivia ansiosa. Com o cronograma pronto e as videoaulas certas, parei de me perder e finalmente rendi. Passei na federal!",
+      "Com o cronograma e os simulados eu parei de estudar no escuro e foquei no que realmente caía. Cheguei firme na prova e conquistei minha vaga na UFT.",
   },
   {
-    inicial: "L",
-    nome: "Lucas P.",
-    resultado: "Aprovado em Engenharia — Universidade Federal",
-    foto: "/aprovados/lucas.jpg",
+    inicial: "T",
+    nome: "Thiago Miranda",
+    resultado: "Aprovado em Direito — UFT",
+    foto: "/aprovados/thiago.jpg",
     texto:
-      "Os simulados e o banco de questões fizeram toda a diferença. Fui pra prova sabendo o que mais caía e como o tempo funcionava. Recomendo demais.",
+      "A organização dos estudos e o treino de redação foram o que mais me ajudaram. Fui pra prova confiante e passei em Direito na UFT.",
   },
   {
     inicial: "B",

@@ -360,7 +360,7 @@ export default function Vendas() {
                 {/* Foto do aluno aprovado: coloque o arquivo em public/aprovados/
                     e informe o caminho em `foto` no config. Sem foto (ou arquivo
                     faltando), mostra o espaço reservado automaticamente. */}
-                <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-gradient-to-br from-lilas to-brand-100">
+                <div className="relative flex aspect-[5/7] items-center justify-center overflow-hidden bg-gradient-to-br from-lilas to-brand-100">
                   <FotoAprovado foto={d.foto} nome={d.nome} resultado={d.resultado} />
                   <span className="absolute left-3 top-3 rounded-full bg-acerto px-2.5 py-1 text-xs font-bold text-white shadow">
                     Aprovado(a)
