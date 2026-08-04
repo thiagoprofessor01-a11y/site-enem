@@ -18,7 +18,7 @@ COMO ADICIONAR AS FOTOS DOS ALUNOS APROVADOS
 DICA DE IMAGEM
 --------------
 - Formato: JPG ou PNG
-- Proporção ideal: paisagem 4:3 (ex.: 800 x 600 pixels) — a foto é cortada para caber
+- Proporção ideal: QUADRADA 1:1 (ex.: 800 x 800 pixels)
 - Peso: de preferência abaixo de 300 KB para carregar rápido
 
 Você pode ter mais de 3 depoimentos: basta adicionar novos itens na lista

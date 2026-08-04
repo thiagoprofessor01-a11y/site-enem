@@ -92,7 +92,7 @@ export const DEPOIMENTOS = [
     inicial: "M",
     nome: "Marina S.",
     resultado: "Aprovada em Enfermagem — Universidade Federal",
-    foto: "", // ex.: "/aprovados/marina.jpg"
+    foto: "/aprovados/marina.jpg",
     texto:
       "Eu estudava sem direção e vivia ansiosa. Com o cronograma pronto e as videoaulas certas, parei de me perder e finalmente rendi. Passei na federal!",
   },
@@ -100,7 +100,7 @@ export const DEPOIMENTOS = [
     inicial: "L",
     nome: "Lucas P.",
     resultado: "Aprovado em Engenharia — Universidade Federal",
-    foto: "", // ex.: "/aprovados/lucas.jpg"
+    foto: "/aprovados/lucas.jpg",
     texto:
       "Os simulados e o banco de questões fizeram toda a diferença. Fui pra prova sabendo o que mais caía e como o tempo funcionava. Recomendo demais.",
   },
@@ -108,7 +108,7 @@ export const DEPOIMENTOS = [
     inicial: "B",
     nome: "Beatriz A.",
     resultado: "Aprovada em Direito — Universidade Federal",
-    foto: "", // ex.: "/aprovados/beatriz.jpg"
+    foto: "/aprovados/beatriz.jpg",
     texto:
       "A parte de redação me destravou. Entendi as 5 competências e minha nota subiu muito. Valeu cada centavo pelo que entrega.",
   },
