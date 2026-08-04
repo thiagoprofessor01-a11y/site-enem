@@ -41,7 +41,7 @@ export function CardVazio({ children }) {
 
 export function Tag({ children }) {
   return (
-    <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
+    <span className="whitespace-nowrap rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
       {children}
     </span>
   );
