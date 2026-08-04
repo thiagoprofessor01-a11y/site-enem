@@ -926,7 +926,7 @@ function QuestaoForm({ onSalvar, onCancelar }) {
 function Secao({ titulo, acao, children }) {
   return (
     <section className="mb-2">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-slate-900">{titulo}</h2>
         {acao}
       </div>
@@ -938,36 +938,41 @@ function Secao({ titulo, acao, children }) {
 function ItemLinha({ titulo, tag, sub, nivel, onSubir, onDescer, onAbrir, onEditar, onExcluir }) {
   const temReorder = onSubir !== undefined || onDescer !== undefined;
   return (
-    <li className="card flex items-center justify-between gap-3 p-4">
-      {temReorder && (
-        <div className="flex shrink-0 flex-col">
-          <button
-            onClick={onSubir || undefined}
-            disabled={!onSubir}
-            title="Mover para cima (mesmo nível)"
-            className="text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
-          >
-            ▲
-          </button>
-          <button
-            onClick={onDescer || undefined}
-            disabled={!onDescer}
-            title="Mover para baixo (mesmo nível)"
-            className="text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
-          >
-            ▼
-          </button>
-        </div>
-      )}
-      <button onClick={onAbrir} className="min-w-0 flex-1 text-left">
-        <div className="flex items-center gap-2">
-          <span className="truncate font-semibold text-slate-900">{titulo}</span>
-          {tag && <Tag>{tag}</Tag>}
-          {nivel != null && <NivelDots nivel={nivel} />}
-        </div>
-        {sub && <p className="mt-0.5 truncate text-xs text-slate-500">{sub}</p>}
-      </button>
-      <div className="flex shrink-0 items-center gap-1">
+    <li className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Nome + info (ocupa a linha inteira no celular) */}
+      <div className="flex min-w-0 items-center gap-2">
+        {temReorder && (
+          <div className="flex shrink-0 flex-col leading-none">
+            <button
+              onClick={onSubir || undefined}
+              disabled={!onSubir}
+              title="Mover para cima (mesmo nível)"
+              className="px-1 text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
+            >
+              ▲
+            </button>
+            <button
+              onClick={onDescer || undefined}
+              disabled={!onDescer}
+              title="Mover para baixo (mesmo nível)"
+              className="px-1 text-slate-400 transition hover:text-brand-600 disabled:opacity-30"
+            >
+              ▼
+            </button>
+          </div>
+        )}
+        <button onClick={onAbrir} className="min-w-0 flex-1 text-left">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-slate-900">{titulo}</span>
+            {tag && <Tag>{tag}</Tag>}
+            {nivel != null && <NivelDots nivel={nivel} />}
+          </div>
+          {sub && <p className="mt-0.5 text-xs text-slate-500">{sub}</p>}
+        </button>
+      </div>
+
+      {/* Ações (linha própria no celular, à direita no desktop) */}
+      <div className="flex shrink-0 items-center gap-1 border-t border-slate-100 pt-3 sm:border-0 sm:pt-0">
         <Botao variant="outline" onClick={onAbrir}>
           Abrir →
         </Botao>
