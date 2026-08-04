@@ -5,8 +5,7 @@ import Link from "next/link";
 
 // Tela de agradecimento pós-pagamento. Ao voltar do checkout com
 // ?session_id=..., confirma na Stripe que a sessão foi paga (rede de
-// segurança além do webhook) e mostra a confirmação. O e-mail de
-// boas-vindas é disparado pelo webhook quando a Stripe confirma o pagamento.
+// segurança além do webhook) e mostra a confirmação.
 export default function ObrigadoClient() {
   const [estado, setEstado] = useState("confirmando"); // confirmando | ok | pendente | erro
 
@@ -53,15 +52,11 @@ export default function ObrigadoClient() {
             Pagamento confirmado!
           </h1>
           <p className="mt-3 text-slate-600">
-            Seu acesso ao <strong>MeuENEM</strong> já está liberado. Enviamos um e-mail de
-            confirmação para a sua caixa de entrada.
+            Seu acesso ao <strong>MeuENEM</strong> já está liberado. Bons estudos!
           </p>
           <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
             Começar a estudar →
           </Link>
-          <p className="mt-4 text-xs text-slate-400">
-            Não recebeu o e-mail? Verifique a caixa de spam.
-          </p>
         </div>
       )}
 
@@ -70,8 +65,8 @@ export default function ObrigadoClient() {
           <span className="text-4xl">⏳</span>
           <h1 className="mt-4 text-2xl font-bold text-slate-900">Pagamento em processamento</h1>
           <p className="mt-2 text-slate-600">
-            Assim que o pagamento for confirmado, seu acesso é liberado automaticamente e você
-            recebe um e-mail. Isso costuma levar só alguns instantes.
+            Assim que o pagamento for confirmado, seu acesso é liberado automaticamente. Isso
+            costuma levar só alguns instantes.
           </p>
           <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
             Ir para a plataforma
