@@ -38,7 +38,14 @@ export async function POST(req) {
         console.error("[stripe confirm] erro ao liberar:", error);
         return NextResponse.json({ error: "falha ao liberar acesso" }, { status: 500 });
       }
-      return NextResponse.json({ ok: true, liberado: true });
+      // Valor e moeda da venda (para o evento de conversão do pixel).
+      const valor = session.amount_total != null ? session.amount_total / 100 : null;
+      return NextResponse.json({
+        ok: true,
+        liberado: true,
+        valor,
+        moeda: (session.currency || "brl").toUpperCase(),
+      });
     }
 
     return NextResponse.json({ ok: true, liberado: false, status: session.payment_status });
