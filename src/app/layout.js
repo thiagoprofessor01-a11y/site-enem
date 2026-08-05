@@ -41,8 +41,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+// Trava: init + PageView disparam uma única vez por carregamento,
+// mesmo que este script seja avaliado mais de uma vez (hidratação/StrictMode).
+if(!window.__meuenemPixel){window.__meuenemPixel=1;
 fbq('init', '1888470902537217');
-fbq('track', 'PageView');`}
+fbq('track', 'PageView');}`}
         </Script>
         {/* End Meta Pixel Code */}
       </head>
