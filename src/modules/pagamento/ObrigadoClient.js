@@ -22,8 +22,23 @@ export default function ObrigadoClient() {
       .then((r) => r.json())
       .then((d) => {
         if (!ativo) return;
-        if (d?.liberado) setEstado("ok");
-        else if (d?.ok) setEstado("pendente");
+        if (d?.liberado) {
+          setEstado("ok");
+          // Evento de conversão do Meta Pixel — dispara só ao confirmar a compra
+          // e só uma vez por pagamento (evita recontar ao atualizar a página).
+          const chave = `fbq-purchase-${sessionId}`;
+          if (
+            typeof window !== "undefined" &&
+            typeof window.fbq === "function" &&
+            !sessionStorage.getItem(chave)
+          ) {
+            window.fbq("track", "Purchase", {
+              value: d.valor ?? undefined,
+              currency: d.moeda || "BRL",
+            });
+            sessionStorage.setItem(chave, "1");
+          }
+        } else if (d?.ok) setEstado("pendente");
         else setEstado("erro");
       })
       .catch(() => ativo && setEstado("erro"));
