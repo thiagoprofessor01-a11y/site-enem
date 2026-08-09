@@ -88,27 +88,6 @@ const FAQ = [
   { q: "Serve para qualquer curso?", a: "Sim. O conteúdo cobre todas as áreas do ENEM, então serve para qualquer curso e universidade que usam a nota." },
 ];
 
-// Mini agenda usada na seção do cronograma.
-function AgendaMock() {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
-      {[
-        ["Segunda", "Matemática — Função afim"],
-        ["Terça", "Biologia — Ecologia"],
-        ["Quarta", "Redação — Estrutura da dissertação"],
-      ].map(([dia, tarefa]) => (
-        <div key={dia} className="flex items-center gap-4 border-b border-white/10 py-3 last:border-0">
-          <span className="w-16 shrink-0 text-xs font-bold uppercase tracking-wide text-white/40">{dia}</span>
-          <span className="text-sm font-semibold text-white/90">{tarefa}</span>
-        </div>
-      ))}
-      <div className="mt-4 rounded-xl bg-acerto/15 p-3 text-center text-sm font-bold text-acerto">
-        Seu plano de hoje, montado automaticamente
-      </div>
-    </div>
-  );
-}
-
 // Mockup de um computador com o site MeuENEM aberto na tela.
 function ComputadorMockup() {
   return (
@@ -233,28 +212,22 @@ export default function Vendas() {
             </p>
           </Reveal>
 
-          <div className="mx-auto mt-14 grid max-w-5xl items-center gap-10 lg:grid-cols-2">
-            <Reveal>
-              <ul className="space-y-4">
-                {CRONOGRAMA_PONTOS.map(([t, d], i) => (
-                  <li
-                    key={t}
-                    className="flex gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:border-ciano/40"
-                  >
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-acerto text-brand-950">
-                      <Icon name="calendario" className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <p className="font-bold text-white">{t}</p>
-                      <p className="mt-0.5 text-sm text-white/65">{d}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={120}>
-              <AgendaMock />
-            </Reveal>
+          <div className="mx-auto mt-14 grid max-w-3xl gap-4 sm:grid-cols-2">
+            {CRONOGRAMA_PONTOS.map(([t, d], i) => (
+              <Reveal
+                key={t}
+                delay={i * 80}
+                className="flex gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:border-ciano/40"
+              >
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-acerto text-brand-950">
+                  <Icon name="calendario" className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="font-bold text-white">{t}</p>
+                  <p className="mt-0.5 text-sm text-white/65">{d}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
 
           <Reveal className="mt-12 flex justify-center" delay={100}>
