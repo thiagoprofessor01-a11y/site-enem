@@ -7,7 +7,7 @@ import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
 import { OFERTA, PLANOS, DEPOIMENTOS } from "@/lib/config";
 
 // Landing page de vendas do Meu ENEM — tema ESCURO, ousado e direto.
-// Identidade: Azul ENEM #3028D0 · Azul profundo #17106F · Ciano · Lilás · Verde · Amarelo.
+// Diferencial central: CRONOGRAMA DE ESTUDOS PERSONALIZADO.
 
 const PARA_VOCE = [
   { icon: "alvo", titulo: "Passar no ENEM 2026" },
@@ -19,40 +19,48 @@ const PARA_VOCE = [
 ];
 
 const FEATURES = [
-  { icon: "calendario", titulo: "Cronograma inteligente", desc: "Um plano dia a dia calculado pelo tempo que falta até a prova, priorizando o que mais cai." },
+  { icon: "calendario", titulo: "Cronograma personalizado", desc: "Um plano dia a dia calculado pelo tempo que falta até a prova, priorizando o que mais cai. É o nosso diferencial." },
   { icon: "play", titulo: "Videoaulas selecionadas", desc: "As melhores aulas de cada assunto, escolhidas a dedo — sem perder tempo procurando." },
-  { icon: "lista", titulo: "Banco de questões", desc: "Questões do ENEM por matéria e tópico, com correção na hora e tela cheia." },
+  { icon: "lista", titulo: "Banco de questões", desc: "Questões do ENEM por matéria e tópico, com gabarito na hora e tela cheia." },
   { icon: "raio", titulo: "Simulados", desc: "Simulados no estilo da prova para você treinar ritmo e controle de tempo." },
-  { icon: "lapis", titulo: "Redação nota 1000", desc: "Os melhores temas e materiais para treinar as 5 competências avaliadas." },
+  { icon: "lapis", titulo: "Redação", desc: "Os melhores temas e materiais para treinar as 5 competências avaliadas." },
   { icon: "livro", titulo: "Resumos", desc: "Resumos objetivos em PDF e imagem, por matéria, para revisar rápido." },
 ];
 
 // Itens do card de preço no hero (curtos, com check verde).
 const CARD_DESTAQUES = [
+  "Cronograma personalizado: diz o que estudar hoje",
   "Videoaulas focadas no que mais cai",
-  "Banco de questões do ENEM com correção",
+  "Banco de questões do ENEM com gabarito na hora",
   "Simulados no estilo da prova",
-  "Redação: temas e correção pelas 5 competências",
-  "Plano de estudos que diz o que fazer hoje",
+  "Redação: temas e materiais das 5 competências",
   "Resumos em PDF para revisar rápido",
 ];
 
 // Frases da faixa que rola (marquee) abaixo do hero.
 const TICKER = [
+  "Cronograma de estudos personalizado",
   "Preparação completa para o ENEM 2026",
-  "Plano mensal: comece agora",
-  "Plano trimestral: melhor custo-benefício",
   "Foco no que mais cai",
+  "Plano mensal ou trimestral",
   "Cancele quando quiser",
 ];
 
+// Pontos fortes do cronograma (seção diferencial).
+const CRONOGRAMA_PONTOS = [
+  ["Feito sob medida", "Você diz seu tempo e sua data de prova; o plano se molda a você."],
+  ["Prioriza o que mais cai", "As matérias entram na ordem certa — do que mais cai para o que menos cai."],
+  ["Diz o que fazer hoje", "Todo dia mostra a aula, as questões e o simulado da vez. Sem se perder."],
+  ["Acompanha seu progresso", "Você vê a meta semanal andar e nunca fica no escuro."],
+];
+
 const INCLUSO = [
+  "Cronograma de estudos 100% personalizado — nosso diferencial",
   "Conteúdo das 5 áreas: Matemática, Linguagens, Humanas, Natureza e Redação",
-  "Cronograma / planejador de estudos personalizado",
   "Videoaulas selecionadas, do básico ao avançado",
   "Banco de questões do ENEM com filtros por matéria, tópico, ano e dificuldade",
   "Simulados cronometrados no estilo da prova, com desempenho",
-  "Redação: banco de temas e correção pelas 5 competências",
+  "Redação: banco de temas e materiais das 5 competências",
   "Resumos objetivos em PDF e imagem para revisar rápido",
   "Acompanhamento da meta semanal e do seu progresso",
   "Acesso no celular, tablet ou computador",
@@ -66,11 +74,12 @@ const COMO = [
 
 const NUMEROS = [
   { v: "5", r: "áreas do conhecimento cobertas" },
-  { v: "1", r: "plano de estudos só seu" },
+  { v: "1", r: "cronograma feito só para você" },
   { v: "R$ 24,90", r: "por mês para começar" },
 ];
 
 const FAQ = [
+  { q: "Como funciona o cronograma personalizado?", a: "Você informa quantas horas por dia tem e a sua data de prova. A plataforma monta um plano de estudos sob medida, prioriza o que mais cai e mostra, todo dia, exatamente o que estudar. É o que nos diferencia." },
   { q: "Como funciona a cobrança?", a: "Você escolhe entre o plano mensal (R$ 24,90) ou o trimestral (R$ 57,90). A assinatura renova automaticamente no fim de cada período e você pode cancelar quando quiser." },
   { q: "Posso cancelar quando quiser?", a: "Sim. Você cancela a qualquer momento e continua com acesso até o fim do período já pago — sem multa e sem burocracia." },
   { q: "Qual a diferença entre mensal e trimestral?", a: "O conteúdo é o mesmo nos dois. No trimestral você paga a cada 3 meses e sai mais barato por mês — ideal para a reta final até a prova." },
@@ -78,12 +87,23 @@ const FAQ = [
   { q: "Serve para qualquer curso?", a: "Sim. O conteúdo cobre todas as áreas do ENEM, então serve para qualquer curso e universidade que usam a nota." },
 ];
 
-function Estrelas() {
+// Mini agenda usada na seção do cronograma.
+function AgendaMock() {
   return (
-    <div className="flex gap-0.5 text-meta">
-      {"★★★★★".split("").map((s, i) => (
-        <span key={i}>{s}</span>
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
+      {[
+        ["Segunda", "Matemática — Função afim"],
+        ["Terça", "Biologia — Ecologia"],
+        ["Quarta", "Redação — Estrutura da dissertação"],
+      ].map(([dia, tarefa]) => (
+        <div key={dia} className="flex items-center gap-4 border-b border-white/10 py-3 last:border-0">
+          <span className="w-16 shrink-0 text-xs font-bold uppercase tracking-wide text-white/40">{dia}</span>
+          <span className="text-sm font-semibold text-white/90">{tarefa}</span>
+        </div>
       ))}
+      <div className="mt-4 rounded-xl bg-acerto/15 p-3 text-center text-sm font-bold text-acerto">
+        Seu plano de hoje, montado automaticamente
+      </div>
     </div>
   );
 }
@@ -94,7 +114,6 @@ function ComputadorMockup() {
     <div className="relative mx-auto w-full max-w-md">
       <div className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-brand-600/20 blur-3xl" />
       <div className="relative">
-        {/* monitor */}
         <div className="rounded-2xl border border-white/15 bg-slate-900/80 p-2.5 shadow-2xl ring-1 ring-white/5">
           <div className="flex items-center gap-2 px-2 pb-2.5 pt-1">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
@@ -108,7 +127,6 @@ function ComputadorMockup() {
             <TelaMockup />
           </div>
         </div>
-        {/* base / pé do monitor */}
         <div className="mx-auto h-5 w-24 rounded-b-xl bg-gradient-to-b from-slate-700 to-slate-800" />
         <div className="mx-auto h-2 w-44 rounded-full bg-slate-800/80 shadow-lg" />
       </div>
@@ -131,29 +149,13 @@ export default function Vendas() {
               Preparação<br />completa
             </h1>
             <span className="mt-5 inline-block bg-acerto px-3 py-1.5 text-lg font-extrabold uppercase tracking-tight text-brand-950 sm:text-xl">
-              Foco no que mais cai
+              Com cronograma personalizado
             </span>
             <p className="mt-6 max-w-md text-lg text-white/75">
-              Conteúdos objetivos, videoaulas, simulados, correção de redação e um plano de
-              estudos que diz o que fazer hoje.
+              Videoaulas, simulados, redação e — o que só a gente entrega — um{" "}
+              <strong className="text-white">cronograma de estudos personalizado</strong> que diz
+              o que você tem que estudar hoje.
             </p>
-
-            <div className="mt-8 flex items-center gap-4">
-              <div className="flex -space-x-2">
-                {DEPOIMENTOS.map((d) => (
-                  <span
-                    key={d.nome}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-950 bg-lilas text-sm font-bold text-brand-800"
-                  >
-                    {d.inicial}
-                  </span>
-                ))}
-              </div>
-              <div>
-                <Estrelas />
-                <p className="text-xs text-white/60">Aprovados que estudaram com direção</p>
-              </div>
-            </div>
           </div>
 
           {/* Direita — card de preço */}
@@ -184,12 +186,12 @@ export default function Vendas() {
               </ComprarAcesso>
 
               <ul className="mt-6 space-y-3">
-                {CARD_DESTAQUES.map((b) => (
+                {CARD_DESTAQUES.map((b, idx) => (
                   <li key={b} className="flex items-start gap-3 text-sm">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-acerto text-xs font-black text-brand-950">
                       ✓
                     </span>
-                    <span className="font-medium text-white/85">{b}</span>
+                    <span className={idx === 0 ? "font-bold text-white" : "font-medium text-white/85"}>{b}</span>
                   </li>
                 ))}
               </ul>
@@ -211,6 +213,59 @@ export default function Vendas() {
           )}
         </div>
       </div>
+
+      {/* =============== DIFERENCIAL: CRONOGRAMA (destaque) =========== */}
+      <section className="border-b border-white/10 bg-brand-900 py-20 sm:py-24">
+        <div className="container">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-acerto px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-brand-950">
+              ★ O que nos diferencia
+            </span>
+            <h2 className="mt-5 text-4xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl">
+              Um cronograma <span className="text-ciano">só seu</span>
+            </h2>
+            <p className="mt-5 text-lg text-white/75">
+              Os outros te entregam um monte de aula solta e você se vira. Aqui é diferente: você
+              recebe um <strong className="text-white">plano de estudos personalizado</strong> — diz
+              quantas horas por dia tem, e a plataforma monta o seu caminho até a prova e mostra,
+              todo dia, exatamente o que estudar.
+            </p>
+          </Reveal>
+
+          <div className="mx-auto mt-14 grid max-w-5xl items-center gap-10 lg:grid-cols-2">
+            <Reveal>
+              <ul className="space-y-4">
+                {CRONOGRAMA_PONTOS.map(([t, d], i) => (
+                  <li
+                    key={t}
+                    className="flex gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:border-ciano/40"
+                  >
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-acerto text-brand-950">
+                      <Icon name="calendario" className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="font-bold text-white">{t}</p>
+                      <p className="mt-0.5 text-sm text-white/65">{d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+            <Reveal delay={120}>
+              <AgendaMock />
+            </Reveal>
+          </div>
+
+          <Reveal className="mt-12 flex justify-center" delay={100}>
+            <ComprarAcesso
+              plano="mensal"
+              className="rounded-xl bg-meta px-8 py-4 text-base font-extrabold uppercase tracking-wide text-brand-950 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+            >
+              Quero meu cronograma personalizado
+            </ComprarAcesso>
+          </Reveal>
+        </div>
+      </section>
 
       {/* ===================== VEJA A PLATAFORMA ====================== */}
       <section className="border-b border-white/10 py-16 sm:py-20">
@@ -310,9 +365,19 @@ export default function Vendas() {
               <Reveal
                 key={f.titulo}
                 delay={(i % 3) * 90}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:border-ciano/40 hover:bg-white/[0.08]"
+                className={`group rounded-2xl border p-6 transition hover:-translate-y-1 ${
+                  i === 0
+                    ? "border-acerto/40 bg-acerto/10 hover:border-acerto"
+                    : "border-white/10 bg-white/5 hover:border-ciano/40 hover:bg-white/[0.08]"
+                }`}
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600/30 text-ciano ring-1 ring-inset ring-ciano/30 transition group-hover:bg-ciano group-hover:text-brand-900">
+                <span
+                  className={`flex h-12 w-12 items-center justify-center rounded-xl ring-1 ring-inset transition ${
+                    i === 0
+                      ? "bg-acerto text-brand-950 ring-acerto"
+                      : "bg-brand-600/30 text-ciano ring-ciano/30 group-hover:bg-ciano group-hover:text-brand-900"
+                  }`}
+                >
                   <Icon name={f.icon} className="h-6 w-6" />
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-white">{f.titulo}</h3>
@@ -323,59 +388,8 @@ export default function Vendas() {
         </div>
       </section>
 
-      {/* ====================== CRONOGRAMA (destaque) ================= */}
-      <section className="border-y border-white/10 bg-brand-900 py-20">
-        <div className="container grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
-            <span className="text-sm font-bold uppercase tracking-widest text-ciano">
-              O diferencial
-            </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Um plano de estudos que se adapta a você
-            </h2>
-            <p className="mt-4 text-white/70">
-              Diga quantas horas por dia você tem até a prova. O Meu ENEM monta um cronograma
-              inteligente, prioriza o que mais cai e mostra, todo dia, exatamente o que estudar.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Distribui as matérias pelas 5 áreas do conhecimento",
-                "Prioriza os assuntos com maior incidência no ENEM",
-                "Mostra as aulas e as questões do seu dia",
-                "Você acompanha o progresso e nunca se perde",
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-acerto text-xs font-black text-white">
-                    ✓
-                  </span>
-                  <span className="text-sm font-medium text-white/80">{t}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={120} className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
-            {[
-              ["Segunda", "Matemática — Função afim"],
-              ["Terça", "Biologia — Ecologia"],
-              ["Quarta", "Redação — Estrutura da dissertação"],
-            ].map(([dia, tarefa]) => (
-              <div key={dia} className="flex items-center gap-4 border-b border-white/10 py-3 last:border-0">
-                <span className="w-16 shrink-0 text-xs font-bold uppercase tracking-wide text-white/40">
-                  {dia}
-                </span>
-                <span className="text-sm font-semibold text-white/90">{tarefa}</span>
-              </div>
-            ))}
-            <div className="mt-4 flex gap-2">
-              <span className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">Aula</span>
-              <span className="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-bold text-white/70">Questões</span>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       {/* ========================= COMO FUNCIONA ====================== */}
-      <section className="py-20">
+      <section className="border-y border-white/10 bg-brand-900 py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -397,7 +411,7 @@ export default function Vendas() {
       </section>
 
       {/* ======================= ALUNOS APROVADOS ===================== */}
-      <section id="depoimentos" className="scroll-mt-20 border-y border-white/10 bg-white/[0.03] py-20">
+      <section id="depoimentos" className="scroll-mt-20 py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -426,8 +440,7 @@ export default function Vendas() {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <Estrelas />
-                  <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-slate-700">
+                  <blockquote className="flex-1 text-sm leading-relaxed text-slate-700">
                     “{d.texto}”
                   </blockquote>
                   <figcaption className="mt-5 border-t border-slate-100 pt-4">
@@ -442,7 +455,7 @@ export default function Vendas() {
       </section>
 
       {/* ============================ PLANOS ========================== */}
-      <section id="comprar" className="scroll-mt-20 py-20">
+      <section id="comprar" className="scroll-mt-20 border-t border-white/10 bg-white/[0.03] py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -514,7 +527,7 @@ export default function Vendas() {
       </section>
 
       {/* ============================== FAQ =========================== */}
-      <section className="border-t border-white/10 bg-white/[0.03] py-20">
+      <section className="py-20">
         <div className="container mx-auto max-w-2xl">
           <Reveal>
             <h2 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -540,15 +553,15 @@ export default function Vendas() {
       </section>
 
       {/* ========================== CTA FINAL ========================= */}
-      <section className="py-20">
+      <section className="border-t border-white/10 py-20">
         <div className="container">
           <Reveal className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-brand-900 px-8 py-16 text-center shadow-2xl sm:px-16">
             <h2 className="relative mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
               {OFERTA.promessa}
             </h2>
             <p className="relative mx-auto mt-4 max-w-xl text-white/75">
-              Comece hoje com um plano claro e estude com foco até o dia da prova. Planos a partir
-              de R$ {PLANOS[0].preco} por mês, cancele quando quiser.
+              Comece hoje com um cronograma feito só para você e estude com foco até o dia da prova.
+              Planos a partir de R$ {PLANOS[0].preco} por mês, cancele quando quiser.
             </p>
             <div className="relative mt-8 flex justify-center">
               <Link

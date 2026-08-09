@@ -74,7 +74,7 @@ export const BENEFICIOS = [
   {
     emoji: "✍️",
     titulo: "Redação",
-    desc: "Aulas, banco de temas e correção pelas 5 competências avaliadas pelo ENEM.",
+    desc: "Aulas e banco de temas para treinar as 5 competências avaliadas pelo ENEM.",
   },
   {
     emoji: "🎬",
@@ -134,7 +134,7 @@ export const PILARES = [
     href: "/redacao",
     titulo: "Redação nota 1000",
     descricao:
-      "Aulas, banco de temas e correção pelas 5 competências avaliadas pelo ENEM.",
+      "Aulas e banco de temas para treinar as 5 competências avaliadas pelo ENEM.",
     emoji: "✍️",
   },
   {
