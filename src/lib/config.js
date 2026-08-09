@@ -99,18 +99,18 @@ export const DEPOIMENTOS = [
   {
     inicial: "T",
     nome: "Thiago Miranda",
-    resultado: "Aprovado em Direito — UFT",
+    resultado: "Aprovado em Direito — UFRJ",
     foto: "/aprovados/thiago.jpg",
     texto:
-      "A organização dos estudos e o treino de redação foram o que mais me ajudaram. Fui pra prova confiante e passei em Direito na UFT.",
+      "A organização dos estudos e o treino de redação foram o que mais me ajudaram. Fui pra prova confiante e passei em Direito na UFRJ.",
   },
   {
-    inicial: "B",
-    nome: "Beatriz A.",
-    resultado: "Aprovada em Direito — Universidade Federal",
-    foto: "/aprovados/beatriz.jpg",
+    inicial: "C",
+    nome: "Ciro",
+    resultado: "Aprovado em Medicina — UFG",
+    foto: "/aprovados/ciro.jpg",
     texto:
-      "A parte de redação me destravou. Entendi as 5 competências e minha nota subiu muito. Valeu cada centavo pelo que entrega.",
+      "Estudar pelo que mais cai fez toda a diferença. Segui o cronograma, treinei muita questão e consegui a vaga mais concorrida: Medicina na UFG.",
   },
 ];
 
