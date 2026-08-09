@@ -195,7 +195,7 @@ export default function Vendas() {
       </div>
 
       {/* =============== DIFERENCIAL: CRONOGRAMA (destaque) =========== */}
-      <section className="border-b border-white/10 bg-brand-900 py-20 sm:py-24">
+      <section className="border-b border-white/10 bg-brand-900 py-16 sm:py-24">
         <div className="container">
           <Reveal className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-acerto px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-brand-950">
@@ -269,7 +269,7 @@ export default function Vendas() {
       </section>
 
       {/* ===================== IDEAL PARA VOCÊ QUE QUER ================ */}
-      <section className="relative py-20">
+      <section className="relative py-14 sm:py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -319,7 +319,7 @@ export default function Vendas() {
       </section>
 
       {/* =========================== RECURSOS ========================= */}
-      <section id="recursos" className="scroll-mt-20 py-20">
+      <section id="recursos" className="scroll-mt-20 py-14 sm:py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -363,7 +363,7 @@ export default function Vendas() {
       </section>
 
       {/* ========================= COMO FUNCIONA ====================== */}
-      <section className="border-y border-white/10 bg-brand-900 py-20">
+      <section className="border-y border-white/10 bg-brand-900 py-14 sm:py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -385,7 +385,7 @@ export default function Vendas() {
       </section>
 
       {/* ======================= ALUNOS APROVADOS ===================== */}
-      <section id="depoimentos" className="scroll-mt-20 py-20">
+      <section id="depoimentos" className="scroll-mt-20 py-14 sm:py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -429,7 +429,7 @@ export default function Vendas() {
       </section>
 
       {/* ============================ PLANOS ========================== */}
-      <section id="comprar" className="scroll-mt-20 border-t border-white/10 bg-white/[0.03] py-20">
+      <section id="comprar" className="scroll-mt-20 border-t border-white/10 bg-white/[0.03] py-14 sm:py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -527,7 +527,7 @@ export default function Vendas() {
       </section>
 
       {/* ========================== CTA FINAL ========================= */}
-      <section className="border-t border-white/10 py-20">
+      <section className="border-t border-white/10 py-14 sm:py-20">
         <div className="container">
           <Reveal className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-brand-900 px-8 py-16 text-center shadow-2xl sm:px-16">
             <h2 className="relative mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
