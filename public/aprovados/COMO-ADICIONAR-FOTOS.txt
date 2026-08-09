@@ -4,8 +4,8 @@ COMO ADICIONAR AS FOTOS DOS ALUNOS APROVADOS
 1) Coloque os arquivos de imagem DENTRO desta pasta (public/aprovados/).
    Nomes usados hoje na seção de depoimentos:
        pedro.jpg    (Pedro Neto — Inteligência Artificial, UFT)
-       thiago.jpg   (Thiago Miranda — Direito, UFT)
-       beatriz.jpg  (terceiro depoimento)
+       thiago.jpg   (Thiago Miranda — Direito, UFRJ)
+       ciro.jpg     (Ciro — Medicina, UFG)
    (use letras minúsculas, sem espaços e sem acentos no nome do arquivo)
 
 2) O caminho de cada foto fica no arquivo:  src/lib/config.js
