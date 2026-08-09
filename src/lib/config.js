@@ -92,7 +92,7 @@ export const DEPOIMENTOS = [
     inicial: "P",
     nome: "Pedro Neto",
     resultado: "Aprovado em Inteligência Artificial — UFT",
-    foto: "/aprovados/pedro.jpg",
+    foto: "/aprovados/pedro.jpg?v=2",
     texto:
       "Com o cronograma e os simulados eu parei de estudar no escuro e foquei no que realmente caía. Cheguei firme na prova e conquistei minha vaga na UFT.",
   },
@@ -100,7 +100,7 @@ export const DEPOIMENTOS = [
     inicial: "T",
     nome: "Thiago Miranda",
     resultado: "Aprovado em Direito — UFRJ",
-    foto: "/aprovados/thiago.jpg",
+    foto: "/aprovados/thiago.jpg?v=2",
     texto:
       "A organização dos estudos e o treino de redação foram o que mais me ajudaram. Fui pra prova confiante e passei em Direito na UFRJ.",
   },
@@ -108,7 +108,7 @@ export const DEPOIMENTOS = [
     inicial: "C",
     nome: "Ciro",
     resultado: "Aprovado em Medicina — UFG",
-    foto: "/aprovados/ciro.jpg",
+    foto: "/aprovados/ciro.jpg?v=2",
     texto:
       "Estudar pelo que mais cai fez toda a diferença. Segui o cronograma, treinei muita questão e consegui a vaga mais concorrida: Medicina na UFG.",
   },
