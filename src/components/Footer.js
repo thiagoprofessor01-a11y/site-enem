@@ -32,18 +32,18 @@ const COLUNAS = [
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-slate-200 bg-white">
+    <footer className="border-t border-white/10 bg-brand-950 text-white">
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-5">
           <div className="md:col-span-2">
-            <Logo className="h-9 w-auto" />
-            <p className="mt-3 max-w-xs text-sm text-slate-500">
+            <Logo className="h-9 w-auto brightness-0 invert" />
+            <p className="mt-3 max-w-xs text-sm text-white/60">
               {SITE.descricao}
             </p>
           </div>
           {COLUNAS.map((col) => (
             <div key={col.titulo}>
-              <h3 className="text-sm font-semibold text-slate-900">
+              <h3 className="text-sm font-semibold text-white">
                 {col.titulo}
               </h3>
               <ul className="mt-3 space-y-2">
@@ -51,7 +51,7 @@ export default function Footer() {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-sm text-slate-500 transition hover:text-brand-700"
+                      className="text-sm text-white/60 transition hover:text-ciano"
                     >
                       {l.label}
                     </Link>
@@ -61,7 +61,7 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-10 border-t border-slate-100 pt-6 text-center text-xs text-slate-400">
+        <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-white/40">
           © {new Date().getFullYear()} {SITE.nome}. Feito para quem vai passar no ENEM.
         </div>
       </div>
