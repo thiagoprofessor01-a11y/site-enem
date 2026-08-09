@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import FotoAprovado from "@/components/FotoAprovado";
 import TelaMockup from "@/components/TelaMockup";
+import PlataformaMac from "@/components/PlataformaMac";
 import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
 import { OFERTA, PLANOS, DEPOIMENTOS } from "@/lib/config";
 
@@ -289,7 +290,7 @@ export default function Vendas() {
             </Link>
           </Reveal>
           <Reveal delay={120}>
-            <ComputadorMockup />
+            <PlataformaMac fallback={<ComputadorMockup />} />
           </Reveal>
         </div>
       </section>
