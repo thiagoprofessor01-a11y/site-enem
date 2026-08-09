@@ -6,7 +6,7 @@ import TelaMockup from "@/components/TelaMockup";
 import ComprarAcesso from "@/modules/pagamento/ComprarAcesso";
 import { OFERTA, PLANOS, DEPOIMENTOS } from "@/lib/config";
 
-// Landing page de vendas do Meu ENEM — tema ESCURO, animado e interativo.
+// Landing page de vendas do Meu ENEM — tema ESCURO, ousado e direto.
 // Identidade: Azul ENEM #3028D0 · Azul profundo #17106F · Ciano · Lilás · Verde · Amarelo.
 
 const PARA_VOCE = [
@@ -25,6 +25,25 @@ const FEATURES = [
   { icon: "raio", titulo: "Simulados", desc: "Simulados no estilo da prova para você treinar ritmo e controle de tempo." },
   { icon: "lapis", titulo: "Redação nota 1000", desc: "Os melhores temas e materiais para treinar as 5 competências avaliadas." },
   { icon: "livro", titulo: "Resumos", desc: "Resumos objetivos em PDF e imagem, por matéria, para revisar rápido." },
+];
+
+// Itens do card de preço no hero (curtos, com check verde).
+const CARD_DESTAQUES = [
+  "Videoaulas focadas no que mais cai",
+  "Banco de questões do ENEM com correção",
+  "Simulados no estilo da prova",
+  "Redação: temas e correção pelas 5 competências",
+  "Plano de estudos que diz o que fazer hoje",
+  "Resumos em PDF para revisar rápido",
+];
+
+// Frases da faixa que rola (marquee) abaixo do hero.
+const TICKER = [
+  "Preparação completa para o ENEM 2026",
+  "Plano mensal: comece agora",
+  "Plano trimestral: melhor custo-benefício",
+  "Foco no que mais cai",
+  "Cancele quando quiser",
 ];
 
 const INCLUSO = [
@@ -73,13 +92,10 @@ function Estrelas() {
 function ComputadorMockup() {
   return (
     <div className="relative mx-auto w-full max-w-md">
-      {/* brilho atrás */}
-      <div className="pointer-events-none absolute -inset-8 animate-glow rounded-[3rem] bg-gradient-to-tr from-brand-500/50 via-ciano/30 to-transparent blur-3xl" />
-
-      <div className="relative animate-float">
+      <div className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-brand-600/20 blur-3xl" />
+      <div className="relative">
         {/* monitor */}
-        <div className="rounded-2xl border border-white/15 bg-slate-900/80 p-2.5 shadow-2xl ring-1 ring-white/5 backdrop-blur">
-          {/* barra do navegador */}
+        <div className="rounded-2xl border border-white/15 bg-slate-900/80 p-2.5 shadow-2xl ring-1 ring-white/5">
           <div className="flex items-center gap-2 px-2 pb-2.5 pt-1">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
             <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
@@ -88,13 +104,10 @@ function ComputadorMockup() {
               meuenem.online
             </span>
           </div>
-
-          {/* tela / conteúdo do app (print real se existir; senão, painel desenhado) */}
           <div className="overflow-hidden rounded-xl bg-white">
             <TelaMockup />
           </div>
         </div>
-
         {/* base / pé do monitor */}
         <div className="mx-auto h-5 w-24 rounded-b-xl bg-gradient-to-b from-slate-700 to-slate-800" />
         <div className="mx-auto h-2 w-44 rounded-full bg-slate-800/80 shadow-lg" />
@@ -107,60 +120,25 @@ export default function Vendas() {
   return (
     <div className="overflow-hidden bg-brand-950 text-white">
       {/* ============================= HERO ============================= */}
-      <section className="relative">
-        {/* fundo com brilhos e grade */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_40rem_at_70%_-10%,rgba(48,40,208,0.45),transparent),radial-gradient(50rem_30rem_at_0%_20%,rgba(0,200,255,0.18),transparent)]" />
-        <div className="pointer-events-none absolute -right-24 top-10 h-96 w-96 animate-glow rounded-full bg-ciano/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 animate-glow rounded-full bg-brand-500/40 blur-3xl" />
-
-        <div className="container relative grid items-center gap-14 py-20 sm:py-24 lg:grid-cols-2">
-          <div>
-            <span className="animate-fade-up inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-lilas ring-1 ring-white/15">
-              🔥 Preparação completa para o ENEM
+      <section className="relative border-b border-white/10">
+        <div className="container grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr]">
+          {/* Esquerda — título forte */}
+          <div className="animate-fade-up">
+            <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-ciano">
+              Plataforma de estudos para o ENEM
             </span>
-            <h1 className="animate-fade-up mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              Não é sobre estudar mais.{" "}
-              <span className="animate-gradient-x bg-[length:200%_auto] bg-gradient-to-r from-ciano via-lilas to-ciano bg-clip-text text-transparent">
-                É sobre estudar certo.
-              </span>
+            <h1 className="mt-4 text-5xl font-extrabold uppercase leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
+              Preparação<br />completa
             </h1>
-            <p className="animate-fade-up mt-5 max-w-lg text-lg text-white/75">
-              {OFERTA.subpromessa}
+            <span className="mt-5 inline-block bg-acerto px-3 py-1.5 text-lg font-extrabold uppercase tracking-tight text-brand-950 sm:text-xl">
+              Foco no que mais cai
+            </span>
+            <p className="mt-6 max-w-md text-lg text-white/75">
+              Conteúdos objetivos, videoaulas, simulados, correção de redação e um plano de
+              estudos que diz o que fazer hoje.
             </p>
 
-            {/* Selo de preço em destaque */}
-            <div className="animate-fade-up mt-8 inline-flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-lilas">A partir de</p>
-                <p className="flex items-end gap-1 leading-none">
-                  <span className="mb-0.5 text-lg font-bold">R$</span>
-                  <span className="text-4xl font-extrabold">{PLANOS[0].preco.split(",")[0]}</span>
-                  <span className="mb-0.5 text-lg font-bold">,{PLANOS[0].preco.split(",")[1]}</span>
-                  <span className="mb-1 ml-1 text-sm font-semibold text-white/60">/mês</span>
-                </p>
-              </div>
-              <span className="h-10 w-px bg-white/15" />
-              <p className="max-w-[9rem] text-xs font-medium text-white/60">
-                Cancele quando quiser · sem fidelidade
-              </p>
-            </div>
-
-            <div className="animate-fade-up mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="#comprar"
-                className="group relative overflow-hidden rounded-xl bg-meta px-7 py-4 text-center text-base font-extrabold text-brand-900 shadow-[0_0_30px_-5px_rgba(255,200,87,0.6)] transition hover:-translate-y-0.5 hover:brightness-105"
-              >
-                Quero começar agora
-              </Link>
-              <Link
-                href="#recursos"
-                className="rounded-xl border border-white/25 bg-white/5 px-7 py-4 text-center text-base font-semibold text-white backdrop-blur transition hover:bg-white/10"
-              >
-                Ver o que está incluso
-              </Link>
-            </div>
-
-            <div className="animate-fade-up mt-8 flex items-center gap-4">
+            <div className="mt-8 flex items-center gap-4">
               <div className="flex -space-x-2">
                 {DEPOIMENTOS.map((d) => (
                   <span
@@ -178,15 +156,91 @@ export default function Vendas() {
             </div>
           </div>
 
-          {/* Mockup do computador */}
+          {/* Direita — card de preço */}
           <div className="animate-fade-up">
-            <ComputadorMockup />
+            <div className="mx-auto max-w-sm rounded-3xl border border-white/15 bg-black/40 p-6 shadow-2xl backdrop-blur sm:p-8">
+              <span className="inline-flex rounded-full border border-acerto/60 px-3 py-1 text-xs font-bold uppercase tracking-wide text-acerto">
+                Acesso completo à plataforma
+              </span>
+
+              <div className="mt-5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-white/60">A partir de</p>
+                <p className="flex items-end gap-1 leading-none">
+                  <span className="mb-1.5 text-2xl font-bold">R$</span>
+                  <span className="text-6xl font-extrabold sm:text-7xl">{PLANOS[0].preco.split(",")[0]}</span>
+                  <span className="mb-1.5 text-2xl font-bold">,{PLANOS[0].preco.split(",")[1]}</span>
+                  <span className="mb-2.5 ml-1 text-base font-semibold text-white/60">/mês</span>
+                </p>
+                <p className="mt-1.5 text-sm text-white/60">
+                  ou R$ {PLANOS[1].preco}/trimestre · cancele quando quiser
+                </p>
+              </div>
+
+              <ComprarAcesso
+                plano="mensal"
+                className="mt-6 flex w-full items-center justify-center rounded-xl bg-meta px-6 py-4 text-base font-extrabold uppercase tracking-wide text-brand-950 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              >
+                Garantir meu acesso
+              </ComprarAcesso>
+
+              <ul className="mt-6 space-y-3">
+                {CARD_DESTAQUES.map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-sm">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-acerto text-xs font-black text-brand-950">
+                      ✓
+                    </span>
+                    <span className="font-medium text-white/85">{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ===================== FAIXA QUE ROLA (marquee) =============== */}
+      <div className="overflow-hidden border-y border-brand-900 bg-acerto py-3">
+        <div className="flex w-max animate-marquee items-center gap-6 whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-brand-950">
+          {[0, 1].map((rep) =>
+            TICKER.map((t, i) => (
+              <span key={`${rep}-${i}`} className="flex items-center gap-6">
+                <span>{t}</span>
+                <span className="text-brand-950/40">●</span>
+              </span>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* ===================== VEJA A PLATAFORMA ====================== */}
+      <section className="border-b border-white/10 py-16 sm:py-20">
+        <div className="container grid items-center gap-12 lg:grid-cols-2">
+          <Reveal>
+            <span className="text-sm font-bold uppercase tracking-widest text-ciano">
+              Por dentro da plataforma
+            </span>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
+              Tudo organizado, do jeito que você precisa
+            </h2>
+            <p className="mt-4 max-w-md text-white/70">
+              Abra no computador ou no celular e veja, todo dia, exatamente o que estudar: aula,
+              questões, simulado ou redação. Sem se perder.
+            </p>
+            <Link
+              href="#comprar"
+              className="mt-8 inline-flex rounded-xl bg-meta px-7 py-4 text-base font-extrabold text-brand-950 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+            >
+              Ver planos — a partir de R$ {PLANOS[0].preco}
+            </Link>
+          </Reveal>
+          <Reveal delay={120}>
+            <ComputadorMockup />
+          </Reveal>
+        </div>
+      </section>
+
       {/* ===================== IDEAL PARA VOCÊ QUE QUER ================ */}
-      <section className="relative border-t border-white/5 py-20">
+      <section className="relative py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -202,7 +256,7 @@ export default function Vendas() {
               <Reveal
                 key={item.titulo}
                 delay={i * 70}
-                className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur transition hover:-translate-y-1 hover:border-ciano/40 hover:bg-white/10"
+                className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-1 hover:border-ciano/40 hover:bg-white/10"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white transition group-hover:scale-110 group-hover:bg-ciano group-hover:text-brand-900">
                   <Icon name={item.icon} className="h-6 w-6" />
@@ -215,7 +269,7 @@ export default function Vendas() {
           <Reveal className="mt-10 flex justify-center" delay={120}>
             <Link
               href="#comprar"
-              className="rounded-xl bg-acerto px-8 py-4 text-base font-extrabold text-white shadow-[0_0_30px_-8px_rgba(33,181,115,0.7)] transition hover:-translate-y-0.5 hover:brightness-105"
+              className="rounded-xl bg-acerto px-8 py-4 text-base font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
             >
               Assine agora
             </Link>
@@ -224,13 +278,11 @@ export default function Vendas() {
       </section>
 
       {/* ============================ NÚMEROS ========================== */}
-      <section className="border-y border-white/5 bg-white/[0.03]">
+      <section className="border-y border-white/10 bg-white/[0.03]">
         <div className="container grid grid-cols-1 gap-6 py-10 sm:grid-cols-3">
           {NUMEROS.map((n, i) => (
             <Reveal key={n.r} delay={i * 90} className="text-center">
-              <p className="bg-gradient-to-r from-ciano to-lilas bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
-                {n.v}
-              </p>
+              <p className="text-4xl font-extrabold tracking-tight text-ciano">{n.v}</p>
               <p className="mt-1 text-sm text-white/60">{n.r}</p>
             </Reveal>
           ))}
@@ -258,7 +310,7 @@ export default function Vendas() {
               <Reveal
                 key={f.titulo}
                 delay={(i % 3) * 90}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-1 hover:border-ciano/40 hover:bg-white/[0.08] hover:shadow-[0_20px_40px_-20px_rgba(0,200,255,0.4)]"
+                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:border-ciano/40 hover:bg-white/[0.08]"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600/30 text-ciano ring-1 ring-inset ring-ciano/30 transition group-hover:bg-ciano group-hover:text-brand-900">
                   <Icon name={f.icon} className="h-6 w-6" />
@@ -272,8 +324,7 @@ export default function Vendas() {
       </section>
 
       {/* ====================== CRONOGRAMA (destaque) ================= */}
-      <section className="relative overflow-hidden border-y border-white/5 bg-gradient-to-br from-brand-900 to-brand-950 py-20">
-        <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 animate-glow rounded-full bg-ciano/15 blur-3xl" />
+      <section className="border-y border-white/10 bg-brand-900 py-20">
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -302,7 +353,7 @@ export default function Vendas() {
               ))}
             </ul>
           </Reveal>
-          <Reveal delay={120} className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur">
+          <Reveal delay={120} className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
             {[
               ["Segunda", "Matemática — Função afim"],
               ["Terça", "Biologia — Ecologia"],
@@ -334,7 +385,7 @@ export default function Vendas() {
           <div className="mx-auto mt-14 grid max-w-4xl gap-8 sm:grid-cols-3">
             {COMO.map((p, i) => (
               <Reveal key={p.n} delay={i * 110} className="text-center">
-                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-ciano text-xl font-extrabold text-white shadow-[0_0_25px_-6px_rgba(0,200,255,0.7)]">
+                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-xl font-extrabold text-white">
                   {p.n}
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-white">{p.titulo}</h3>
@@ -346,7 +397,7 @@ export default function Vendas() {
       </section>
 
       {/* ======================= ALUNOS APROVADOS ===================== */}
-      <section id="depoimentos" className="scroll-mt-20 border-y border-white/5 bg-white/[0.03] py-20">
+      <section id="depoimentos" className="scroll-mt-20 border-y border-white/10 bg-white/[0.03] py-20">
         <div className="container">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-sm font-bold uppercase tracking-widest text-ciano">
@@ -463,7 +514,7 @@ export default function Vendas() {
       </section>
 
       {/* ============================== FAQ =========================== */}
-      <section className="border-t border-white/5 bg-white/[0.03] py-20">
+      <section className="border-t border-white/10 bg-white/[0.03] py-20">
         <div className="container mx-auto max-w-2xl">
           <Reveal>
             <h2 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -473,7 +524,7 @@ export default function Vendas() {
           <div className="mt-10 space-y-3">
             {FAQ.map((item, i) => (
               <Reveal key={item.q} delay={i * 60}>
-                <details className="group rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur [&_summary::-webkit-details-marker]:hidden">
+                <details className="group rounded-2xl border border-white/10 bg-white/5 p-5 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between font-bold text-white">
                     {item.q}
                     <span className="ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ciano font-black text-brand-900 transition group-open:rotate-45">
@@ -491,9 +542,7 @@ export default function Vendas() {
       {/* ========================== CTA FINAL ========================= */}
       <section className="py-20">
         <div className="container">
-          <Reveal className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-brand-800 to-brand-950 px-8 py-16 text-center shadow-2xl sm:px-16">
-            <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 animate-glow rounded-full bg-ciano/25 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 animate-glow rounded-full bg-brand-500/40 blur-3xl" />
+          <Reveal className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-brand-900 px-8 py-16 text-center shadow-2xl sm:px-16">
             <h2 className="relative mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
               {OFERTA.promessa}
             </h2>
@@ -504,7 +553,7 @@ export default function Vendas() {
             <div className="relative mt-8 flex justify-center">
               <Link
                 href="#comprar"
-                className="rounded-xl bg-meta px-8 py-4 text-base font-extrabold text-brand-900 shadow-[0_0_35px_-5px_rgba(255,200,87,0.7)] transition hover:-translate-y-0.5 hover:brightness-105"
+                className="rounded-xl bg-meta px-8 py-4 text-base font-extrabold text-brand-900 shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
               >
                 Ver planos — a partir de R$ {PLANOS[0].preco}
               </Link>
