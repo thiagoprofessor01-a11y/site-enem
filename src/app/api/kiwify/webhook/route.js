@@ -14,11 +14,17 @@ export const dynamic = "force-dynamic";
 //                          (usado para validar a assinatura). Se vazio, não valida.
 
 function assinaturaValida(rawBody, signature, token) {
-  if (!token) return true; // sem token configurado → não valida (configure em produção)
-  if (!signature) return false;
+  // Falha fechada: sem token ou sem assinatura, recusa (não aceita não validado).
+  if (!token || !signature) return false;
   const sha1 = crypto.createHmac("sha1", token).update(rawBody).digest("hex");
   const sha256 = crypto.createHmac("sha256", token).update(rawBody).digest("hex");
-  return signature === sha1 || signature === sha256;
+  // Comparação em tempo constante para evitar timing attack.
+  const bate = (a, b) => {
+    const ba = Buffer.from(a);
+    const bb = Buffer.from(b);
+    return ba.length === bb.length && crypto.timingSafeEqual(ba, bb);
+  };
+  return bate(signature, sha1) || bate(signature, sha256);
 }
 
 function acharEmail(o) {
