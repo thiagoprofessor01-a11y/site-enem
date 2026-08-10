@@ -7,12 +7,13 @@ import Link from "next/link";
 // ?session_id=..., confirma na Stripe que a sessão foi paga (rede de
 // segurança além do webhook) e mostra a confirmação.
 export default function ObrigadoClient() {
-  const [estado, setEstado] = useState("confirmando"); // confirmando | ok | pendente | erro
+  const [estado, setEstado] = useState("confirmando"); // confirmando | ok | pendente | obrigado | erro
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get("session_id");
     if (!sessionId) {
-      setEstado("erro");
+      // Fluxo Kiwify (sem session_id): o acesso é liberado pelo webhook.
+      setEstado("obrigado");
       return;
     }
     let ativo = true;
@@ -71,6 +72,26 @@ export default function ObrigadoClient() {
           </p>
           <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
             Começar a estudar →
+          </Link>
+        </div>
+      )}
+
+      {estado === "obrigado" && (
+        <div className="animate-fade-up w-full">
+          <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-acerto text-white shadow-lg">
+            <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+          <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900">
+            Obrigado pela compra!
+          </h1>
+          <p className="mt-3 text-slate-600">
+            Recebemos seu pagamento. Seu acesso ao <strong>MeuENEM</strong> é liberado
+            automaticamente em instantes — use o mesmo e-mail da compra para entrar.
+          </p>
+          <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
+            Ir para a plataforma →
           </Link>
         </div>
       )}
