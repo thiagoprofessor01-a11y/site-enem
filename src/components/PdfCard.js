@@ -23,12 +23,17 @@ export default function PdfCard({ titulo, url, tipo = "pdf", orientacao = "retra
             // eslint-disable-next-line @next/next/no-img-element
             <img src={url} alt={titulo} className="absolute inset-0 h-full w-full object-cover" />
           ) : (
-            <iframe
-              src={`${url}#toolbar=0&navpanes=0&view=FitH`}
-              title={titulo}
-              className="pointer-events-none absolute inset-0 h-full w-full"
-              loading="lazy"
-            />
+            // Capa LEVE (não carrega o PDF inteiro na prévia — só ao abrir).
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-slate-50 to-slate-200 p-5">
+              <span className="flex h-14 w-11 items-center justify-center rounded-md bg-white shadow ring-1 ring-slate-200">
+                <svg viewBox="0 0 24 24" className="h-7 w-7 text-rose-500" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z" />
+                  <path d="M14 3v5h5" />
+                </svg>
+              </span>
+              <span className="line-clamp-3 text-center text-xs font-semibold text-slate-600">{titulo}</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">PDF</span>
+            </div>
           )
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-slate-300">Arquivo</div>

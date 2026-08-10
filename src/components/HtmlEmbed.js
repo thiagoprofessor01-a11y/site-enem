@@ -31,15 +31,32 @@ export default function HtmlEmbed({ html, minHeight = 80 }) {
     return () => window.removeEventListener("message", onMsg);
   }, [minHeight]);
 
-  const srcDoc =
-    `<!doctype html><html><head><meta charset="utf-8">` +
-    `<meta name="viewport" content="width=device-width, initial-scale=1">` +
-    `<style>body{margin:0;padding:2px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;line-height:1.5;}img{max-width:100%;height:auto;}</style>` +
-    `</head><body>` +
-    `<script>window.__embedId=${JSON.stringify(idRef.current)}<\/script>` +
-    (html || "") +
-    REPORTER +
-    `</body></html>`;
+  const conteudo = html || "";
+  // Se o usuário colou um DOCUMENTO HTML COMPLETO (<!doctype>/<html> com seu
+  // próprio <head><style>), preservamos exatamente como está — só injetamos o
+  // script de altura antes do </body>. Assim o simulado fica igual ao código
+  // colado. Se for só um trecho, embrulhamos com uma base mínima.
+  const ehDocCompleto = /<!doctype\s+html|<html[\s>]/i.test(conteudo);
+  const idScript = `<script>window.__embedId=${JSON.stringify(idRef.current)}<\/script>`;
+
+  let srcDoc;
+  if (ehDocCompleto) {
+    // Preserva o documento colado como está; injeta os scripts antes do </body>.
+    const injecao = idScript + REPORTER;
+    srcDoc = /<\/body>/i.test(conteudo)
+      ? conteudo.replace(/<\/body>/i, injecao + "</body>")
+      : conteudo + injecao;
+  } else {
+    srcDoc =
+      `<!doctype html><html><head><meta charset="utf-8">` +
+      `<meta name="viewport" content="width=device-width, initial-scale=1">` +
+      `<style>body{margin:0;padding:2px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;line-height:1.5;}img{max-width:100%;height:auto;}</style>` +
+      `</head><body>` +
+      idScript +
+      conteudo +
+      REPORTER +
+      `</body></html>`;
+  }
 
   return (
     <iframe
