@@ -12,7 +12,7 @@ const csp = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "connect-src 'self' https: wss:",
-  "frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com",
+  "frame-src 'self' blob: https://*.supabase.co https://www.youtube-nocookie.com https://www.youtube.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
