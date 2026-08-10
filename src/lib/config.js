@@ -26,6 +26,12 @@ export const OFERTA = {
     "O método completo para você organizar os estudos, focar no que mais cai e chegar confiante no dia da prova.",
 };
 
+// Links de checkout do Kiwify (um por plano). Troque aqui se mudarem.
+export const KIWIFY_CHECKOUT = {
+  mensal: "https://pay.kiwify.com.br/Dazh51v",
+  trimestral: "https://pay.kiwify.com.br/dcX4GEc",
+};
+
 // ---------------------------------------------------------------------
 // PLANOS — assinaturas exibidas na página de vendas.
 // Edite preço/periodicidade aqui; o valor de cobrança (em centavos) e o
