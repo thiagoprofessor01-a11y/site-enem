@@ -29,7 +29,7 @@ export const OFERTA = {
 // Contato de suporte (usado no cancelamento de assinatura, ajuda etc.).
 // TROQUE pelo seu e-mail/WhatsApp reais.
 export const SUPORTE = {
-  email: "suporte@meuenem.online",
+  email: "meuenem0@gmail.com",
   whatsapp: "", // opcional: só números, ex.: "5563999999999"
 };
 
