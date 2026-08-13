@@ -19,6 +19,13 @@ const textos = {
 
 export default function SimuladosClient({ embutido = false, forcarAdmin = false }) {
   return (
-    <BancoModulos store={simuladosStore} textos={textos} embutido={embutido} forcarAdmin={forcarAdmin} />
+    <BancoModulos
+      store={simuladosStore}
+      textos={textos}
+      embutido={embutido}
+      forcarAdmin={forcarAdmin}
+      fechadoPorPadrao
+      colunas={2}
+    />
   );
 }
