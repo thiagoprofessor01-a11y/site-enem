@@ -26,6 +26,13 @@ export const OFERTA = {
     "O método completo para você organizar os estudos, focar no que mais cai e chegar confiante no dia da prova.",
 };
 
+// Contato de suporte (usado no cancelamento de assinatura, ajuda etc.).
+// TROQUE pelo seu e-mail/WhatsApp reais.
+export const SUPORTE = {
+  email: "suporte@meuenem.online",
+  whatsapp: "", // opcional: só números, ex.: "5563999999999"
+};
+
 // Links de checkout do Kiwify (um por plano). Troque aqui se mudarem.
 export const KIWIFY_CHECKOUT = {
   mensal: "https://pay.kiwify.com.br/Dazh51v",
