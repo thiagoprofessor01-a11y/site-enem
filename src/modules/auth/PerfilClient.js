@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSessao, excluirConta } from "./auth";
+import { SUPORTE } from "@/lib/config";
 
 export default function PerfilClient() {
   const sessao = useSessao();
@@ -34,6 +35,51 @@ export default function PerfilClient() {
           </p>
           <p className="mt-0.5 text-slate-800">{sessao?.email || "—"}</p>
         </div>
+      </div>
+
+      {/* Assinatura / cancelamento */}
+      <div className="mt-12 border-t border-slate-100 pt-8">
+        <h2 className="text-lg font-semibold text-slate-900">Assinatura</h2>
+        {sessao?.pago ? (
+          <>
+            <p className="mt-1 text-sm text-slate-500">
+              Você pode cancelar quando quiser. Ao cancelar, você continua com acesso até o fim
+              do período já pago — sem multa.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href={`mailto:${SUPORTE.email}?subject=${encodeURIComponent(
+                  "Cancelamento de assinatura — MeuENEM"
+                )}&body=${encodeURIComponent(
+                  `Olá, quero cancelar minha assinatura.\n\nE-mail da conta: ${sessao?.email || ""}\nNome: ${sessao?.nome || ""}`
+                )}`}
+                className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Cancelar assinatura
+              </a>
+              {SUPORTE.whatsapp && (
+                <a
+                  href={`https://wa.me/${SUPORTE.whatsapp}?text=${encodeURIComponent(
+                    `Olá, quero cancelar minha assinatura do MeuENEM. E-mail: ${sessao?.email || ""}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Cancelar pelo WhatsApp
+                </a>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-slate-400">
+              O cancelamento é processado pelo pagamento (Kiwify). Assim que confirmado, a
+              renovação não acontece mais.
+            </p>
+          </>
+        ) : (
+          <p className="mt-1 text-sm text-slate-500">
+            Você não tem uma assinatura ativa no momento.
+          </p>
+        )}
       </div>
 
       {/* Excluir conta */}
