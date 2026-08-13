@@ -16,7 +16,14 @@ import { useSessao } from "@/modules/auth/auth";
 const input =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
-export default function BancoModulos({ store, textos, embutido = false, forcarAdmin = false }) {
+export default function BancoModulos({
+  store,
+  textos,
+  embutido = false,
+  forcarAdmin = false,
+  fechadoPorPadrao = false, // começa com os módulos recolhidos
+  colunas = 1, // 1 = lista; 2 = grade (um na esquerda, um na direita)
+}) {
   const sessao = useSessao();
   const [banco, setBanco] = useState(null);
 
@@ -63,7 +70,7 @@ export default function BancoModulos({ store, textos, embutido = false, forcarAd
           Nenhum módulo cadastrado ainda.
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className={colunas === 2 ? "grid items-start gap-6 md:grid-cols-2" : "space-y-8"}>
           {modulos.map((mod) => (
             <ModuloBloco
               key={mod.id}
@@ -71,6 +78,7 @@ export default function BancoModulos({ store, textos, embutido = false, forcarAd
               itens={itensDo(mod.id)}
               admin={admin}
               textos={t}
+              fechadoPorPadrao={fechadoPorPadrao}
               onRenomear={(nome) => recarregar(store.updateModulo(mod.id, { nome }))}
               onExcluir={() => recarregar(store.deleteModulo(mod.id))}
               onAddItem={(dados) => recarregar(store.addItem(mod.id, dados))}
@@ -85,7 +93,7 @@ export default function BancoModulos({ store, textos, embutido = false, forcarAd
   if (embutido) return <div>{corpo}</div>;
 
   return (
-    <div className="container max-w-2xl py-12">
+    <div className={`container py-12 ${colunas === 2 ? "max-w-5xl" : "max-w-2xl"}`}>
       <header className="mb-10 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">{t.titulo}</h1>
         <p className="mx-auto mt-2 max-w-lg text-slate-600">
@@ -126,8 +134,8 @@ function NovoModulo({ placeholder, botao, onCriar }) {
   );
 }
 
-function ModuloBloco({ modulo, itens, admin, textos, onRenomear, onExcluir, onAddItem, onDelItem }) {
-  const [aberto, setAberto] = useState(true);
+function ModuloBloco({ modulo, itens, admin, textos, fechadoPorPadrao = false, onRenomear, onExcluir, onAddItem, onDelItem }) {
+  const [aberto, setAberto] = useState(!fechadoPorPadrao);
   const [addindo, setAddindo] = useState(false);
   const [editandoNome, setEditandoNome] = useState(false);
   const [nome, setNome] = useState(modulo.nome);
