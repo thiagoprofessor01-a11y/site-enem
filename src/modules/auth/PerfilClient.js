@@ -3,12 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSessao, excluirConta } from "./auth";
-import { SUPORTE, KIWIFY_PORTAL } from "@/lib/config";
+import { SUPORTE } from "@/lib/config";
 
 export default function PerfilClient() {
   const sessao = useSessao();
   const router = useRouter();
   const [confirmando, setConfirmando] = useState(false);
+  const [cancelando, setCancelando] = useState(false);
+
+  const mailtoCancelar =
+    `mailto:${SUPORTE.email}` +
+    `?subject=${encodeURIComponent("Cancelamento de assinatura — MeuENEM")}` +
+    `&body=${encodeURIComponent(
+      `Olá, quero cancelar minha assinatura.\n\nE-mail da conta: ${sessao?.email || ""}\nNome: ${sessao?.nome || ""}`
+    )}`;
 
   async function handleExcluir() {
     await excluirConta();
@@ -43,32 +51,41 @@ export default function PerfilClient() {
         {sessao?.pago ? (
           <>
             <p className="mt-1 text-sm text-slate-500">
-              Você pode cancelar quando quiser, você mesmo, direto no Kiwify (onde o pagamento é
-              feito). Você continua com acesso até o fim do período já pago — sem multa.
+              Você pode cancelar quando quiser. Você continua com acesso até o fim do período já
+              pago — sem multa.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href={KIWIFY_PORTAL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
+
+            {cancelando ? (
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-sm font-medium text-slate-700">
+                  Ao confirmar, você envia um pedido de cancelamento para o nosso suporte
+                  ({SUPORTE.email}). Processamos e a renovação não acontece mais — você mantém o
+                  acesso até o fim do período já pago.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <a
+                    href={mailtoCancelar}
+                    onClick={() => setCancelando(false)}
+                    className="rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+                  >
+                    Enviar pedido de cancelamento
+                  </a>
+                  <button
+                    onClick={() => setCancelando(false)}
+                    className="text-sm font-semibold text-slate-500 transition hover:text-slate-700"
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setCancelando(true)}
+                className="mt-4 rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Cancelar assinatura
-              </a>
-            </div>
-            <p className="mt-2 text-xs text-slate-400">
-              Entre com o <strong>mesmo e-mail da compra</strong> ({sessao?.email}). Você também
-              pode cancelar pelo botão “Gerenciar assinatura” no e-mail de cobrança do Kiwify.
-              {SUPORTE.email ? (
-                <>
-                  {" "}
-                  Precisa de ajuda?{" "}
-                  <a href={`mailto:${SUPORTE.email}`} className="font-semibold text-brand-600">
-                    {SUPORTE.email}
-                  </a>
-                </>
-              ) : null}
-            </p>
+              </button>
+            )}
           </>
         ) : (
           <p className="mt-1 text-sm text-slate-500">
