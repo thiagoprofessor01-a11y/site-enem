@@ -39,6 +39,10 @@ export const KIWIFY_CHECKOUT = {
   trimestral: "https://pay.kiwify.com.br/dcX4GEc",
 };
 
+// Portal do cliente do Kiwify — onde o aluno gerencia/cancela a assinatura
+// sozinho (entra com o e-mail da compra). Ajuste se o Kiwify mudar a URL.
+export const KIWIFY_PORTAL = "https://dashboard.kiwify.com.br/minhas-compras";
+
 // ---------------------------------------------------------------------
 // PLANOS — assinaturas exibidas na página de vendas.
 // Edite preço/periodicidade aqui; o valor de cobrança (em centavos) e o
