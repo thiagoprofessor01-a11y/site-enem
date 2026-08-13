@@ -79,6 +79,7 @@ export default function BancoModulos({
               admin={admin}
               textos={t}
               fechadoPorPadrao={fechadoPorPadrao}
+              colunas={colunas}
               onRenomear={(nome) => recarregar(store.updateModulo(mod.id, { nome }))}
               onExcluir={() => recarregar(store.deleteModulo(mod.id))}
               onAddItem={(dados) => recarregar(store.addItem(mod.id, dados))}
@@ -134,15 +135,18 @@ function NovoModulo({ placeholder, botao, onCriar }) {
   );
 }
 
-function ModuloBloco({ modulo, itens, admin, textos, fechadoPorPadrao = false, onRenomear, onExcluir, onAddItem, onDelItem }) {
+function ModuloBloco({ modulo, itens, admin, textos, fechadoPorPadrao = false, colunas = 1, onRenomear, onExcluir, onAddItem, onDelItem }) {
   const [aberto, setAberto] = useState(!fechadoPorPadrao);
   const [addindo, setAddindo] = useState(false);
   const [editandoNome, setEditandoNome] = useState(false);
   const [nome, setNome] = useState(modulo.nome);
   const t = textos;
+  // Numa grade de 2 colunas, ao ABRIR o card ocupa a largura toda (o conteúdo
+  // do simulado é largo e fica espremido em meia coluna).
+  const larguraTotal = colunas === 2 && aberto ? "md:col-span-2" : "";
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <section className={`overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ${larguraTotal}`}>
       <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3">
         <button
           type="button"
