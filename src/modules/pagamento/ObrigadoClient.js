@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSessao } from "@/modules/auth/auth";
 
-// Tela de agradecimento pós-pagamento. Ao voltar do checkout com
-// ?session_id=..., confirma na Stripe que a sessão foi paga (rede de
-// segurança além do webhook) e mostra a confirmação.
+// Tela de agradecimento pós-pagamento.
 export default function ObrigadoClient() {
+  const sessao = useSessao();
   const [estado, setEstado] = useState("confirmando"); // confirmando | ok | pendente | obrigado | erro
 
   useEffect(() => {
@@ -86,13 +86,34 @@ export default function ObrigadoClient() {
           <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900">
             Obrigado pela compra!
           </h1>
-          <p className="mt-3 text-slate-600">
-            Recebemos seu pagamento. Seu acesso ao <strong>MeuENEM</strong> é liberado
-            automaticamente em instantes — use o mesmo e-mail da compra para entrar.
-          </p>
-          <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
-            Ir para a plataforma →
-          </Link>
+          {sessao ? (
+            <>
+              <p className="mt-3 text-slate-600">
+                Recebemos seu pagamento. Seu acesso ao <strong>MeuENEM</strong> é liberado
+                automaticamente em instantes.
+              </p>
+              <Link href="/conteudos" className="btn-primary mt-8 inline-flex">
+                Ir para a plataforma →
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="mt-3 text-slate-600">
+                Recebemos seu pagamento! Agora <strong>crie sua conta</strong> para acessar a
+                plataforma. Use o <strong>mesmo e-mail</strong> que você usou na compra — assim o
+                acesso já entra liberado.
+              </p>
+              <Link href="/cadastro" className="btn-primary mt-8 inline-flex">
+                Criar minha conta →
+              </Link>
+              <p className="mt-4 text-xs text-slate-400">
+                Já tem conta?{" "}
+                <Link href="/entrar" className="font-semibold text-brand-600">
+                  Entrar
+                </Link>
+              </p>
+            </>
+          )}
         </div>
       )}
 

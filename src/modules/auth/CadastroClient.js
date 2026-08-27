@@ -62,10 +62,9 @@ export default function CadastroClient() {
         setAviso("Conta criada! Verifique seu e-mail para confirmar antes de entrar.");
         return;
       }
-      // Se o visitante veio escolhendo um plano, leva-o direto à seção de planos
-      // (já logado) para concluir a assinatura; senão, entra na plataforma.
-      const plano = new URLSearchParams(window.location.search).get("plano");
-      router.replace(plano ? "/#comprar" : "/conteudos");
+      // Entra na plataforma. Quem já pagou (mesmo e-mail da compra) já entra
+      // com o acesso liberado; quem não pagou vê a tela de escolher plano.
+      router.replace("/conteudos");
     } catch (err) {
       setErro("Não foi possível criar a conta. Tente novamente.");
     } finally {
@@ -93,6 +92,9 @@ export default function CadastroClient() {
         <h1 className="mt-5 text-2xl font-bold tracking-tight text-slate-900">Criar conta</h1>
         <p className="mt-2 text-sm text-slate-600">
           Crie sua conta para acessar a plataforma.
+        </p>
+        <p className="mt-2 text-xs font-medium text-brand-600">
+          Já comprou? Use o <strong>mesmo e-mail</strong> da compra para o acesso já entrar liberado.
         </p>
       </div>
 
